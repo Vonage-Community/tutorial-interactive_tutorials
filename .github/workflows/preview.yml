@@ -11,11 +11,7 @@ jobs:
   deploy-preview:
     if: contains(github.event.pull_request.labels.*.name, 'Preview')
     runs-on: ubuntu-latest
-
-    env:
-      VONAGE_API_KEY: 'febe6726'
-      VCR_REGION: 'euw1'
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

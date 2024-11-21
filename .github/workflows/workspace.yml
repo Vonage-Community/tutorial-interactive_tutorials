@@ -11,10 +11,6 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
-    env:
-      VONAGE_API_KEY: 'febe6726'
-      VCR_REGION: 'euw1'
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
