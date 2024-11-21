@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "**/.DS_Store": true,
+        "setup.json": true,
+        "vcr.yml": true,
+    },
+    "vs-browser.url": "<URL>",
+    "vs-browser.reload.onSave": false,
+    "workbench.startupEditor": "none"
+}

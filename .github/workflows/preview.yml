@@ -1,0 +1,99 @@
+name: Preview Tutorial
+
+on:
+  pull_request:
+    branches: ["main"]
+    types:
+      - labeled
+      - synchronize
+
+jobs:
+  deploy-preview:
+    if: contains(github.event.pull_request.labels.*.name, 'Preview')
+    runs-on: ubuntu-latest
+
+    env:
+      VONAGE_API_KEY: 'febe6726'
+      VCR_REGION: 'euw1'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get changed files
+        id: get-changed-files
+        uses: tj-actions/changed-files@v45
+
+      - name: Get changed folder
+        id: get-changed-folder
+        env:
+          ALL_CHANGED_FILES: ${{ steps.get-changed-files.outputs.all_changed_files }}
+        run: |
+          first_file=$(echo "$ALL_CHANGED_FILES" | tr ' ' '\n' | grep "tutorials" | head -n 1)
+          top_level_dir=$(echo "$first_file" | cut -d'/' -f1,2)
+          echo "dir=$top_level_dir" >> "$GITHUB_OUTPUT"
+
+      - name: Check for config file
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          pwd
+          if [ ! -f tutorial-config.json ]; then
+            echo "tutorial-config.json not found. Exiting."
+            exit 1
+          fi
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.4
+
+      - name: Install dependencies
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          node -v
+          npm -v
+          npm install
+
+      - name: Run build
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          npm run build
+
+      - name: Prep deploy
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          shopt -s extglob
+          rm -rf !(dist|tutorial-config.json)
+          mkdir -p ./public
+          cp -r ./dist/* ./public
+          rm -rf dist
+          cp -r $GITHUB_WORKSPACE/scripting/DummyServer/* .
+
+          NAME=$(jq -r '.slug' tutorial-config.json)
+          sed -i "s/<NAME>/$NAME/g" vcr.yml
+          sed -i "s/<ENV>/preview/g" vcr.yml
+
+          cat vcr.yml
+
+      - name: Install Cloud Runtime CLI
+        uses: Vonage/cloud-runtime-cli@main
+
+      - name: Deploy
+        id: deploy
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          vcr deploy --api-key ${{env.VONAGE_API_KEY}} --api-secret ${{ secrets.VONAGE_API_SECRET }} --region aws.${{env.VCR_REGION}} --graphql-endpoint https://graphql.${{env.VCR_REGION}}.runtime.vonage.cloud/v1/graphql 2>&1 | tee deploy-vcr-logs.log
+          url=$(grep -oP 'https://neru-\S+' deploy-vcr-logs.log)
+          sanitized_url=$(echo "$url" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
+          echo "url=$sanitized_url" >> "$GITHUB_OUTPUT"
+
+      - name: Leave comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Your Tutorial Preview has been deployed: ${{ steps.deploy.outputs.url }}'
+            });

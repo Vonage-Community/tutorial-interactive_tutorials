@@ -1,0 +1,146 @@
+name: Create Tutorial Workspace
+
+on:
+  pull_request:
+    branches: ["main"]
+    types:
+      - closed
+
+jobs:
+  create-workspace:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    env:
+      VONAGE_API_KEY: 'febe6726'
+      VCR_REGION: 'euw1'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get changed files
+        id: get-changed-files
+        uses: tj-actions/changed-files@v45
+
+      - name: Get changed folder
+        id: get-changed-folder
+        env:
+          ALL_CHANGED_FILES: ${{ steps.get-changed-files.outputs.all_changed_files }}
+        run: |
+          first_file=$(echo "$ALL_CHANGED_FILES" | tr ' ' '\n' | grep "tutorials" | head -n 1)
+          top_level_dir=$(echo "$first_file" | cut -d'/' -f1,2)
+          echo "dir=$top_level_dir" >> "$GITHUB_OUTPUT"
+
+      - name: Check for config file
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          pwd
+          if [ ! -f tutorial-config.json ]; then
+            echo "tutorial-config.json not found. Exiting."
+            exit 1
+          fi
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.4
+
+      - name: Install dependencies
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          node -v
+          npm -v
+          npm install
+
+      - name: Run build
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          pwd
+          npm run build
+
+      - name: Prep deploy
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          mkdir -p server
+          cd server
+          mkdir -p ./public
+          cp -r ../dist/* ./public
+          rm -rf ../dist
+          cp -r $GITHUB_WORKSPACE/scripting/DummyServer/* .
+
+          NAME=$(jq -r '.slug' ../tutorial-config.json)
+          VERSION=$(jq -r '.version' ../tutorial-config.json)
+          VERSION=${VERSION//./-}
+          sed -i "s/<NAME>/$NAME/g" vcr.yml
+          sed -i "s/<ENV>/$VERSION/g" vcr.yml
+
+          cat vcr.yml
+
+      - name: Install Cloud Runtime CLI
+        uses: Vonage/cloud-runtime-cli@main
+
+      - name: Deploy
+        id: deploy
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}/server
+        run: |
+          vcr deploy --api-key ${{env.VONAGE_API_KEY}} --api-secret ${{ secrets.VONAGE_API_SECRET }} --region aws.${{env.VCR_REGION}} --graphql-endpoint https://graphql.${{env.VCR_REGION}}.runtime.vonage.cloud/v1/graphql 2>&1 | tee deploy-vcr-logs.log
+          url=$(grep -oP 'https://neru-\S+' deploy-vcr-logs.log)
+          sanitized_url=$(echo "$url" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
+          echo "url=$sanitized_url" >> "$GITHUB_OUTPUT"
+
+      - name: Create Workspace Folder
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          rm -rf server ws
+          mkdir -p ws
+          cd ws
+          pwd
+          cp ../tutorial-config.json .
+          cp -r $GITHUB_WORKSPACE/scripting/DummyWorkspace/. .
+          cp $GITHUB_WORKSPACE/scripting/createWorkspace.sh .
+          ls -a
+          ./createWorkspace.sh ${{ steps.deploy.outputs.url }}
+
+      - name: Tag the commit
+        id: tag-commit
+        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add --all
+
+          slug=$(jq -r '.slug' tutorial-config.json)
+          version=$(jq -r '.version' tutorial-config.json)
+          TAG_NAME="${slug}-v${version}"
+
+          git commit -m "Adding workspace for ${TAG_NAME}"
+          git tag -a $TAG_NAME -m "Tagging commit for version ${TAG_NAME}"
+
+          git push
+          git push origin $TAG_NAME
+
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+
+      - name: Zip Workspace
+        uses: TheDoctor0/zip-release@0.7.6
+        with:
+          type: "zip"
+          directory: "${{ steps.get-changed-folder.outputs.dir }}/ws"
+          path: "."
+          filename: "ws.zip"
+          exclusions: "tutorial-config.json createWorkspace.sh"
+
+      - name: Upload a Build Artifact
+        id: upload-release-artifact
+        uses: actions/upload-artifact@v4.0.0
+        with:
+          path: "${{ steps.get-changed-folder.outputs.dir }}/ws/ws.zip"    
+
+      - name: Create release assets
+        uses: ncipollo/release-action@v1
+        with:
+          name: Release ${{ steps.tag-commit.outputs.tag_name }}
+          artifacts: "${{ steps.get-changed-folder.outputs.dir }}/ws/ws.zip"
+          body: Download and Upload the ws.zip file to Code Hub now.
+          tag: ${{ steps.tag-commit.outputs.tag_name }}
