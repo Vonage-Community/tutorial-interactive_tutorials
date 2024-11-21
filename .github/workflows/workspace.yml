@@ -80,7 +80,7 @@ jobs:
         id: deploy
         working-directory: ${{ steps.get-changed-folder.outputs.dir }}/server
         run: |
-          vcr deploy --api-key ${{env.VONAGE_API_KEY}} --api-secret ${{ secrets.VONAGE_API_SECRET }} --region aws.${{env.VCR_REGION}} --graphql-endpoint https://graphql.${{env.VCR_REGION}}.runtime.vonage.cloud/v1/graphql 2>&1 | tee deploy-vcr-logs.log
+          vcr deploy --api-key ${{ vars.VONAGE_API_KEY }} --api-secret ${{ secrets.VONAGE_API_SECRET }} --region aws.${{ vars.VCR_REGION }} --graphql-endpoint https://graphql.${{ vars.VCR_REGION }}.runtime.vonage.cloud/v1/graphql 2>&1 | tee deploy-vcr-logs.log
           url=$(grep -oP 'https://neru-\S+' deploy-vcr-logs.log)
           sanitized_url=$(echo "$url" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
           echo "url=$sanitized_url" >> "$GITHUB_OUTPUT"
