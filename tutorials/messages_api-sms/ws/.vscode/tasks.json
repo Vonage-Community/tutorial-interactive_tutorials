@@ -39,7 +39,7 @@
       "label": "Run",
       "dependsOn": [
         "ExportEnv",
-        "OpenBroswer",
+        "OpenBrowser",
         "OpenTerminal",
         "CleanUp"
       ],

@@ -1,6 +1,4 @@
 {
     "enabled": true,
-    "startupfiles": [
-        "send-sms.js"
-    ]
+    "startupfiles": ["send-sms.js"] 
 }

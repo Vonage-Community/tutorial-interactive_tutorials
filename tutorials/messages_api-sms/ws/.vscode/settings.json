@@ -1,10 +1,11 @@
 {
     "files.exclude": {
         "**/.DS_Store": true,
+        ".vscode/": true,
         "setup.json": true,
         "vcr.yml": true,
     },
-    "vs-browser.url": "https://neru-febe6726-messages-api-sms-0-1.euw1.runtime.vonage.cloud",
+    "vs-browser.url": "https://Vonage-Community.github.io/tutorial-interactive_tutorials/tutorials/messages_api-sms/0.2",
     "vs-browser.reload.onSave": false,
     "workbench.startupEditor": "none"
 }

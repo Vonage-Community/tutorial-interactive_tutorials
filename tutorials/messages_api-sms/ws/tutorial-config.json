@@ -4,10 +4,9 @@
   "files": [
     "send-sms.js"
   ],
-  "openFile": "send-sms.js",
   "panels": [
     "terminal",
     "browser"
   ],
-  "version": "0.1"
+  "version": "0.2"
 }
