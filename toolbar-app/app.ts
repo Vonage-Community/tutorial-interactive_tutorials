@@ -190,7 +190,7 @@ export default defineToolbarApp({
           astroToolbarWindow?.querySelector(
             '#download-link'
           ) as HTMLAnchorElement
-        ).href = `${window.location.href + tutorial.slug}.zip`;
+        ).href = `${window.location.origin}/${tutorial.slug}.zip`;
         generateButton.disabled = false;
         completeSpan.style.display = 'block';
       }
