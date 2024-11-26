@@ -1,0 +1,20 @@
+{
+  "name": "@example/starlight-basics",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "node download-toolbar.js && astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.28.6",
+    "adm-zip": "^0.5.16",
+    "astro": "^4.15.3",
+    "astro-relative-links": "^0.4.0",
+    "sharp": "^0.32.5"
+  }
+}
