@@ -55,33 +55,13 @@ jobs:
         run: |
           npm run build
 
-      - name: Prep deploy
-        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
-        run: |
-          shopt -s extglob
-          rm -rf !(dist|tutorial-config.json)
-          mkdir -p ./public
-          cp -r ./dist/* ./public
-          rm -rf dist
-          cp -r $GITHUB_WORKSPACE/scripting/DummyServer/* .
-
-          NAME=$(jq -r '.slug' tutorial-config.json)
-          sed -i "s/<NAME>/$NAME/g" vcr.yml
-          sed -i "s/<ENV>/preview/g" vcr.yml
-
-          cat vcr.yml
-
-      - name: Install Cloud Runtime CLI
-        uses: Vonage/cloud-runtime-cli@main
-
-      - name: Deploy
-        id: deploy
-        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
-        run: |
-          vcr deploy --api-key ${{ vars.VONAGE_API_KEY }} --api-secret ${{ secrets.VONAGE_API_SECRET }} --region aws.${{ vars.VCR_REGION }} --graphql-endpoint https://graphql.${{ vars.VCR_REGION }}.runtime.vonage.cloud/v1/graphql 2>&1 | tee deploy-vcr-logs.log
-          url=$(grep -oP 'https://neru-\S+' deploy-vcr-logs.log)
-          sanitized_url=$(echo "$url" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
-          echo "url=$sanitized_url" >> "$GITHUB_OUTPUT"
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: "${{ steps.get-changed-folder.outputs.dir }}/dist"
+          publish_branch: gh_pages
+          destination_dir: "${{ steps.get-changed-folder.outputs.dir }}/preview"
 
       - name: Leave comment on PR
         uses: actions/github-script@v7
@@ -91,5 +71,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Your Tutorial Preview has been deployed: ${{ steps.deploy.outputs.url }}'
+              body: 'Your Tutorial Preview has been deployed: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.get-changed-folder.outputs.dir }}/preview'
             });

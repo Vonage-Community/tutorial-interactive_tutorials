@@ -19,7 +19,6 @@ fi
 SLUG=$(jq -r '.slug' "$CONFIG_FILE")
 VERSION=$(jq -r '.version' "$CONFIG_FILE")
 FILES=$(jq -r '.files[]' "$CONFIG_FILE")
-OPEN_FILE=$(jq -r '.openFile' "$CONFIG_FILE")
 
 # Create files from the "files" array
 for FILE in $FILES; do
@@ -45,8 +44,10 @@ fi
 OFOS_FILE=".vscode/ofos.json"
 if [ -f "$OFOS_FILE" ]; then
     TEMP_FILE=$(mktemp)
-    sed "s|<FILE>|$OPEN_FILE|" "$OFOS_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$OFOS_FILE"
-    echo "Updated $OFOS_FILE with openFile: $OPEN_FILE"
+    FILES_ARRAY=$(printf '"%s",' $FILES)
+    FILES_ARRAY="[${FILES_ARRAY%,}]"
+    sed "s|<FILES>|$FILES_ARRAY|" "$OFOS_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$OFOS_FILE"
+    echo "Updated $OFOS_FILE with files: $FILES_ARRAY"
 else
     echo "$OFOS_FILE not found."
 fi

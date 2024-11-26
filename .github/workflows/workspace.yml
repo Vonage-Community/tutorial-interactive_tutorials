@@ -56,47 +56,33 @@ jobs:
           npm run build
 
       - name: Prep deploy
+        id: prep-deploy
         working-directory: ${{ steps.get-changed-folder.outputs.dir }}
-        run: |
-          mkdir -p server
-          cd server
-          mkdir -p ./public
-          cp -r ../dist/* ./public
-          rm -rf ../dist
-          cp -r $GITHUB_WORKSPACE/scripting/DummyServer/* .
+        run: |  
+          NAME=$(jq -r '.slug' ./tutorial-config.json)
+          VERSION=$(jq -r '.version' ./tutorial-config.json)
 
-          NAME=$(jq -r '.slug' ../tutorial-config.json)
-          VERSION=$(jq -r '.version' ../tutorial-config.json)
-          VERSION=${VERSION//./-}
-          sed -i "s/<NAME>/$NAME/g" vcr.yml
-          sed -i "s/<ENV>/$VERSION/g" vcr.yml
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
 
-          cat vcr.yml
-
-      - name: Install Cloud Runtime CLI
-        uses: Vonage/cloud-runtime-cli@main
-
-      - name: Deploy
-        id: deploy
-        working-directory: ${{ steps.get-changed-folder.outputs.dir }}/server
-        run: |
-          vcr deploy --api-key ${{ vars.VONAGE_API_KEY }} --api-secret ${{ secrets.VONAGE_API_SECRET }} --region aws.${{ vars.VCR_REGION }} --graphql-endpoint https://graphql.${{ vars.VCR_REGION }}.runtime.vonage.cloud/v1/graphql 2>&1 | tee deploy-vcr-logs.log
-          url=$(grep -oP 'https://neru-\S+' deploy-vcr-logs.log)
-          sanitized_url=$(echo "$url" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
-          echo "url=$sanitized_url" >> "$GITHUB_OUTPUT"
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: "${{ steps.get-changed-folder.outputs.dir }}/dist"
+          publish_branch: gh_pages
+          destination_dir: "${{ steps.get-changed-folder.outputs.dir }}/${{ steps.prep-deploy.outputs.version }}"
 
       - name: Create Workspace Folder
         working-directory: ${{ steps.get-changed-folder.outputs.dir }}
         run: |
-          rm -rf server ws
           mkdir -p ws
           cd ws
-          pwd
           cp ../tutorial-config.json .
-          cp -r $GITHUB_WORKSPACE/scripting/DummyWorkspace/. .
+          cp -r $GITHUB_WORKSPACE/scripting/TemplateWorkspace/. .
           cp $GITHUB_WORKSPACE/scripting/createWorkspace.sh .
           ls -a
-          ./createWorkspace.sh ${{ steps.deploy.outputs.url }}
+          ./createWorkspace.sh https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.get-changed-folder.outputs.dir }}/${{ steps.prep-deploy.outputs.version }}
 
       - name: Tag the commit
         id: tag-commit
@@ -106,9 +92,7 @@ jobs:
           git config user.email "actions@github.com"
           git add --all
 
-          slug=$(jq -r '.slug' tutorial-config.json)
-          version=$(jq -r '.version' tutorial-config.json)
-          TAG_NAME="${slug}-v${version}"
+          TAG_NAME="${{ steps.prep-deploy.outputs.name }}-v${{ steps.prep-deploy.outputs.version }}"
 
           git commit -m "Adding workspace for ${TAG_NAME}"
           git tag -a $TAG_NAME -m "Tagging commit for version ${TAG_NAME}"

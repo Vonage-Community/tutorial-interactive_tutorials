@@ -1,9 +1,0 @@
-project:
-    name: <NAME>
-instance:
-    name: <ENV>
-    runtime: nodejs22
-    region: aws.euw1
-    application-id: 6b3dc652-f374-47eb-856e-5e846a975f5e
-    build-script: "./build.sh"
-    entrypoint: [npm, run, start]
