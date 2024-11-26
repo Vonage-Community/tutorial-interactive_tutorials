@@ -82,7 +82,7 @@ jobs:
           cp -r $GITHUB_WORKSPACE/scripting/TemplateWorkspace/. .
           cp $GITHUB_WORKSPACE/scripting/createWorkspace.sh .
           ls -a
-          ./createWorkspace.sh https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.get-changed-folder.outputs.dir }}/${{ steps.prep-deploy.outputs.version }}
+          ./createWorkspace.sh https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.get-changed-folder.outputs.dir }}/${{ steps.prep-deploy.outputs.version }}/
 
       - name: Tag the commit
         id: tag-commit
