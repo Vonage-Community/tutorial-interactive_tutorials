@@ -71,5 +71,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Your Tutorial Preview has been deployed: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.get-changed-folder.outputs.dir }}/preview'
+              body: 'Your Tutorial Preview has been deployed: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.get-changed-folder.outputs.dir }}/preview/'
             });
