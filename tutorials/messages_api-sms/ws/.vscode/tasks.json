@@ -2,7 +2,15 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "OpenBrowser",
+      "label": "OpenContentView",
+      "command": "${input:openBrowser}",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
+      "label": "OpenPreviewView",
       "command": "${input:openBrowser}",
       "presentation": {
         "reveal": "never",
@@ -27,6 +35,15 @@
       }
     },
     {
+      "label": "ConfigurePreview",
+      "type": "shell",
+      "command": "chmod +x ./.vscode/preview.sh; ./.vscode/preview.sh",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
       "label": "CleanUp",
       "type": "shell",
       "command": "chmod +x ./.vscode/cleanup.sh; ./.vscode/cleanup.sh",
@@ -37,12 +54,7 @@
     },
     {
       "label": "Run",
-      "dependsOn": [
-        "ExportEnv",
-        "OpenBrowser",
-        "OpenTerminal",
-        "CleanUp"
-      ],
+      "dependsOn": ["ExportEnv", "OpenContentView", "OpenTerminal", "ConfigurePreview", "OpenPreviewView", "CleanUp"],
       "dependsOrder": "sequence",
       "runOptions": {
         "runOn": "folderOpen"

@@ -5,8 +5,7 @@
     "send-sms.js"
   ],
   "panels": [
-    "terminal",
     "browser"
   ],
-  "version": "0.2"
+  "version": "0.3"
 }
