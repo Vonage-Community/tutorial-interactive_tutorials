@@ -19,6 +19,7 @@ fi
 SLUG=$(jq -r '.slug' "$CONFIG_FILE")
 VERSION=$(jq -r '.version' "$CONFIG_FILE")
 FILES=$(jq -r '.files[]' "$CONFIG_FILE")
+PANELS=$(jq -r '.panels[]' "$CONFIG_FILE")
 
 # Create files from the "files" array
 for FILE in $FILES; do
@@ -50,4 +51,20 @@ if [ -f "$OFOS_FILE" ]; then
     echo "Updated $OFOS_FILE with files: $FILES_ARRAY"
 else
     echo "$OFOS_FILE not found."
+fi
+
+# Update tasks.json using a temporary file
+if echo "${PANELS[@]}" | grep -q "browser"; then
+    TASKS='["ExportEnv", "OpenContentView", "OpenTerminal", "ConfigurePreview", "OpenPreviewView", "CleanUp"]'
+else
+    TASKS='["ExportEnv", "OpenContentView", "OpenTerminal", "CleanUp"]'
+fi
+
+TASKS_FILE=".vscode/tasks.json"
+if [ -f "$TASKS_FILE" ]; then
+    TEMP_FILE=$(mktemp)
+    sed "s|<TASKS>|$TASKS|" "$TASKS_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$TASKS_FILE"
+    echo "Updated $TASKS_FILE with tasks: $TASKS"
+else
+    echo "$TASKS_FILE not found."
 fi
