@@ -11,5 +11,5 @@ export default defineConfig({
     title: 'Vonage Onboarding',
     tableOfContents: false,
     pagefind: false,
-  }), markdoc()],
+  }), markdoc({ allowHTML: true })],
 });
