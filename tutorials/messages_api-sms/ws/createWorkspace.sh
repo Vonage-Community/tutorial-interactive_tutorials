@@ -55,9 +55,9 @@ fi
 
 # Update tasks.json using a temporary file
 if echo "${PANELS[@]}" | grep -q "browser"; then
-    TASKS='["ExportEnv", "OpenContentView", "OpenTerminal", "ConfigurePreview", "OpenPreviewView", "CleanUp"]'
+    TASKS='["OpenContentView", "ConfigurePreview", "ExportEnv", "OpenTerminal", "OpenPreviewView", "CleanUp"]' 
 else
-    TASKS='["ExportEnv", "OpenContentView", "OpenTerminal", "CleanUp"]'
+    TASKS='["OpenContentView", "ExportEnv", "OpenTerminal", "CleanUp"]'
 fi
 
 TASKS_FILE=".vscode/tasks.json"
