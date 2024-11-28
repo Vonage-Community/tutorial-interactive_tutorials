@@ -6,7 +6,7 @@
         "vcr.yml": true,
     },
     "vs-browser.url": "<URL>",
-    "vs-browser.columnToShowIn": "Two",
+    "vs-browser.columnToShowIn": "Beside",
     "vs-browser.reload.onSave": false,
     "workbench.startupEditor": "none"
 }
