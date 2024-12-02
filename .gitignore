@@ -3,6 +3,7 @@
 
 *.zip
 .DS_Store
+*.drawio
 
 ### Node ###
 # Logs
