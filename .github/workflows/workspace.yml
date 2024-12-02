@@ -79,6 +79,7 @@ jobs:
           mkdir -p ws
           cd ws
           cp ../tutorial-config.json .
+          cp ../README.md .
           cp -r $GITHUB_WORKSPACE/scripting/TemplateWorkspace/. .
           cp $GITHUB_WORKSPACE/scripting/createWorkspace.sh .
           ls -a
