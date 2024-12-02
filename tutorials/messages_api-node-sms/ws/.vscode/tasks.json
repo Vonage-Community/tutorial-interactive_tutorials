@@ -54,7 +54,7 @@
     },
     {
       "label": "Run",
-      "dependsOn": ["ExportEnv", "OpenContentView", "ConfigurePreview", "OpenTerminal", "CleanUp", "OpenPreviewView"],
+      "dependsOn": ["ExportEnv", "OpenContentView", "OpenTerminal", "CleanUp"],
       "dependsOrder": "sequence",
       "runOptions": {
         "runOn": "folderOpen"
