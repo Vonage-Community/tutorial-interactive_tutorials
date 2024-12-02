@@ -1,5 +1,14 @@
 declare module 'astro:content' {
 	interface Render {
+		'.mdoc': Promise<{
+			Content(props: Record<string, any>): import('astro').MarkdownInstance<{}>['Content'];
+			headings: import('astro').MarkdownHeading[];
+		}>;
+	}
+}
+
+declare module 'astro:content' {
+	interface Render {
 		'.mdx': Promise<{
 			Content: import('astro').MarkdownInstance<{}>['Content'];
 			headings: import('astro').MarkdownHeading[];
