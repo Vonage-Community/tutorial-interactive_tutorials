@@ -5,7 +5,7 @@
         "setup.json": true,
         "vcr.yml": true,
     },
-    "vs-browser.url": "https://Vonage-Community.github.io/tutorial-interactive_tutorials/tutorials/messages_api-node-sms/0.4.0/",
+    "vs-browser.url": "https://Vonage-Community.github.io/tutorial-interactive_tutorials/tutorials/messages_api-node-sms/0.4.1/",
     "vs-browser.columnToShowIn": "Beside",
     "vs-browser.reload.onSave": false,
     "workbench.startupEditor": "none"
