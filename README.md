@@ -40,7 +40,7 @@ Then start the development server:
 npm run dev
 ```
 
-This will start your site on your local machine. You can now edit the tutorial content in the `src` folder. Tutorials support markdown, markdoc, and HTML. You can view some sample components in the docs folder in the repo. 
+This will start your site on your local machine. You can now edit the tutorial content in the `src` folder. Tutorials support markdown, markdoc, and HTML. Once you are done, add a small synopsis to the README.md file in your tutorial's folder.
 
 ### Create the Tutorial Config
 
