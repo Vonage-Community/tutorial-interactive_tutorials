@@ -9,7 +9,7 @@ In this step, we will intialize the Vonage Client with some credentials and init
 | `VONAGE_NUMBER` | The phone number you are sending the message from. This is the number rented from Vonage when setting up the application. |
 | `TO_NUMBER`     | The phone number you are sending the message to.                                                                          |
 
-> Note: If your account is in the trial period, the `TO_NUMBER` can only be the phone number that you used to create the account. Also, don't use a leading + or 00 when entering a phone number, start with the country code, for example 447700900000.
+> Note: If your account is in the trial period, the `TO_NUMBER` can only be the phone number that you used to create the account. Also, don't use a leading + or 00 when entering a phone number, start with the country code, for example 447700900000. This is the E.164 number format.
 
 Copy this code into `send-sms.js`
 
@@ -26,5 +26,6 @@ const vonage = new Vonage({
   applicationId: process.env.VONAGE_APPLICATION_ID,
   privateKey: process.env.VONAGE_PRIVATE_KEY,
 });
-
 ```
+
+Update `TO_NUMBER` with the number you want to send an SMS to. The environment variables that are being used have been auto populated for you, you can view them in the `.env` file.
