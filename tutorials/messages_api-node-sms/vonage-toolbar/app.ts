@@ -41,6 +41,7 @@ export default defineToolbarApp({
     <details name='steps'>
       <summary>Step 3: Create steps</summary>
       In the src -> content -> docs folder, please add the steps for the tutorial
+      <br><br>See <a href='https://conshus.github.io/onboarding-tutorials/toolbar-app/' target='blank' style='color: white'>Reference</a> for components you can add.<br><br>
     </details>
     <details name='steps'>
       <summary>Step 4: Set Files needed</summary>
@@ -190,7 +191,7 @@ export default defineToolbarApp({
           astroToolbarWindow?.querySelector(
             '#download-link'
           ) as HTMLAnchorElement
-        ).href = `${window.location.href + tutorial.slug}.zip`;
+        ).href = `${window.location.origin}/${tutorial.slug}.zip`;
         generateButton.disabled = false;
         completeSpan.style.display = 'block';
       }
