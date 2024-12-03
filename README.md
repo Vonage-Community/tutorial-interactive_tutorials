@@ -52,8 +52,6 @@ This will create a `tutorial-config.json` file. For example:
 
 ```json
 {
-  "title": "Messages API - SMS (Node.js)",
-  "slug": "messages_api-node-sms", // Your tutorial folder name
   "files": [
     "send-sms.js" // The files needed for the tutorial
   ],
