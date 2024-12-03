@@ -1,14 +1,10 @@
 import { defineToolbarApp } from 'astro/toolbar';
 
 let tutorial: {
-  title: string;
-  slug: string;
   files: string[];
   panels: string[];
   version: string;
 } = {
-  title: '',
-  slug: '',
   files: [],
   panels: [],
   version: '',
@@ -16,16 +12,12 @@ let tutorial: {
 
 export default defineToolbarApp({
   init(canvas, app, server) {
-    const myWindow = document.createElement('astro-dev-toolbar-window');
 
+    const myWindow = document.createElement('astro-dev-toolbar-window');
     const myContent = document.createElement('div');
     myContent.innerHTML = `
     <details name='steps' open>
-      <summary>Step 1: Enter title</summary>
-      <input id='title' placeholder='Enter tutorial title'/>
-    </details>
-    <details name='steps'>
-      <summary>Step 2: Select panels needed</summary>
+      <summary>Step 1: Select panels needed</summary>
       Please select other panels used in the tutorial
       <form id='panels'>
         <div>
@@ -34,22 +26,26 @@ export default defineToolbarApp({
         </div>
         <div>
           <input type="checkbox" id="browser" name="panels" value="browser" />
-          <label for="browser">Browser</label>
+          <label for="browser">Preview Browser</label>
         </div>
       </form>
     </details>
     <details name='steps'>
-      <summary>Step 3: Create steps</summary>
+      <summary>Step 2: Create steps</summary>
       In the src -> content -> docs folder, please add the steps for the tutorial
-      <br><br>See <a href='https://conshus.github.io/onboarding-tutorials/toolbar-app/' target='blank' style='color: white'>Reference</a> for components you can add.<br><br>
+      <br><br>See <a href='https://vonage-community.github.io/tutorial-interactive_tutorials/toolbar-app' target='blank' style='color: white'>Reference</a> for components you can add.<br><br>
     </details>
     <details name='steps'>
-      <summary>Step 4: Set Files needed</summary>
+      <summary>Step 3: Set Files needed</summary>
       Please enter the names and file type of the files needed for the tutorial one at a time.
       <input id='file-input' placeholder='ex. index.html'/><button id="add-file">add</button>
       <strong id='file-input-error'>please include filename AND filetype</strong>
       <br/>File list:
       <ul id='file-list'></ul>
+    </details>
+    <details name='steps'>
+      <summary>Step 4: Enter version</summary>
+      <input id='version' placeholder='0.0.0'/>
     </details>
     <details name='steps'>
       <summary>Step 5: Finish up</summary>
@@ -68,8 +64,50 @@ export default defineToolbarApp({
 
     const astroToolbarWindow = canvas.querySelector('astro-dev-toolbar-window');
 
-    if (localStorage.getItem('tutorial')) {
-      tutorial = JSON.parse(localStorage.getItem('tutorial') || '{}');
+    const versionInput = astroToolbarWindow?.querySelector(
+      '#version'
+    ) as HTMLInputElement;
+    versionInput.value = tutorial.version !== '' ? tutorial.version : '';
+    versionInput?.addEventListener('change', (event) => {
+      tutorial.version = versionInput?.value;
+      saveTutorial();
+    });
+
+    // check for tutorial-config.json
+    function checkConfig() {
+      server.send('vonage-app:config-check', {});
+    };
+
+    if (localStorage.getItem('config-checked')) {
+      // if config-checked exists
+      // check local storage for tutorial config and load if it exists
+      console.log('config-checked exists');
+      checkLocalStorage();
+    } else {
+      console.log('config checked not there')
+      // if config-checked doesn't exist 
+      // - check for tutorial config file
+      checkConfig();
+      //localStorage.setItem('config-checked', 'false');
+    }
+
+    server.on('config-checked', (data: any) => {
+      console.log('config data: ', data);
+      // - if tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI(), and set config-checked to true
+      if (data.found){
+        console.log('tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI()')
+        tutorial = data.tutorial;
+        saveTutorial();
+        updateUI();
+      } else {
+        // - if tutorial config file does not exist, check local storage for tutorial config, load if it exists, and set config-checked to true
+        console.log('config file does not exist, check local storage for tutorial config, load if it exists');
+        checkLocalStorage();  
+      }
+      localStorage.setItem('config-checked', 'true');
+    });
+
+    function updateUI(){
       refreshFilesList();
       if (tutorial.panels.length !== 0) {
         tutorial.panels.forEach((panel) => {
@@ -78,6 +116,15 @@ export default defineToolbarApp({
           ).checked = true;
         });
       }
+      versionInput.value = tutorial.version; 
+    }
+
+    function checkLocalStorage(){
+      if (localStorage.getItem('tutorial')) {
+        console.log('localStorage.getItem tutorial')
+        tutorial = JSON.parse(localStorage.getItem('tutorial') || '{}');
+        updateUI();
+      }  
     }
 
     const completeSpan = astroToolbarWindow?.querySelector(
@@ -130,16 +177,6 @@ export default defineToolbarApp({
       saveTutorial();
     }
 
-    const titleInput = astroToolbarWindow?.querySelector(
-      '#title'
-    ) as HTMLInputElement;
-    titleInput.value = tutorial.title !== '' ? tutorial.title : '';
-    titleInput?.addEventListener('change', (event) => {
-      tutorial.title = titleInput?.value;
-      tutorial.slug = titleInput?.value.replaceAll(' ', '-').toLowerCase();
-      saveTutorial();
-    });
-
     const fileInputError = astroToolbarWindow?.querySelector(
       '#file-input-error'
     ) as HTMLElement;
@@ -175,7 +212,7 @@ export default defineToolbarApp({
       generateButton.disabled = true;
       statusEl.innerText = '';
       completeSpan.style.display = 'none';
-      server.send('my-app:generate', { tutorial });
+      server.send('vonage-app:generate', { tutorial });
     });
 
     server.on('server-status', (data: any) => {
@@ -191,9 +228,11 @@ export default defineToolbarApp({
           astroToolbarWindow?.querySelector(
             '#download-link'
           ) as HTMLAnchorElement
-        ).href = `${window.location.origin}/${tutorial.slug}.zip`;
+        ).href = `${window.location.origin}/product_name-language-topic.zip`;
         generateButton.disabled = false;
         completeSpan.style.display = 'block';
+        // clear local storage
+        localStorage.clear();
       }
     });
   },

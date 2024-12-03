@@ -17,11 +17,39 @@ export default {
       });
     },
     'astro:server:setup': ({ toolbar }) => {
-      toolbar.on('my-app:generate', async (data: any) => {
+      
+      toolbar.on('vonage-app:config-check', async (data:any) => {
+        try {
+          const filePath = 'tutorial-config.json';
+          const fileData = await fs.readFile(filePath, 'utf8');
+          const config = JSON.parse(fileData);
+          toolbar.send('config-checked', {
+            found: true,
+            tutorial: config,
+          });
+        
+        } catch (err) {
+          if (err.code === 'ENOENT') {
+            console.error('Config file not found.');
+            toolbar.send('config-checked', {
+              found: false,
+              tutorial: {},
+            });
+          } else {
+            console.error('Error reading config file:', err);
+            toolbar.send('config-checked', {
+              found: false,
+              tutorial: {},
+            });
+          }
+        }
+      });
+
+      toolbar.on('vonage-app:generate', async (data: any) => {
         try {
           // create tutorial-config.json file
           toolbar.send('server-status', {
-            status: 'Creating configuration file (config.json)',
+            status: 'Creating configuration file (tutorial-config.json)',
           });
           const configData = JSON.stringify(data.tutorial, null, 2);
           await fs.writeFile('tutorial-config.json', configData);
@@ -33,7 +61,7 @@ export default {
           const zip = new AdmZip();
           let exclude = ['node_modules', 'dist'];
           const sourceDir = './';
-          const zipFile = `./public/${data.tutorial.slug}.zip`;
+          const zipFile = './public/product_name-language-topic.zip';
           await zip.addLocalFolderPromise(sourceDir, {
             filter: (filePath) => !exclude.some((ex) => filePath.includes(ex)),
           });

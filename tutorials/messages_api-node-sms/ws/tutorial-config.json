@@ -1,11 +1,9 @@
 {
-  "title": "Messages API - SMS (Node.js)",
-  "slug": "messages_api-sms-node",
   "files": [
     "send-sms.js"
   ],
   "panels": [
     "terminal"
   ],
-  "version": "0.5.0"
+  "version": "0.6.0"
 }
