@@ -26,11 +26,11 @@ async function downloadFile(url, filename) {
 console.log('download toolbar application files');
 
 downloadFile(
-  'https://raw.githubusercontent.com/conshus/onboarding-tutorials/refs/heads/main/toolbar-app/vonage-toolbar/integration.ts',
+  'https://raw.githubusercontent.com/vonage-community/tutorial-interactive_tutorials/refs/heads/main/toolbar-app/vonage-toolbar/integration.ts',
   'integration.ts'
 );
 
 downloadFile(
-  'https://raw.githubusercontent.com/conshus/onboarding-tutorials/refs/heads/main/toolbar-app/vonage-toolbar/app.ts',
+  'https://raw.githubusercontent.com/vonage-community/tutorial-interactive_tutorials/refs/heads/main/toolbar-app/vonage-toolbar/app.ts',
   'app.ts'
 );
