@@ -22,14 +22,14 @@ jobs:
           node-version: 22.4
 
       - name: Install dependencies
-        working-directory: /toolbar-app
+        working-directory: $GITHUB_WORKSPACE/toolbar-app
         run: |
           node -v
           npm -v
           npm install
 
       - name: Run build
-        working-directory: /toolbar-app
+        working-directory: $GITHUB_WORKSPACE/toolbar-app
         run: |
           npm run build
 
@@ -37,9 +37,9 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: "/toolbar-app/dist"
+          publish_dir: "$GITHUB_WORKSPACE/toolbar-app/dist"
           publish_branch: gh_pages
-          destination_dir: "/toolbar-app/"
+          destination_dir: "$GITHUB_WORKSPACE/toolbar-app/"
 
       - name: Leave comment on PR
         uses: actions/github-script@v7
