@@ -59,7 +59,8 @@ jobs:
         id: prep-deploy
         working-directory: ${{ steps.get-changed-folder.outputs.dir }}
         run: |  
-          NAME=$(jq -r '.slug' ./tutorial-config.json)
+          NAME=${{ steps.get-changed-folder.outputs.dir }}
+          NAME=${NAME#*/}
           VERSION=$(jq -r '.version' ./tutorial-config.json)
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
