@@ -1,6 +1,6 @@
 # Starlight Starter Kit: Basics
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/conshus/onboarding-tutorials/tree/main/00-starter-tutorial/)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage-Community/tutorial-interactive_tutorials/tree/main/toolbar-app/)
 
 or download locally and run `npm install && npm run dev`
 
