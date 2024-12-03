@@ -49,5 +49,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Your Tutorial Preview has been deployed: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/toolbar-app/'
+              body: 'The reference page has been updated: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/toolbar-app/'
             });
