@@ -1,0 +1,10 @@
+{
+  "files": [
+    "server.rb"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "version": "0.0.1"
+}

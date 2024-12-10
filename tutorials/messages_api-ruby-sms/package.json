@@ -1,0 +1,20 @@
+{
+  "name": "vonage-interactive-tutorial",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "astro": "astro",
+    "dev": "astro dev",
+    "build": "astro build",
+    "postinstall": "node download-toolbar.js"
+  },
+  "dependencies": {
+    "@astrojs/markdoc": "^0.11.5",
+    "@astrojs/starlight": "^0.28.6",
+    "@astrojs/starlight-markdoc": "^0.1.0",
+    "astro": "^4.15.3",
+    "astro-relative-links": "^0.4.0",
+    "sharp": "^0.32.5",
+    "adm-zip": "^0.5.16"
+  }
+}
