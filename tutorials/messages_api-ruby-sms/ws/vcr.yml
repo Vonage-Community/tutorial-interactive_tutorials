@@ -1,0 +1,8 @@
+project:
+    name: tutorial
+instance:
+    name: dev
+    runtime: nodejs22
+    region: aws.euw1
+    application-id: 6b3dc652-f374-47eb-856e-5e846a975f5e
+    entrypoint: [npm, run, start]

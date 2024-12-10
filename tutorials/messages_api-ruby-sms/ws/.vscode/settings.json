@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "**/.DS_Store": true,
+        ".vscode/": true,
+        "setup.json": true,
+        "vcr.yml": true,
+    },
+    "vs-browser.url": "https://Vonage-Community.github.io/tutorial-interactive_tutorials/tutorials/messages_api-ruby-sms/0.0.1/",
+    "vs-browser.columnToShowIn": "Beside",
+    "vs-browser.reload.onSave": false,
+    "workbench.startupEditor": "none"
+}
