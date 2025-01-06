@@ -15,7 +15,7 @@
     "@astrojs/starlight": "^0.28.6",
     "@astrojs/starlight-markdoc": "^0.1.0",
     "adm-zip": "^0.5.16",
-    "astro": "^4.15.3",
+    "astro": "^5.0.0",
     "astro-relative-links": "^0.4.0",
     "sharp": "^0.32.5"
   }
