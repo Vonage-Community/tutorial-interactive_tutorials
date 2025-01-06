@@ -17,4 +17,11 @@ export default defineConfig({
     }),
     markdoc({ allowHTML: true })
   ],
+  vite: {
+    server: {
+      fs: {
+        strict: false
+      }
+    }
+  }
 });
