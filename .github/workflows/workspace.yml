@@ -24,7 +24,7 @@ jobs:
         env:
           ALL_CHANGED_FILES: ${{ steps.get-changed-files.outputs.all_changed_files }}
         run: |
-          first_file=$(echo "$ALL_CHANGED_FILES" | tr ' ' '\n' | grep "tutorials" | head -n 1)
+          first_file=$(echo "$ALL_CHANGED_FILES" | tr ' ' '\n' | grep "^tutorials/" | grep -v "^tutorials/00" | head -n 1)
           top_level_dir=$(echo "$first_file" | cut -d'/' -f1,2)
           echo "dir=$top_level_dir" >> "$GITHUB_OUTPUT"
 
@@ -43,7 +43,7 @@ jobs:
           node-version: 22.4
 
       - name: Install dependencies
-        working-directory: ${{ steps.get-changed-folder.outputs.dir }}
+        working-directory: ${{ github.workspace }}/tutorials
         run: |
           node -v
           npm -v
