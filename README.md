@@ -16,10 +16,16 @@ To create a new tutorial, first clone the repo:
 git clone git@github.com:Vonage-Community/tutorial-interactive_tutorials.git
 ```
 
-Create a copy of the starter tutorial, giving the target folder your tutorial name. Then change directory into your tutorial folder:
+Change directory into the tutorials folder, then install the dependencies:
 
 ```bash
 cd tutorials
+npm install
+```
+
+Create a copy of the starter tutorial, giving the target folder your tutorial name. Then change directory into your tutorial folder:
+
+```bash
 cp -r 00_Starter-Tutorial product_name-language-topic
 cd product_name-language-topic
 ```
@@ -28,13 +34,7 @@ cd product_name-language-topic
 
 ### Create the Tutorial Content
 
-The tutorials are static websites built with [Astro](https://astro.build). First install the dependencies:
-
-```
-npm install
-```
-
-Then start the development server:
+The tutorials are static websites built with [Astro](https://astro.build). Start the development server:
 
 ```
 npm run dev
