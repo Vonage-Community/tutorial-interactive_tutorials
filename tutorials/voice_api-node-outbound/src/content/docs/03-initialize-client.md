@@ -1,0 +1,31 @@
+---
+title: Initialize the Client and Variables
+---
+
+In this step, we will intialize the Vonage Client with some credentials and initialize some variables that will be needed later.
+
+| Key             | Description                                                                                                   |
+|-----------------|---------------------------------------------------------------------------------------------------------------|
+| `VONAGE_NUMBER` | The phone number you are calling from. This is the number rented from Vonage when setting up the application. |
+| `TO_NUMBER`     | The phone number you are calling.                                                                             |
+
+> Note: If your account is in the trial period, the `TO_NUMBER` can only be the phone number that you used to create the account. Also, don't use a leading + or 00 when entering a phone number, start with the country code, for example 447700900000. This is the E.164 number format.
+
+Copy this code into `make-call.js`
+
+```js
+const { Vonage } = require('@vonage/server-sdk');
+const { SMS } = require('@vonage/messages');
+
+const TO_NUMBER = ''
+const VONAGE_NUMBER = process.env.VONAGE_NUMBER;
+
+const vonage = new Vonage({
+  apiKey: process.env.VONAGE_API_KEY,
+  apiSecret: process.env.VONAGE_API_SECRET,
+  applicationId: process.env.VONAGE_APPLICATION_ID,
+  privateKey: process.env.VONAGE_PRIVATE_KEY,
+});
+```
+
+Update `TO_NUMBER` with the number you want to send an SMS to. The environment variables that are being used have been auto populated for you, you can view them in the `.env` file.

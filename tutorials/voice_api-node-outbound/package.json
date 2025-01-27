@@ -1,0 +1,9 @@
+{
+  "name": "vonage-interactive-tutorial",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node ../download-toolbar.js && astro dev",
+    "build": "astro build"
+  }
+}
