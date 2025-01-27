@@ -1,0 +1,11 @@
+{
+    "data": [
+      {
+        "type": "PHONE_NUMBER",
+        "title": "Vonage Number",
+        "description": "You need to link a Vonage number for the tutorial.",
+        "features": ["VOICE", "SMS"],
+        "name": "VONAGE_NUMBER"
+      }
+    ]
+}

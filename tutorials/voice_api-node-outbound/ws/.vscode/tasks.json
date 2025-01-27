@@ -1,0 +1,76 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "OpenContentView",
+      "command": "${input:openBrowser}",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
+      "label": "OpenPreviewView",
+      "command": "${input:openBrowser}",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
+      "label": "OpenTerminal",
+      "command": "${input:openNewTerminal}",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
+      "label": "ExportEnv",
+      "type": "shell",
+      "command": "chmod +x ./.vscode/envs.sh; ./.vscode/envs.sh",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
+      "label": "ConfigurePreview",
+      "type": "shell",
+      "command": "chmod +x ./.vscode/preview.sh; ./.vscode/preview.sh",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
+      "label": "CleanUp",
+      "type": "shell",
+      "command": "chmod +x ./.vscode/cleanup.sh; ./.vscode/cleanup.sh",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
+      "label": "Run",
+      "dependsOn": ["ExportEnv", "OpenContentView", "OpenTerminal", "CleanUp"],
+      "dependsOrder": "sequence",
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "openBrowser",
+      "type": "command",
+      "command": "vs-browser.start"
+    },
+    {
+      "id": "openNewTerminal",
+      "type": "command",
+      "command": "workbench.action.terminal.new"
+    }
+  ]
+}

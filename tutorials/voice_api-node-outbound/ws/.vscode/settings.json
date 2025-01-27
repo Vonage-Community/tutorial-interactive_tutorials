@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "**/.DS_Store": true,
+        ".vscode/": true,
+        "setup.json": true,
+        "vcr.yml": true,
+    },
+    "vs-browser.url": "https://Vonage-Community.github.io/tutorial-interactive_tutorials/tutorials/voice_api-node-outbound/0.1.0/",
+    "vs-browser.columnToShowIn": "Beside",
+    "vs-browser.reload.onSave": false,
+    "workbench.startupEditor": "none"
+}

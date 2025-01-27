@@ -1,0 +1,9 @@
+{
+  "files": [
+    "make-call.js"
+  ],
+  "panels": [
+    "terminal"
+  ],
+  "version": "0.1.0"
+}
