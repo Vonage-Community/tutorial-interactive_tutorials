@@ -5,8 +5,6 @@
 .DS_Store
 *.drawio
 
-tutorials/**/vonage-toolbar/
-
 ### Node ###
 # Logs
 logs
