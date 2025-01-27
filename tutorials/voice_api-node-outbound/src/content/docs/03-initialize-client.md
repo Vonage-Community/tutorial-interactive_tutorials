@@ -15,7 +15,6 @@ Copy this code into `make-call.js`
 
 ```js
 const { Vonage } = require('@vonage/server-sdk');
-const { SMS } = require('@vonage/messages');
 
 const TO_NUMBER = ''
 const VONAGE_NUMBER = process.env.VONAGE_NUMBER;
