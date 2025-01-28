@@ -1,4 +1,4 @@
 {
     "enabled": true,
-    "startupfiles": ["make-call.js"] 
+    "startupfiles": ["make-call.js","enable-voice.js"] 
 }
