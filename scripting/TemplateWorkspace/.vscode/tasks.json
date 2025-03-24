@@ -44,6 +44,15 @@
       }
     },
     {
+      "label": "EnableCapabilities",
+      "type": "shell",
+      "command": "chmod +x ./.vscode/capabilities.sh; ./.vscode/capabilities.sh",
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    },
+    {
       "label": "CleanUp",
       "type": "shell",
       "command": "chmod +x ./.vscode/cleanup.sh; ./.vscode/cleanup.sh",

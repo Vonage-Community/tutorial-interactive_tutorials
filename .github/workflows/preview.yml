@@ -18,7 +18,7 @@ jobs:
 
       - name: Get changed files
         id: get-changed-files
-        uses: tj-actions/changed-files@2f7c5bf
+        uses: tj-actions/changed-files@2f7c5bfce28377bc069a65ba478de0a74aa0ca32
 
       - name: Get changed folder
         id: get-changed-folder
