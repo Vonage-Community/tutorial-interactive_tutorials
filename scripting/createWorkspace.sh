@@ -54,11 +54,13 @@ else
     echo "$OFOS_FILE not found."
 fi
 
-# Update capabilities.sh using a temporary file
+# Update capabilities.js using a temporary file
 CAPABILITIES_FILE=".vscode/capabilities.js"
 if [ -f "$CAPABILITIES_FILE" ]; then
     TEMP_FILE=$(mktemp)
-    sed "s|<CAPABILITIES>|$CAPABILITIES|" "$CAPABILITIES_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$CAPABILITIES_FILE"
+    CAPABILITIES_ARRAY=$(printf '"%s",' $CAPABILITIES)
+    CAPABILITIES_ARRAY="[${CAPABILITIES_ARRAY%,}]"
+    sed "s|<CAPABILITIES>|$CAPABILITIES_ARRAY|" "$CAPABILITIES_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$CAPABILITIES_FILE"
     echo "Updated $CAPABILITIES_FILE with: $CAPABILITIES"
 else
     echo "$CAPABILITIES_FILE not found."
