@@ -1,10 +1,12 @@
 {
   "files": [
-    "make-call.js",
-    "enable-voice.js"
+    "make-call.js"
   ],
   "panels": [
     "terminal"
   ],
-  "version": "0.2.0"
+  "capabilities": [
+    "voice"
+  ],
+  "version": "0.3.0"
 }

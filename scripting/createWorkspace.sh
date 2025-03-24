@@ -19,6 +19,7 @@ fi
 SLUG=$(jq -r '.slug' "$CONFIG_FILE")
 VERSION=$(jq -r '.version' "$CONFIG_FILE")
 FILES=$(jq -r '.files[]' "$CONFIG_FILE")
+CAPABILITIES=$(jq -r '.capabilities[]' "$CONFIG_FILE")
 PANELS=$(jq -r '.panels[]' "$CONFIG_FILE")
 
 # Create files from the "files" array
@@ -53,11 +54,21 @@ else
     echo "$OFOS_FILE not found."
 fi
 
+# Update capabilities.sh using a temporary file
+CAPABILITIES_FILE=".vscode/capabilities.js"
+if [ -f "$CAPABILITIES_FILE" ]; then
+    TEMP_FILE=$(mktemp)
+    sed "s|<CAPABILITIES>|$CAPABILITIES|" "$CAPABILITIES_FILE" > "$TEMP_FILE" && mv "$TEMP_FILE" "$CAPABILITIES_FILE"
+    echo "Updated $CAPABILITIES_FILE with: $CAPABILITIES"
+else
+    echo "$CAPABILITIES_FILE not found."
+fi
+
 # Update tasks.json using a temporary file
 if echo "${PANELS[@]}" | grep -q "browser"; then
-    TASKS='["ExportEnv", "OpenContentView", "ConfigurePreview", "OpenTerminal", "CleanUp", "OpenPreviewView"]' 
+    TASKS='["ExportEnv", "OpenContentView", "ConfigurePreview", "OpenTerminal", "EnableCapabilities", "CleanUp", "OpenPreviewView"]' 
 else
-    TASKS='["ExportEnv", "OpenContentView", "OpenTerminal", "CleanUp"]'
+    TASKS='["ExportEnv", "OpenContentView", "OpenTerminal", "EnableCapabilities", "CleanUp"]'
 fi
 
 TASKS_FILE=".vscode/tasks.json"
