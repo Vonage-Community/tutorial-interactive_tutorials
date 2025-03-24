@@ -46,7 +46,7 @@
     {
       "label": "EnableCapabilities",
       "type": "shell",
-      "command": "chmod +x ./.vscode/capabilities.sh; ./.vscode/capabilities.sh",
+      "command": "node ./.vscode/capabilities.js",
       "presentation": {
         "reveal": "never",
         "close": true

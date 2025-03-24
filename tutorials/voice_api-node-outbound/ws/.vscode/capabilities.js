@@ -1,8 +1,8 @@
 const VONAGE_API_KEY = process.env.VONAGE_API_KEY;
 const VONAGE_API_SECRET = process.env.VONAGE_API_SECRET;
-const VONAGE_APPLICATION = process.env.VONAGE_APPLICATION_ID || '8b6851fe-567c-4e86-adf8-3bea83633c60';
+const VONAGE_APPLICATION = process.env.VONAGE_APPLICATION_ID;
 
-const capabilities = [voice];
+const capabilities = ["voice"];
 
 if (capabilities) {
     console.log(`Enabling ${capabilities}`);
