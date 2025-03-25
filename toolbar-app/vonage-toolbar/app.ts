@@ -3,10 +3,12 @@ import { defineToolbarApp } from 'astro/toolbar';
 let tutorial: {
   files: string[];
   panels: string[];
+  capabilities: string[];
   version: string;
 } = {
   files: [],
   panels: [],
+  capabilities: [],
   version: '',
 };
 
@@ -44,11 +46,21 @@ export default defineToolbarApp({
       <ul id='file-list'></ul>
     </details>
     <details name='steps'>
-      <summary>Step 4: Enter version</summary>
+      <summary>Step 4: Select capabilities needed</summary>
+      Please select any capabilities used in the tutorial
+      <form id='capabilities'>
+        <div>
+          <input type="checkbox" id="voice" name="capabilities" value="voice" />
+          <label for="voice">Voice</label>
+        </div>
+      </form>
+    </details>
+    <details name='steps'>
+      <summary>Step 5: Enter version</summary>
       <input id='version' placeholder='0.0.0'/>
     </details>
     <details name='steps'>
-      <summary>Step 5: Finish up</summary>
+      <summary>Step 6: Finish up</summary>
       Click to start generating the tutorial: <button id="generate">generate</button>
       <p id="status"></p>
       <span id="complete">
@@ -116,6 +128,14 @@ export default defineToolbarApp({
           ).checked = true;
         });
       }
+
+      if (tutorial.capabilities.length !== 0) {
+        tutorial.capabilities.forEach((capability) => {
+          (
+            astroToolbarWindow?.querySelector(`#${capability}`) as HTMLInputElement
+          ).checked = true;
+        });
+      }
       versionInput.value = tutorial.version; 
     }
 
@@ -145,6 +165,21 @@ export default defineToolbarApp({
       });
       saveTutorial();
     });
+
+    const capabilitiesForm = astroToolbarWindow?.querySelector('#capabilities');
+
+    capabilitiesForm?.addEventListener('change', (event) => {
+      console.log('capabilities change event');
+      tutorial.capabilities = [];
+      const capabilitiesChecked = astroToolbarWindow?.querySelectorAll(
+        'input[type="checkbox"][name="capabilities"]:checked'
+      );
+      capabilitiesChecked?.forEach((capability) => {
+        tutorial.capabilities.push(capability.id);
+      });
+      saveTutorial();
+    });
+
 
     function saveTutorial() {
       localStorage.setItem('tutorial', JSON.stringify(tutorial));
