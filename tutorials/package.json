@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@astrojs/markdoc": "^0.12.4",
-    "@astrojs/starlight": "^0.31.0",
+    "@astrojs/starlight": "^0.32.0",
     "@astrojs/starlight-markdoc": "^0.2.0",
     "adm-zip": "^0.5.16",
     "astro": "^5.1.3",
