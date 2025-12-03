@@ -3,11 +3,13 @@ import { defineToolbarApp } from 'astro/toolbar';
 let tutorial: {
   files: string[];
   panels: string[];
+  repository: string;
   capabilities: string[];
   version: string;
 } = {
   files: [],
   panels: [],
+  repository: '',
   capabilities: [],
   version: '',
 };
@@ -46,7 +48,11 @@ export default defineToolbarApp({
       <ul id='file-list'></ul>
     </details>
     <details name='steps'>
-      <summary>Step 4: Select capabilities needed</summary>
+      <summary>Step 4: Load an external repo</summary>
+      <input id='repository' style="width: 100%;" placeholder='https://github.com/Vonage-Community/sample-video-node-learning_server.git'/>
+    </details>
+    <details name='steps'>
+      <summary>Step 5: Select capabilities needed</summary>
       Please select any capabilities used in the tutorial
       <form id='capabilities'>
         <div>
@@ -56,11 +62,11 @@ export default defineToolbarApp({
       </form>
     </details>
     <details name='steps'>
-      <summary>Step 5: Enter version</summary>
+      <summary>Step 6: Enter version</summary>
       <input id='version' placeholder='0.0.0'/>
     </details>
     <details name='steps'>
-      <summary>Step 6: Finish up</summary>
+      <summary>Step 7: Finish up</summary>
       Click to start generating the tutorial: <button id="generate">generate</button>
       <p id="status"></p>
       <span id="complete">
@@ -137,6 +143,7 @@ export default defineToolbarApp({
         });
       }
       versionInput.value = tutorial.version; 
+      repositoryInput.value = tutorial.repository;
     }
 
     function checkLocalStorage(){
@@ -165,6 +172,16 @@ export default defineToolbarApp({
       });
       saveTutorial();
     });
+
+    const repositoryInput = astroToolbarWindow?.querySelector(
+      '#repository'
+    ) as HTMLInputElement;
+    repositoryInput.value = tutorial.repository !== '' ? tutorial.repository : '';
+    repositoryInput?.addEventListener('change', (event) => {
+      tutorial.repository = repositoryInput?.value;
+      saveTutorial();
+    });
+
 
     const capabilitiesForm = astroToolbarWindow?.querySelector('#capabilities');
 
@@ -200,11 +217,18 @@ export default defineToolbarApp({
         fileButton.dataset.id = file;
         fileButton.innerText = 'delete';
         fileButton.addEventListener('click', (event) => {
-          tutorial.files.splice(
-            tutorial.files.indexOf((event.target as HTMLElement).dataset.id),
-            1
-          );
-          refreshFilesList();
+          const id = (event.currentTarget as HTMLElement).dataset.id;
+          if (!id) return;
+          const idx = tutorial.files.indexOf(id);
+          if (idx > -1) {
+            tutorial.files.splice(idx, 1);
+             refreshFilesList();
+          }
+          // tutorial.files.splice(
+          //   tutorial.files.indexOf((event.target as HTMLElement).dataset.id),
+          //   1
+          // );
+          // refreshFilesList();
         });
         fileLi.appendChild(fileButton);
         fileUl.appendChild(fileLi);
