@@ -91,6 +91,15 @@ export default defineToolbarApp({
       saveTutorial();
     });
 
+    const repositoryInput = astroToolbarWindow?.querySelector(
+      '#repository'
+    ) as HTMLInputElement;
+    repositoryInput.value = tutorial.repository !== '' ? tutorial.repository : '';
+    versionInput?.addEventListener('change', (event) => {
+      tutorial.repository = repositoryInput?.value;
+      saveTutorial();
+    });
+
     // check for tutorial-config.json
     function checkConfig() {
       server.send('vonage-app:config-check', {});
@@ -172,16 +181,6 @@ export default defineToolbarApp({
       });
       saveTutorial();
     });
-
-    const repositoryInput = astroToolbarWindow?.querySelector(
-      '#repository'
-    ) as HTMLInputElement;
-    repositoryInput.value = tutorial.repository !== '' ? tutorial.repository : '';
-    repositoryInput?.addEventListener('change', (event) => {
-      tutorial.repository = repositoryInput?.value;
-      saveTutorial();
-    });
-
 
     const capabilitiesForm = astroToolbarWindow?.querySelector('#capabilities');
 
