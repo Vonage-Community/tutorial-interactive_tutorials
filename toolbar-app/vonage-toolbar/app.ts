@@ -37,7 +37,7 @@ export default defineToolbarApp({
     </details>
     <details name='steps'>
       <summary>Step 2: Load an external repo (optional)</summary>
-      The repo will be loaded in the project folder
+      The repo will be loaded in the project folder. If there are any setup scripts needed to run the repo, please put them in the setup-project.js file.
       <input id='repository' style="width: 100%;" placeholder='https://github.com/Vonage-Community/repo-name.git'/>
     </details>
     <details name='steps'>
