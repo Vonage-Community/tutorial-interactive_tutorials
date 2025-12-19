@@ -2,12 +2,14 @@ import { defineToolbarApp } from 'astro/toolbar';
 
 let tutorial: {
   files: string[];
+  openFiles: string[];
   panels: string[];
   repository: string;
   capabilities: string[];
   version: string;
 } = {
   files: [],
+  openFiles: [],
   panels: [],
   repository: '',
   capabilities: [],
@@ -16,7 +18,6 @@ let tutorial: {
 
 export default defineToolbarApp({
   init(canvas, app, server) {
-
     const myWindow = document.createElement('astro-dev-toolbar-window');
     const myContent = document.createElement('div');
     myContent.innerHTML = `
@@ -35,24 +36,33 @@ export default defineToolbarApp({
       </form>
     </details>
     <details name='steps'>
-      <summary>Step 2: Create steps</summary>
+      <summary>Step 2: Load an external repo (optional)</summary>
+      The repo will be loaded in the project folder
+      <input id='repository' style="width: 100%;" placeholder='https://github.com/Vonage-Community/repo-name.git'/>
+    </details>
+    <details name='steps'>
+      <summary>Step 3: Set Files to be opened</summary>
+      Please enter the names and file type of the files to be opened for the tutorial one at a time. If from external repo make sure to add 'project/' in front.
+      <br/><input id='file-open-input' placeholder='ex. index.html'/><button id="add-file-open">add</button>
+      <strong id='file-open-input-error'>please include filename AND filetype</strong>
+      <br/>File list:
+      <ul id='file-open-list'></ul>
+    </details>
+    <details name='steps'>
+      <summary>Step 4: Create steps</summary>
       In the src -> content -> docs folder, please add the steps for the tutorial and delete reference.mdoc when finished.
       <br><br>See <a href='https://vonage-community.github.io/tutorial-interactive_tutorials/toolbar-app' target='blank' style='color: white'>Reference</a> for components you can add.<br><br>
     </details>
     <details name='steps'>
-      <summary>Step 3: Set Files needed</summary>
-      Please enter the names and file type of the files needed for the tutorial one at a time.
-      <input id='file-input' placeholder='ex. index.html'/><button id="add-file">add</button>
+      <summary>Step 5: Set Files to be created</summary>
+      Please enter the names and file type of the files to be created for the tutorial one at a time. They will be opened in the editor. If the file should be in a folder, make sure to put it in front of the filename ex. 'public/'.
+      <br/><input id='file-input' placeholder='ex. index.html'/><button id="add-file">add</button>
       <strong id='file-input-error'>please include filename AND filetype</strong>
       <br/>File list:
       <ul id='file-list'></ul>
     </details>
     <details name='steps'>
-      <summary>Step 4: Load an external repo</summary>
-      <input id='repository' style="width: 100%;" placeholder='https://github.com/Vonage-Community/sample-video-node-learning_server.git'/>
-    </details>
-    <details name='steps'>
-      <summary>Step 5: Select capabilities needed</summary>
+      <summary>Step 6: Select capabilities needed</summary>
       Please select any capabilities used in the tutorial
       <form id='capabilities'>
         <div>
@@ -62,11 +72,11 @@ export default defineToolbarApp({
       </form>
     </details>
     <details name='steps'>
-      <summary>Step 6: Enter version</summary>
+      <summary>Step 7: Enter version</summary>
       <input id='version' placeholder='0.0.0'/>
     </details>
     <details name='steps'>
-      <summary>Step 7: Finish up</summary>
+      <summary>Step 8: Finish up</summary>
       Click to start generating the tutorial: <button id="generate">generate</button>
       <p id="status"></p>
       <span id="complete">
@@ -94,8 +104,9 @@ export default defineToolbarApp({
     const repositoryInput = astroToolbarWindow?.querySelector(
       '#repository'
     ) as HTMLInputElement;
-    repositoryInput.value = tutorial.repository !== '' ? tutorial.repository : '';
-    versionInput?.addEventListener('change', (event) => {
+    repositoryInput.value =
+      tutorial.repository !== '' ? tutorial.repository : '';
+    repositoryInput?.addEventListener('change', (event) => {
       tutorial.repository = repositoryInput?.value;
       saveTutorial();
     });
@@ -103,7 +114,7 @@ export default defineToolbarApp({
     // check for tutorial-config.json
     function checkConfig() {
       server.send('vonage-app:config-check', {});
-    };
+    }
 
     if (localStorage.getItem('config-checked')) {
       // if config-checked exists
@@ -111,8 +122,8 @@ export default defineToolbarApp({
       console.log('config-checked exists');
       checkLocalStorage();
     } else {
-      console.log('config checked not there')
-      // if config-checked doesn't exist 
+      console.log('config checked not there');
+      // if config-checked doesn't exist
       // - check for tutorial config file
       checkConfig();
       //localStorage.setItem('config-checked', 'false');
@@ -121,21 +132,26 @@ export default defineToolbarApp({
     server.on('config-checked', (data: any) => {
       console.log('config data: ', data);
       // - if tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI(), and set config-checked to true
-      if (data.found){
-        console.log('tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI()')
+      if (data.found) {
+        console.log(
+          'tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI()'
+        );
         tutorial = data.tutorial;
         saveTutorial();
         updateUI();
       } else {
         // - if tutorial config file does not exist, check local storage for tutorial config, load if it exists, and set config-checked to true
-        console.log('config file does not exist, check local storage for tutorial config, load if it exists');
-        checkLocalStorage();  
+        console.log(
+          'config file does not exist, check local storage for tutorial config, load if it exists'
+        );
+        checkLocalStorage();
       }
       localStorage.setItem('config-checked', 'true');
     });
 
-    function updateUI(){
+    function updateUI() {
       refreshFilesList();
+      refreshFilesOpenList();
       if (tutorial.panels.length !== 0) {
         tutorial.panels.forEach((panel) => {
           (
@@ -147,20 +163,22 @@ export default defineToolbarApp({
       if (tutorial.capabilities.length !== 0) {
         tutorial.capabilities.forEach((capability) => {
           (
-            astroToolbarWindow?.querySelector(`#${capability}`) as HTMLInputElement
+            astroToolbarWindow?.querySelector(
+              `#${capability}`
+            ) as HTMLInputElement
           ).checked = true;
         });
       }
-      versionInput.value = tutorial.version; 
+      versionInput.value = tutorial.version;
       repositoryInput.value = tutorial.repository;
     }
 
-    function checkLocalStorage(){
+    function checkLocalStorage() {
       if (localStorage.getItem('tutorial')) {
-        console.log('localStorage.getItem tutorial')
+        console.log('localStorage.getItem tutorial');
         tutorial = JSON.parse(localStorage.getItem('tutorial') || '{}');
         updateUI();
-      }  
+      }
     }
 
     const completeSpan = astroToolbarWindow?.querySelector(
@@ -196,7 +214,6 @@ export default defineToolbarApp({
       saveTutorial();
     });
 
-
     function saveTutorial() {
       localStorage.setItem('tutorial', JSON.stringify(tutorial));
     }
@@ -221,7 +238,7 @@ export default defineToolbarApp({
           const idx = tutorial.files.indexOf(id);
           if (idx > -1) {
             tutorial.files.splice(idx, 1);
-             refreshFilesList();
+            refreshFilesList();
           }
           // tutorial.files.splice(
           //   tutorial.files.indexOf((event.target as HTMLElement).dataset.id),
@@ -255,6 +272,63 @@ export default defineToolbarApp({
           refreshFilesList();
         } else {
           fileInputError.style.display = 'block';
+        }
+      });
+
+    function refreshFilesOpenList() {
+      const fileUl = astroToolbarWindow?.querySelector(
+        '#file-open-list'
+      ) as HTMLButtonElement;
+      fileUl.innerHTML = '';
+      tutorial.openFiles = Array.from(new Set(tutorial.openFiles));
+      tutorial.openFiles.forEach((file) => {
+        const fileLi = document.createElement('li');
+        fileLi.id = file;
+        fileLi.innerText = file + ' ';
+        fileLi.classList.add('file');
+        const fileButton = document.createElement('button');
+        fileButton.dataset.id = file;
+        fileButton.innerText = 'delete';
+        fileButton.addEventListener('click', (event) => {
+          const id = (event.currentTarget as HTMLElement).dataset.id;
+          if (!id) return;
+          const idx = tutorial.openFiles.indexOf(id);
+          if (idx > -1) {
+            tutorial.openFiles.splice(idx, 1);
+            refreshFilesOpenList();
+          }
+          // tutorial.files.splice(
+          //   tutorial.files.indexOf((event.target as HTMLElement).dataset.id),
+          //   1
+          // );
+          // refreshFilesList();
+        });
+        fileLi.appendChild(fileButton);
+        fileUl.appendChild(fileLi);
+      });
+      saveTutorial();
+    }
+
+    const fileOpenInputError = astroToolbarWindow?.querySelector(
+      '#file-open-input-error'
+    ) as HTMLElement;
+
+    fileOpenInputError.style.display = 'none';
+
+    astroToolbarWindow
+      ?.querySelector('#add-file-open')
+      ?.addEventListener('click', (event) => {
+        fileOpenInputError.style.display = 'none';
+        const fileOpenInput = astroToolbarWindow?.querySelector(
+          '#file-open-input'
+        ) as HTMLInputElement;
+        // make sure has extension
+        if (fileOpenInput.value.includes('.')) {
+          tutorial.openFiles = [...tutorial.openFiles, fileOpenInput.value];
+          fileOpenInput.value = '';
+          refreshFilesOpenList();
+        } else {
+          fileOpenInputError.style.display = 'block';
         }
       });
 
