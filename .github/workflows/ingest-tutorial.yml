@@ -1,0 +1,40 @@
+name: Ingest Tutorial Content
+
+on:
+  push:
+    paths:
+      - 'uploads/**.zip'
+  workflow_dispatch:
+
+jobs:
+  process-upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Necessary to push the generated files back
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Script Dependencies
+        # Installing dependencies for the processor script dynamically
+        run: npm install fs-extra unzipper
+
+      - name: Run Processor Script
+        run: node scripts/process-tutorial.js
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🤖 Auto-generate tutorial environment [skip ci]: ${{ github.event.head_commit.message }}"
+          branch: ${{ github.ref }}
+          # Ensure we track the new folders
+          # file_pattern: |
+          #   tutorials/
+          #   .devcontainer/
+          #   uploads/
