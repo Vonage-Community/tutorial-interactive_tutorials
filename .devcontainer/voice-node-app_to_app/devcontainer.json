@@ -1,0 +1,55 @@
+{
+    "name": "Tutorial: voice-node-app_to_app",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+    "workspaceFolder": "/workspaces/tutorial-interactive_tutorials/tutorials/voice-node-app_to_app",
+    "waitFor": "onCreateCommand",
+    "updateContentCommand": "npm install",
+    "postCreateCommand": "",
+    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & wait",
+    "forwardPorts": [
+        "1234"
+    ],
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [],
+            "settings": {
+                "editor.formatOnSave": true,
+                "files.exclude": {
+                    "node_modules": true,
+                    "dist": true,
+                    "steps": true,
+                    ".devcontainer": true,
+                    ".vscode": true,
+                    "package.json": true,
+                    "package-lock.json": true,
+                    "tutorial-config.json": true,
+                    "tsconfig.json": true,
+                    "astro.config.mjs": true,
+                    ".git": true,
+                    ".DS_Store": true,
+                    "__MACOSX": true,
+                    "README.md": true,
+                    "markdoc.config.mjs": true,
+                    "project/setup-project.js": true
+                }
+            }
+        },
+        "codespaces": {
+            "openFiles": [
+                "index.html",
+                "styles.css",
+                "app.js",
+                "config.js"
+            ]
+        }
+    },
+    "portsAttributes": {
+        "1234": {
+            "label": "Tutorial Guide",
+            "onAutoForward": "openPreview"
+        }
+    }
+}

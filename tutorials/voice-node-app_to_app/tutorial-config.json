@@ -1,0 +1,16 @@
+{
+  "files": [
+    "index.html",
+    "styles.css",
+    "app.js"
+  ],
+  "openFiles": [
+    "config.js"
+  ],
+  "panels": [
+    "terminal"
+  ],
+  "repository": "",
+  "capabilities": [],
+  "version": "0.0.1"
+}
