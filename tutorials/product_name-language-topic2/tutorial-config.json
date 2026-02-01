@@ -1,0 +1,17 @@
+{
+  "files": [
+    "customer.js"
+  ],
+  "openFiles": [
+    "index.html",
+    "customer.js"
+  ],
+  "panels": [
+    "terminal"
+  ],
+  "repository": "",
+  "capabilities": [
+    "voice"
+  ],
+  "version": "0.0.1"
+}
