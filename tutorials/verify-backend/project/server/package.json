@@ -1,0 +1,16 @@
+{
+  "name": "verify-example",
+  "version": "0.0.2",
+  "description": "Verify API example",
+  "author": "Vonage",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@vonage/auth": "^1.13.1",
+    "@vonage/verify2": "^1.17.1",
+    "cors": "2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0"
+  }
+}
