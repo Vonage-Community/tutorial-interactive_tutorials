@@ -1,0 +1,27 @@
+{
+  "name": "@example/starlight-basics",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "start:tutorial": "http-server steps -p 1234 --cors -c-1",
+    "postinstall": "cd project && npm install"
+  },
+  "dependencies": {
+    "@astrojs/markdoc": "^0.12.11",
+    "@astrojs/starlight": "^0.30.3",
+    "@astrojs/starlight-markdoc": "^0.2.0",
+    "adm-zip": "^0.5.16",
+    "astro": "^5.15.9",
+    "astro-relative-links": "^0.4.2",
+    "sharp": "^0.33.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

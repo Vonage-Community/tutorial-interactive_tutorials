@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "openFiles": [],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "https://github.com/Vonage-Community/demo-verify-kotlin-node-2fa.git",
+  "capabilities": [],
+  "version": "1.0.0"
+}
