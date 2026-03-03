@@ -13,7 +13,7 @@
     "postinstall": "cd project && npm install"
   },
   "dependencies": {
-    "@astrojs/markdoc": "^0.12.11",
+    "@astrojs/markdoc": "^0.15.0",
     "@astrojs/starlight": "^0.30.3",
     "@astrojs/starlight-markdoc": "^0.2.0",
     "adm-zip": "^0.5.16",
