@@ -263,7 +263,10 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
         "astro.config.mjs",
         ".git",
         ".DS_Store",
-        "project/setup-project.js" 
+        "project/setup-project.js",
+        "vonage-toolbar",
+        "src",
+        "markdoc.config.mjs"
     ];
 
     const filesExclude = {};
