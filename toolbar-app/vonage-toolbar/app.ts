@@ -5,6 +5,7 @@ let tutorial: {
   openFiles: string[];
   panels: string[];
   repository: string;
+  starterFiles: string[];
   capabilities: string[];
   version: string;
 } = {
@@ -12,6 +13,7 @@ let tutorial: {
   openFiles: [],
   panels: [],
   repository: '',
+  starterFiles: [],
   capabilities: [],
   version: '',
 };
@@ -41,20 +43,28 @@ export default defineToolbarApp({
       <input id='repository' style="width: 100%;" placeholder='https://github.com/Vonage-Community/repo-name.git'/>
     </details>
     <details name='steps'>
-      <summary>Step 3: Set Files to be opened</summary>
+      <summary>Step 3: Set Starter Files to be used</summary>
+      Starter Files are files that have the code that the user does not need to worry about. They have comments to let the user know where the code they see in the tutorial needs to go. If you are pulling from an external repo make sure to add 'project/' in front and it will overwrite the external repo file for the tutorial otherwise place the files in the root directory.
+      <br/><input id='starter-file-input' placeholder='ex. index.html'/><button id="add-starter-file">add</button>
+      <strong id='starter-file-input-error'>please include filename AND filetype</strong>
+      <br/>Starter File list:
+      <ul id='starter-file-list'></ul>
+    </details>
+    <details name='steps'>
+      <summary>Step 4: Set Files to be opened</summary>
       Please enter the names and file type of the files to be opened for the tutorial one at a time. If from external repo make sure to add 'project/' in front.
       <br/><input id='file-open-input' placeholder='ex. index.html'/><button id="add-file-open">add</button>
       <strong id='file-open-input-error'>please include filename AND filetype</strong>
-      <br/>File list:
+      <br/>Open File list:
       <ul id='file-open-list'></ul>
     </details>
     <details name='steps'>
-      <summary>Step 4: Create steps</summary>
+      <summary>Step 5: Create steps</summary>
       In the src -> content -> docs folder, please add the steps for the tutorial and delete reference.mdoc when finished.
       <br><br>See <a href='https://vonage-community.github.io/tutorial-interactive_tutorials/toolbar-app' target='blank' style='color: white'>Reference</a> for components you can add.<br><br>
     </details>
     <details name='steps'>
-      <summary>Step 5: Set Files to be created</summary>
+      <summary>Step 6: Set Files to be created</summary>
       Please enter the names and file type of the files to be created for the tutorial one at a time. They will be opened in the editor. If the file should be in a folder, make sure to put it in front of the filename ex. 'public/'.
       <br/><input id='file-input' placeholder='ex. index.html'/><button id="add-file">add</button>
       <strong id='file-input-error'>please include filename AND filetype</strong>
@@ -62,7 +72,7 @@ export default defineToolbarApp({
       <ul id='file-list'></ul>
     </details>
     <details name='steps'>
-      <summary>Step 6: Select capabilities needed</summary>
+      <summary>Step 7: Select capabilities needed</summary>
       Please select any capabilities used in the tutorial
       <form id='capabilities'>
         <div>
@@ -72,16 +82,16 @@ export default defineToolbarApp({
       </form>
     </details>
     <details name='steps'>
-      <summary>Step 7: Enter version</summary>
+      <summary>Step 8: Enter version</summary>
       <input id='version' placeholder='0.0.0'/>
     </details>
     <details name='steps'>
-      <summary>Step 8: Finish up</summary>
+      <summary>Step 9: Finish up</summary>
       Click to start generating the tutorial: <button id="generate">generate</button>
       <p id="status"></p>
       <span id="complete">
         <a href="" id="download-link" target="_blank">Click to download</a>
-        <br/>Then unzip the file and upload the folder to the GitHub repository.
+        <br/>Then rename the zip file and upload the zip file to the GitHub repository <a href="https://github.com/Vonage-Community/tutorial-interactive_tutorials/tree/main/uploads" target="_blank">uploads folder</a>.
       </span>
     </details>
     `;
@@ -331,6 +341,67 @@ export default defineToolbarApp({
           fileOpenInputError.style.display = 'block';
         }
       });
+
+
+    // Starter files
+
+    function refreshStarterFilesList() {
+      const fileUl = astroToolbarWindow?.querySelector(
+        '#starter-file-list'
+      ) as HTMLButtonElement;
+      fileUl.innerHTML = '';
+      tutorial.starterFiles = Array.from(new Set(tutorial.starterFiles));
+      tutorial.starterFiles.forEach((file) => {
+        const fileLi = document.createElement('li');
+        fileLi.id = file;
+        fileLi.innerText = file + ' ';
+        fileLi.classList.add('file');
+        const fileButton = document.createElement('button');
+        fileButton.dataset.id = file;
+        fileButton.innerText = 'delete';
+        fileButton.addEventListener('click', (event) => {
+          const id = (event.currentTarget as HTMLElement).dataset.id;
+          if (!id) return;
+          const idx = tutorial.starterFiles.indexOf(id);
+          if (idx > -1) {
+            tutorial.starterFiles.splice(idx, 1);
+            refreshStarterFilesList();
+          }
+          // tutorial.files.splice(
+          //   tutorial.files.indexOf((event.target as HTMLElement).dataset.id),
+          //   1
+          // );
+          // refreshFilesList();
+        });
+        fileLi.appendChild(fileButton);
+        fileUl.appendChild(fileLi);
+      });
+      saveTutorial();
+    }
+
+    const starterFileInputError = astroToolbarWindow?.querySelector(
+      '#starter-file-input-error'
+    ) as HTMLElement;
+
+    starterFileInputError.style.display = 'none';
+
+    astroToolbarWindow
+      ?.querySelector('#add-starter-file')
+      ?.addEventListener('click', (event) => {
+        starterFileInputError.style.display = 'none';
+        const starterFileInput = astroToolbarWindow?.querySelector(
+          '#starter-file-input'
+        ) as HTMLInputElement;
+        // make sure has extension
+        if (starterFileInput.value.includes('.')) {
+          tutorial.starterFiles = [...tutorial.starterFiles, starterFileInput.value];
+          starterFileInput.value = '';
+          refreshStarterFilesList();
+        } else {
+          starterFileInputError.style.display = 'block';
+        }
+      });
+    ///////
 
     const generateButton = astroToolbarWindow?.querySelector(
       '#generate'
