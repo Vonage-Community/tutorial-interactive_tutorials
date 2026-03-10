@@ -162,6 +162,7 @@ export default defineToolbarApp({
     function updateUI() {
       refreshFilesList();
       refreshFilesOpenList();
+      refreshStarterFilesList();
       if (tutorial.panels.length !== 0) {
         tutorial.panels.forEach((panel) => {
           (
