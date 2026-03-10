@@ -11,7 +11,7 @@ export default defineConfig({
     relativeLinks(),
     vonageIntegration,
     starlight({
-      title: 'Vonage Onboarding',
+      title: 'Vonage Coding Exercise',
       tableOfContents: true,
       pagefind: false,
     }),
