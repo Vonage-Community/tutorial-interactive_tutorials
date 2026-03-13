@@ -1,5 +1,16 @@
 # Vonage Interactive Onboarding Tutorials
 
+Preferred and quickets way to creating a tutorial:
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage-Community/tutorial-interactive_tutorials/tree/main/toolbar-app/)
+
+Follow the steps in the Vonaget Toolbar App
+
+![Vonage Astro Toolbar](.github/images/toolbar.png)
+
+
+## Ignore the following steps for now since we are not using Code Hub:
+
 The repo contains the source code for Vonage Interactive Onboarding Tutorials on [Code Hub](https://developer.vonage.com/en/cloud-runtime). The onboarding tutorials provides a step by step walkthrough of Vonage APIs using Vonage Cloud Runtime Workspaces. This allows for the tutorials to be followed with the only requirement of a Vonage API account.
 
 ![Example Tutorial](.github/images/example.png)
