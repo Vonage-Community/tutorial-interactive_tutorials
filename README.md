@@ -4,7 +4,7 @@ Preferred and quickets way to creating a tutorial:
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage-Community/tutorial-interactive_tutorials/tree/main/toolbar-app/)
 
-Follow the steps in the Vonaget Toolbar App
+Follow the steps in the Vonage Toolbar App
 
 ![Vonage Astro Toolbar](.github/images/toolbar.png)
 
