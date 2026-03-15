@@ -1,0 +1,28 @@
+body, html {
+  background-color: gray;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#videos {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#publisher-container {
+  border: 3px solid white;
+  border-radius: 3px;
+  height: fit-content;
+}
+#publisher {
+  width: 360px;
+  height: 240px;
+}
+#publish-video-true {
+  display: none;
+}
+
+/* ⌄⌄⌄ Add CSS for the archiveLink element ⌄⌄⌄ */
