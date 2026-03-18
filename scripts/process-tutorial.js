@@ -9,6 +9,7 @@ const REPO_NAME = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.
 const UPLOADS_DIR = path.join(__dirname, '../uploads');
 const TUTORIALS_BASE = path.join(__dirname, '../tutorials');
 const DEVCONTAINER_BASE = path.join(__dirname, '../.devcontainer');
+const SOURCES_BASE = path.join(__dirname, '../sources');
 
 async function main() {
     // 1. Detect Zip File
@@ -20,36 +21,37 @@ async function main() {
     const zipFilename = files[0];
     const tutorialName = path.basename(zipFilename, '.zip').replace(/[^a-zA-Z0-9-_]/g, ''); 
     const targetDir = path.join(TUTORIALS_BASE, tutorialName);
-    const tempZipDir = path.join(__dirname, '../temp_zip_staging'); 
+    const sourceDir = path.join(SOURCES_BASE, tutorialName);
     
     console.log(`🚀 Processing Tutorial: ${tutorialName}`);
 
     // 2. Extract Content to STAGING AREA
-    fs.emptyDirSync(tempZipDir);
+    fs.ensureDirSync(SOURCES_BASE);
+    fs.emptyDirSync(sourceDir);
     fs.emptyDirSync(targetDir); 
 
     await fs.createReadStream(path.join(UPLOADS_DIR, zipFilename))
-      .pipe(unzipper.Extract({ path: tempZipDir }))
+      .pipe(unzipper.Extract({ path: sourceDir }))
       .promise();
     
     // FLATTEN LOGIC (If user zipped a folder instead of the files directly)
     const configName = 'tutorial-config.json';
-    if (!fs.existsSync(path.join(tempZipDir, configName))) {
-        const subdirs = fs.readdirSync(tempZipDir).filter(f => fs.statSync(path.join(tempZipDir, f)).isDirectory());
+    if (!fs.existsSync(path.join(sourceDir, configName))) {
+        const subdirs = fs.readdirSync(sourceDir).filter(f => fs.statSync(path.join(sourceDir, f)).isDirectory());
         if (subdirs.length === 1) {
-            const nestedDir = path.join(tempZipDir, subdirs[0]);
+            const nestedDir = path.join(sourceDir, subdirs[0]);
             if (fs.existsSync(path.join(nestedDir, configName))) {
                 console.log(`ℹ️  Found nested root. Flattening staging area...`);
-                fs.copySync(nestedDir, tempZipDir);
+                fs.copySync(nestedDir, sourceDir);
                 fs.removeSync(nestedDir);
             }
         }
     }
 
-    console.log("✅ Zip extracted to staging area.");
+    console.log("✅ Zip extracted to sources area.");
 
     // 3. Load Tutorial Configuration
-    const configPath = path.join(tempZipDir, configName);
+    const configPath = path.join(sourceDir, configName);
     if (!fs.existsSync(configPath)) {
         console.error("❌ Error: tutorial-config.json not found in zip.");
         process.exit(1);
@@ -81,8 +83,7 @@ async function main() {
 
     // 5. THE OVERLAY (Apply Starter Files & Config on top of the cloned repo)
     console.log("📂 Applying starter files and configuration overlay...");
-    fs.copySync(tempZipDir, targetDir, { overwrite: true });
-    fs.removeSync(tempZipDir); 
+    fs.copySync(sourceDir, targetDir, { overwrite: true });
 
     // --- SETUP SCRIPT MIGRATION & VALIDATION ---
     const legacySetup = path.join(targetDir, 'setup-tutorial.js');
@@ -117,7 +118,7 @@ async function main() {
         });
     }
 
-    // --- CONFIGURE ROOT PACKAGE.JSON ---
+    // --- CONFIGURE ROOT PACKAGE.JSON (Target/Runtime Only) ---
     const rootPackageJson = path.join(targetDir, 'package.json');
     if (fs.existsSync(rootPackageJson)) {
         const pkg = fs.readJsonSync(rootPackageJson);
@@ -160,24 +161,30 @@ async function main() {
     await generateDevContainer(tutorialName, tutorialConfig, hasExternalApp, hasSetupScript);
 
     // 9. Generate README
-    const deepLink = `https://codespaces.new/${REPO_OWNER}/${REPO_NAME}?devcontainer_path=.devcontainer/${tutorialName}/devcontainer.json`;
+    const codespaceLink = `https://codespaces.new/${REPO_OWNER}/${REPO_NAME}?devcontainer_path=.devcontainer/${tutorialName}/devcontainer.json`;
+    const stackblitzLink = `https://stackblitz.com/github/${REPO_OWNER}/${REPO_NAME}/tree/main/sources/${tutorialName}`;
     const readmeContent = `
 # ${tutorialName}
 Generated Tutorial Environment.
 
 ## Start Learning
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](${deepLink})
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](${codespaceLink})
+
+## 🛠️ Edit this Tutorial
+Want to make changes to the lesson, add steps, or update starter files?
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](${stackblitzLink})
 
 ### Environment Details
 - **Tutorial Steps**: Port 1234
 - **Your Workspace**: \`tutorials/${tutorialName}\`
 - **Project Code**: \`tutorials/${tutorialName}/project\`
+- **Tutorial Source**: \`sources/${tutorialName}\`
     `;
     fs.writeFileSync(path.join(targetDir, 'README.md'), readmeContent);
 
     // 10. Cleanup
     fs.removeSync(path.join(UPLOADS_DIR, zipFilename));
-    console.log("🧹 Cleanup complete.");
+    console.log("🧹 Cleanup complete. Zip removed from uploads.");
 }
 
 async function generateDevContainer(name, config, hasExternalApp, hasSetupScript) {
