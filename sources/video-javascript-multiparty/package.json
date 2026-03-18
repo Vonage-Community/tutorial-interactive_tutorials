@@ -8,8 +8,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "start:tutorial": "http-server steps -p 1234 --cors -c-1"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/markdoc": "^0.15.10",
@@ -19,9 +18,5 @@
     "astro": "^5.18.0",
     "astro-relative-links": "^0.4.2",
     "sharp": "^0.33.0"
-  },
-  "devDependencies": {
-    "http-server": "^14.1.1",
-    "live-server": "^1.2.2"
   }
 }
