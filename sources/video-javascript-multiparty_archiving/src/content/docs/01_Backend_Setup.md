@@ -3,9 +3,15 @@ title: Setup Backend
 description: Let's get the server set up.
 ---
 
-Let's start with the backend. The following code will be added to the `index.js` in the `routes` folder.
+Let's start with the backend.
 
-After importing some libraries and checking for some environment variables, import the Vonage SDKs needed and initialize instances with credentials:
+There is an `APPLICATION READY` link in the terminal below with a URL. Open that link in a new window.
+
+> Note: If you see an error in the terminal, that is fine. The code you are about to add, will fix it.
+
+The following code will be added to the `index.js` in the `routes` folder.
+
+After importing some libraries and checking for some environment variables, import the Vonage SDKs needed and initialize instances with credentials (`// ⌄⌄⌄ import SDKs and initialize instances ⌄⌄⌄`):
 
 ```js
 import { Vonage } from '@vonage/server-sdk';
@@ -21,7 +27,8 @@ vonage.video = new Video(vonageCredentials);
 
 Next, the routes related to Archiving will be added.
 
-A `POST` request to `/archive/start` will create and start an archive with the session ID that is passed in. This route returns the archive object to the frontend.
+A `POST` request to `/archive/start` will create and start an archive with the session ID that is passed in. This route returns the archive object to the frontend (`// ⌄⌄⌄ start an Archive ⌄⌄⌄
+`):
 
 ```js
 /**
@@ -46,7 +53,7 @@ router.post('/archive/start', async function (req, res) {
 });
 ```
 
-To stop an archive, a `POST` request will be made to the `/archive/:archiveId/stop` where `:archiveId` is the ID of the archive that was started with the previous route. This endpoint return the archive object:
+To stop an archive, a `POST` request will be made to the `/archive/:archiveId/stop` where `:archiveId` is the ID of the archive that was started with the previous route. This endpoint return the archive object (`// ⌄⌄⌄ stop an Archive ⌄⌄⌄`):
 
 ```js
 /**
@@ -66,8 +73,7 @@ router.post('/archive/:archiveId/stop', async function (req, res) {
 });
 ```
 
-
-Sending a `GET` request to `/archive/:archiveId/view` will return the URL of the recording of the archive that matches the ID (`archiveId`) if it is available, otherwise it will show a page that says 'Archiving Pending'.
+Sending a `GET` request to `/archive/:archiveId/view` will return the URL of the recording of the archive that matches the ID (`archiveId`) if it is available, otherwise it will show a page that says 'Archiving Pending' (`// ⌄⌄⌄ view an Archive recording ⌄⌄⌄`):
 
 ```js
 /**
@@ -90,7 +96,7 @@ router.get('/archive/:archiveId/view', async function (req, res) {
 });
 ```
 
-Send a `GET` request to `/archive/:archiveId` where `:archiveid` is the ID of the archive you'd like to get information for:
+Send a `GET` request to `/archive/:archiveId` where `:archiveid` is the ID of the archive you'd like to get information for (`// ⌄⌄⌄ get info on an Archive ⌄⌄⌄`):
 
 ```js
 /**
@@ -112,7 +118,8 @@ router.get('/archive/:archiveId', async function (req, res) {
 });
 ```
 
-To get a list of archives for the session returned to the frontend, send a `GET` request to `/archive` with the queries for `count`, `offset` and `sessionId`:
+To get a list of archives for the session returned to the frontend, send a `GET` request to `/archive` with the queries for `count`, `offset` and `sessionId` (`// ⌄⌄⌄ get a list of Archives ⌄⌄⌄
+`):
 
 ```js
 /**

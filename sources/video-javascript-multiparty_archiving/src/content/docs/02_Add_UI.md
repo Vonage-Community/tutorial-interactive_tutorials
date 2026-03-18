@@ -3,12 +3,12 @@ title: Add UI
 description: Add archive UI to the HTML.
 ---
 
-This code will be added to the `index.html` file in the `public` folder.
+This code will be added to the `index.html` file in the `public` folder (`<!-- ⌄⌄⌄ Add Archive UI ⌄⌄⌄ -->`):
 
 ```html
 <button type="button" id="start">Start Archive</button>
 <button type="button" id="stop">Stop Archive</button>
-<span id="archiveLink"></span> 
+<span id="archiveLink"></span>
 ```
 
 - `start`: button to start an archive

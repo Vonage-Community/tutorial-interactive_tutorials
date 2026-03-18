@@ -7,8 +7,7 @@ Next, let's add some functionality to the application.
 
 The following code snippets will be added to the `app.js` file in the `js` folder.
 
-
-Initialize an `archive` and get references to the archive UI elements and set the display of the stop button to none:
+Initialize an `archive` and get references to the archive UI elements and set the display of the stop button to none (`// ⌄⌄⌄ get references to archive UI & set stop button display to none ⌄⌄⌄`):
 
 ```js
 let archive;
@@ -19,7 +18,7 @@ const archiveLinkSpan = document.querySelector('#archiveLink');
 archiveStopBtn.style.display = "none";
 ```
 
-In the `initializeSession()` function, add an event listener to the session for `archiveStarted` that will set the `archive` variable to the current archive object, update the displays of the buttons and clear the archive link's space:
+In the `initializeSession()` function, add an event listener to the session for `archiveStarted` that will set the `archive` variable to the current archive object, update the displays of the buttons and clear the archive link's space (`// ⌄⌄⌄ add listener for archiveStarted event ⌄⌄⌄`):
 
 ```js
 session.on('archiveStarted', (event) => {
@@ -31,7 +30,7 @@ session.on('archiveStarted', (event) => {
 });
 ```
 
-Next, add an event listener to the session for when the archive is stopped (`archiveStopped`) that will update the buttons' displays and insert a link to view the recording:
+Next, add an event listener to the session for when the archive is stopped (`archiveStopped`) that will update the buttons' displays and insert a link to view the recording (`// ⌄⌄⌄ add listener for archiveStopped event ⌄⌄⌄`):
 
 ```js
 session.on('archiveStopped', (event) => {
@@ -43,7 +42,7 @@ session.on('archiveStopped', (event) => {
 });
 ```
 
-Below `initializeSession()`, add a function that can be called to make `POST` requests to the endpoints:
+Below `initializeSession()`, add a function that can be called to make `POST` requests to the endpoints (`// ⌄⌄⌄ function to create POST requests ⌄⌄⌄`):
 
 ```js
 async function postData(url='', data={}){
@@ -66,7 +65,7 @@ async function postData(url='', data={}){
 }
 ```
 
-Pressing the start button will call the `startArchiving()` function to make a `POST` request to `/archive/start` passing the `sessionId` and if the status that returns does not equal `started`, send the error to the `handleError` function:
+Pressing the start button will call the `startArchiving()` function to make a `POST` request to `/archive/start` passing the `sessionId` and if the status that returns does not equal `started`, send the error to the `handleError` function (`// ⌄⌄⌄ function to start an Archive ⌄⌄⌄`):
 
 ```js
 async function startArchiving(){
@@ -88,8 +87,7 @@ async function startArchiving(){
 archiveStartBtn.addEventListener('click', startArchiving, false);
 ```
 
-
-Pressing the stop button will call the `stopArchiving()` function to make a `POST` request to the stop archiving endpoint with the archive ID inserted to the backend and if the status that returns does not equal `stopped`, send the error to the `handleError` function:
+Pressing the stop button will call the `stopArchiving()` function to make a `POST` request to the stop archiving endpoint with the archive ID inserted to the backend and if the status that returns does not equal `stopped`, send the error to the `handleError` function (`// ⌄⌄⌄ function to stop an Archive ⌄⌄⌄`):
 
 ```js
 async function stopArchiving(){
