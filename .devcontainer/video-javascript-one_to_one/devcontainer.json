@@ -48,7 +48,8 @@
                     "markdoc.config.mjs": true,
                     ".astro": true,
                     "README.md": true,
-                    "public": true
+                    "public": true,
+                    "download-toolbar.js": true
                 }
             }
         },
