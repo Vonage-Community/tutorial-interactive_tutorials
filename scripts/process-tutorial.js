@@ -276,7 +276,8 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
         "markdoc.config.mjs",
         ".astro",
         "README.md",
-        "public"
+        "public",
+        "download-toolbar.js"
     ];
 
     const filesExclude = {};
