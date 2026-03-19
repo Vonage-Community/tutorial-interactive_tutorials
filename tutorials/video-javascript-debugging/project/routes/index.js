@@ -221,23 +221,47 @@ router.get('/room/:name', async function (req, res) {
   }
 });
 
-// Proxy endpoint for GraphQL requests
-router.use('/graphql', createProxyMiddleware({
-  target: 'https://tools.vonage.com/video/insights-api/graphql',
-  changeOrigin: true,
-  onProxyReq: (proxyReq, req, res) => {
-    // Generate a fresh JWT for the request
+/**
+ * GET /api/config
+ */
+ router.get('/api/config', (req, res) => {
+  res.json({
+    applicationId: process.env.API_APPLICATION_ID
+  });
+});
+
+/**
+ * GET /
+ */
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
+
+/**
+ * POST /graphql
+ */
+router.post('/graphql', async (req, res) => {
+  try {
     const token = tokenGenerate(appId, privateKey);
-    
-    // Inject the required headers before it hits Vonage
-    proxyReq.setHeader('Authorization', `Bearer ${token}`);
-    proxyReq.setHeader('Content-Type', 'application/json');
+    const graphqlResponse = await fetch('https://tools.vonage.com/video/insights-api/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req.body)
+    })
+    const graphqlResponseJson = await graphqlResponse.json();
+    res.send(graphqlResponseJson);
+  } catch (error) {
+    console.error("Error with GraphQL: ", error);
+    res.status(500).send(`Error with GraphQL: ${error}`);
   }
-}));
+});
 
 // Serve the GraphiQL interface on the graphiql route
 router.get('/graphiql', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'graphiql.html'));
+  res.sendFile(path.join(__dirname, '../public', 'graphiql.html'));
 });
 
 export default router;
