@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> Vonage Video Archiving Sample </title>
+    <link href="css/app.css" rel="stylesheet" type="text/css">
+    <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
+</head>
+
+<body>
+    <div id="videos">
+      <div id="publisher-container">
+        <div id="publisher"></div>
+        <div id="publisher-controls">
+            <button id="publish-video-true">publishVideo true</button>
+            <button id="publish-video-false">publishVideo false</button>
+            <button type="button" id="start">Start Archive</button>
+            <button type="button" id="stop">Stop Archive</button>
+            <span id="archiveLink"></span>
+        </div>
+      </div>
+      <div id="subscribers"></div>
+    </div>
+    <div>
+      <a href="/graphiql" target="_blank">view GraphiQL IDE</a>
+    </div>
+
+    <script type="text/javascript" src="js/app.js"></script>
+</body>
+
+</html>
