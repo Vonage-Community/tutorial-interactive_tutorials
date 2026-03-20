@@ -3,7 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import _ from 'lodash';
 import fs from 'fs';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import { tokenGenerate } from '@vonage/jwt';
 
 const __filename = fileURLToPath(import.meta.url);
