@@ -1,0 +1,25 @@
+{
+  "files": [],
+  "openFiles": [
+    "project/index.js",
+    "project/pages/app-to-phone.html",
+    "project/pages/phone-to-app.html",
+    "project/pages/app-to-app-outbound.html",
+    "project/pages/app-to-app-inbound.html"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "https://github.com/Vonage-Community/sample-voice-node-learning_server.git",
+  "starterFiles": [
+    "project/index.js",
+    "project/package.json",
+    "project/pages/app-to-phone.html",
+    "project/pages/phone-to-app.html",
+    "project/pages/app-to-app-outbound.html",
+    "project/pages/app-to-app-inbound.html"
+  ],
+  "capabilities": [],
+  "version": "0.0.1"
+}
