@@ -1,110 +1,109 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Vonage Video Debugging Sample</title>
+    <style>
+      .snippet-box {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 1.5rem;
+        border-radius: 6px;
+        position: relative;
+        margin: 1.5rem 0;
+        overflow-x: auto;
+      }
 
-<head>
-  <title> Vonage Video Debugging Sample </title>
-  <style>
-    .snippet-box {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      padding: 1.5rem;
-      border-radius: 6px;
-      position: relative;
-      margin: 1.5rem 0;
-      overflow-x: auto;
-    }
+      pre {
+        margin: 0;
+      }
 
-    pre {
-      margin: 0;
-    }
+      code {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.95em;
+      }
 
-    code {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.95em;
-    }
+      .snippet-box button {
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border: none;
+        background: #0055ff;
+        color: #fff;
+        border-radius: 4px;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-weight: bold;
+      }
 
-    .snippet-box button {
-      cursor: pointer;
-      padding: 0.5rem 1rem;
-      border: none;
-      background: #0055ff;
-      color: #fff;
-      border-radius: 4px;
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-weight: bold;
-    }
+      .snippet-box button:hover {
+        background: #0044cc;
+      }
 
-    .snippet-box button:hover {
-      background: #0044cc;
-    }
+      .link-button {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.75rem 1.5rem;
+        background: #000;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+    </style>
+    <link href="css/app.css" rel="stylesheet" type="text/css" />
+    <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
+  </head>
 
-    .link-button {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
-      background: #000;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      font-weight: bold;
-    }
-  </style>
-  <link href="css/app.css" rel="stylesheet" type="text/css">
-  <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
-</head>
-
-<body>
-  <div>
-    <div id="videos">
-      <div id="publisher-container">
-        <div id="publisher"></div>
-        <div id="publisher-controls">
-          <button id="publish-video-true">publishVideo true</button>
-          <button id="publish-video-false">publishVideo false</button>
-          <button type="button" id="start">Start Archive</button>
-          <button type="button" id="stop">Stop Archive</button>
-          <span id="archiveLink"></span>
+  <body>
+    <div>
+      <div id="videos">
+        <div id="publisher-container">
+          <div id="publisher"></div>
+          <div id="publisher-controls">
+            <button id="publish-video-true">publishVideo true</button>
+            <button id="publish-video-false">publishVideo false</button>
+            <button type="button" id="start">Start Archive</button>
+            <button type="button" id="stop">Stop Archive</button>
+            <span id="archiveLink"></span>
+          </div>
         </div>
+        <div id="subscribers"></div>
       </div>
-      <div id="subscribers"></div>
-    </div>
-    <div id="graphql-container">
-      <div class="snippet-box">
-        <button id="copy-btn">Copy Query</button>
-        <pre><code id="query-display">Loading query...</code></pre>
+      <div id="graphql-container">
+        <div class="snippet-box">
+          <button id="copy-btn">Copy Query</button>
+          <pre><code id="query-display">Loading query...</code></pre>
+        </div>
+        <a href="/graphiql" target="_blank" class="link-button"
+          >open GraphiQL IDE &rarr;</a
+        >
       </div>
-      <a href="/graphiql" target="_blank" class="link-button">open GraphiQL IDE &rarr;</a>
     </div>
-  </div>
 
-  <script type="text/javascript" src="js/app.js"></script>
-  <script>
-    // 1. Helper to get the start of today in ISO 8601 format
-    function getStartOfTodayISO() {
-      const today = new Date();
-      // Set to midnight UTC
-      today.setUTCHours(0, 0, 0, 0);
-      return today.toISOString();
-    }
+    <script type="text/javascript" src="js/app.js"></script>
+    <script>
+      // 1. Helper to get the start of today in ISO 8601 format
+      function getStartOfTodayISO() {
+        const today = new Date();
+        // Set to midnight UTC
+        today.setUTCHours(0, 0, 0, 0);
+        return today.toISOString();
+      }
 
-    // 2. Fetch the config and generate the query
-    async function generateQuery() {
-      try {
-        const response = await fetch('/api/config');
-        const data = await response.json();
-        const appId = data.applicationId;
-        const startDate = getStartOfTodayISO();
+      // 2. Fetch the config and generate the query
+      async function generateQuery() {
+        try {
+          const response = await fetch('/api/config');
+          const data = await response.json();
+          const appId = data.applicationId;
+          const startDate = getStartOfTodayISO();
 
-        // Construct the GraphQL string using template literals
-        const graphqlQuery = `{
+          // Construct the GraphQL string using template literals
+          const graphqlQuery = `{
   application(applicationId: "${appId}") {
     applicationData(
       start: "${startDate}",
-      interval: DAILY,
-      sdkType: [JS, ANDROID, IOS],
-      groupBy: SDK_TYPE
+      interval: DAILY
     ) {
       resources {
         intervalStart,
@@ -121,29 +120,33 @@
   }
 }`;
 
-        // Update the DOM
-        document.getElementById('query-display').textContent = graphqlQuery;
-      } catch (error) {
-        document.getElementById('query-display').textContent = 'Error loading configuration.';
-        console.error('Failed to fetch config:', error);
+          // Update the DOM
+          document.getElementById('query-display').textContent = graphqlQuery;
+        } catch (error) {
+          document.getElementById('query-display').textContent =
+            'Error loading configuration.';
+          console.error('Failed to fetch config:', error);
+        }
       }
-    }
 
-    // 3. Add copy-to-clipboard functionality
-    document.getElementById('copy-btn').addEventListener('click', () => {
-      const queryText = document.getElementById('query-display').textContent;
-      if (queryText && !queryText.startsWith('Loading') && !queryText.startsWith('Error')) {
-        navigator.clipboard.writeText(queryText).then(() => {
-          const btn = document.getElementById('copy-btn');
-          btn.textContent = 'Copied!';
-          setTimeout(() => btn.textContent = 'Copy Query', 2000);
-        });
-      }
-    });
+      // 3. Add copy-to-clipboard functionality
+      document.getElementById('copy-btn').addEventListener('click', () => {
+        const queryText = document.getElementById('query-display').textContent;
+        if (
+          queryText &&
+          !queryText.startsWith('Loading') &&
+          !queryText.startsWith('Error')
+        ) {
+          navigator.clipboard.writeText(queryText).then(() => {
+            const btn = document.getElementById('copy-btn');
+            btn.textContent = 'Copied!';
+            setTimeout(() => (btn.textContent = 'Copy Query'), 2000);
+          });
+        }
+      });
 
-    // Run the generation on page load
-    generateQuery();
-  </script>
-</body>
-
+      // Run the generation on page load
+      generateQuery();
+    </script>
+  </body>
 </html>
