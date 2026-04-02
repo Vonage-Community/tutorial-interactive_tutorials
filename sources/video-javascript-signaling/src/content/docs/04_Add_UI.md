@@ -16,7 +16,7 @@ Copy this HTML code in the `body` section of `index.html` file in the `public` f
     <div id="textchat">
          <p id="history"></p>
          <form>
-              <input type="text" placeholder="Input your text here" id="msgTxt"></input>
+              <input type="text" placeholder="Input your text here and press ENTER/RETURN" id="msgTxt"></input>
          </form>
     </div>
 ```

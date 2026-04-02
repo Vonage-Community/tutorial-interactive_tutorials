@@ -14,14 +14,14 @@ function handleError(error) {
 }
 
 function initializeSession() {
-  const session = OT.initSession(applicationId, sessionId);
+  session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
   session.on('streamCreated', (event) => {
     const subscriberOptions = {
       insertMode: 'append',
-      width: '320',
-      height: '240',
+      width: '100%',
+      height: '100%',
     };
     session.subscribe(
       event.stream,
