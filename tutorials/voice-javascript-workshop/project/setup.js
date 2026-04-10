@@ -56,10 +56,10 @@ input.on('data', data => {
 });
 
 function setApiKey(data) {
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (data.toString().trim().length === 0 || data.toString().trim() === ' ') {
     console.log('(Can not be blank.) Enter you API key:');
   } else {
-    process.env.VONAGE_API_KEY = data.toString().replace(/\n/g, '');
+    process.env.VONAGE_API_KEY = data.toString().trim();
     step = 'SET_API_SECRET';
     console.log('Enter you API secret:');
   }
@@ -67,10 +67,10 @@ function setApiKey(data) {
 }
 
 function setApiSecret(data) {
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (data.toString().trim().length === 0 || data.toString().trim() === ' ') {
     console.log('(Can not be blank.) Enter you API secret:');
   } else {
-    process.env.VONAGE_API_SECRET = data.toString().replace(/\n/g, '');
+    process.env.VONAGE_API_SECRET = data.toString().trim();
     step = 'SET_APP_NAME';
     console.log('Enter a name for your Application:');
   }
@@ -78,7 +78,7 @@ function setApiSecret(data) {
 }
 
 function setAppName(data) {
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (data.toString().trim().length === 0 || data.toString().trim() === ' ') {
     console.log('(Can not be blank.) Enter a name for your Application:');
   } else {
     createApp(data); 
@@ -89,14 +89,14 @@ function setAppName(data) {
 
 function buyNumberQuestion(data) {
   // console.log("data:", data);
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (data.toString().trim().length === 0 || data.toString().trim() === ' ') {
     console.log('(Can not be blank.) Want to Buy a number? (Y/N):');
-  } else if (data.toString().replace(/\n/g, '').toLowerCase() === 'y'){
+  } else if (data.toString().trim().toLowerCase() === 'y'){
     
-    //   process.env.VONAGE_API_SECRET = data.toString().replace(/\n/g, '');
+    //   process.env.VONAGE_API_SECRET = data.toString().trim();
     step = 'SET_COUNTRY_CODE';
     console.log('Set the country code for your number (ex. US or GB):');      
-  } else if (data.toString().replace(/\n/g, '').toLowerCase() === 'n') {
+  } else if (data.toString().trim().toLowerCase() === 'n') {
     // answered No to question
       writeEnv();
   }
@@ -104,7 +104,7 @@ function buyNumberQuestion(data) {
 }
 
 function setCountryCode(data) {
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (data.toString().trim().length === 0 || data.toString().trim() === ' ') {
     console.log('(Can not be blank.) Set the country code for your number (ex. US or GB):');
   } else {
     buyPhoneNumber(data)      
@@ -113,8 +113,8 @@ function setCountryCode(data) {
 }
 
 function buyPhoneNumber(data){
-  const countryCode = data.toString().replace(/\n/g, '');
-  process.env.COUNTRY_CODE = data.toString().replace(/\n/g, '').toUpperCase();
+  const countryCode = data.toString().trim();
+  process.env.COUNTRY_CODE = data.toString().trim().toUpperCase();
   //Search for a number
   console.log('Searching for a number in country: ', countryCode);
   vonage.numbers.getAvailableNumbers({
@@ -175,7 +175,7 @@ function createApp(data) {
   });
 
   vonage.applications.createApplication({
-      name: data.toString().replace(/\n/g, ''),
+      name: data.toString().trim(),
       capabilities: {
           voice: {
               webhooks: {
@@ -226,7 +226,7 @@ function createApp(data) {
             process.env.PRIVATE_KEY64 = base64PrivateKey;
 
             //Search and Buy phone number
-            process.env.VONAGE_APPLICATION_NAME = data.toString().replace(/\n/g, '');
+            process.env.VONAGE_APPLICATION_NAME = data.toString().trim();
             step = 'BUY_NUMBER';
             console.log('Want to Buy a number? (Y/N):');
 
