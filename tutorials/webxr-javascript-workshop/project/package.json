@@ -1,0 +1,13 @@
+{
+  "name": "sample-voice-node-learning_server",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@vonage/server-sdk": "^3.25.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.0.0"
+  }
+}

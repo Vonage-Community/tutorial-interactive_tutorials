@@ -1,0 +1,26 @@
+{
+  "files": [],
+  "openFiles": [
+    "project/pages/index.html",
+    "project/static/main.js",
+    "project/static/VonageAudioCall.js",
+    "project/static/ExitButton.js"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "https://github.com/Vonage-Community/sample-voice-node-learning_server.git",
+  "starterFiles": [
+    "project/pages/index.html",
+    "project/static/background.webp",
+    "project/static/BallPit.js",
+    "project/static/BallShooter.js",
+    "project/static/demo.css",
+    "project/static/main.js",
+    "project/static/VonageAudioCall.js",
+    "project/static/ExitButton.js"
+  ],
+  "capabilities": [],
+  "version": "0.0.1"
+}
