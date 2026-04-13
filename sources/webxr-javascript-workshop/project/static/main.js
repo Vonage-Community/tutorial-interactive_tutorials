@@ -34,6 +34,7 @@ options.physics.RAPIER = RAPIER;
 // Initializes the scene, camera, xrRenderer, controls, and XR button.
 async function start() {
   xb.add(new BallPit());
+  // add Vonage Call Panel and Exit Button
   await xb.init(options);
 }
 
