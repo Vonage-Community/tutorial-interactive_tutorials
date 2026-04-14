@@ -1,0 +1,19 @@
+{
+  "files": [
+    "project/public/app.js"
+  ],
+  "openFiles": [
+    "project/routes/index.js",
+    "project/views/index.pug"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "https://github.com/Vonage-Community/sample-video-node-learning_server.git",
+  "starterFiles": [
+    "project/routes/index.js"
+  ],
+  "capabilities": [],
+  "version": "0.0.1"
+}
