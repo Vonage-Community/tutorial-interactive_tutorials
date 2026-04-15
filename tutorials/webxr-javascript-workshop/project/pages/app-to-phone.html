@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>App to Phone</title>
+  <script src="https://cdn.jsdelivr.net/npm/@vonage/client-sdk@latest/dist/vonageClientSDK.min.js"></script>
+  <style>
+    input, button {
+      font-size: 1rem;
+    }
+    #hangup {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  &lt; <a href="/">Home</a>
+  <br /><br />
+  <h1>Call Phone from App</h1>
+  <label for="phone-number">Your Phone Number:</label>
+  <input type="text" name="phone-number" value="" placeholder="i.e. 14155550100" id="phone-number" size="30">
+  <button type="button" id="call">Call</button>
+  <button type="button" id="hangup">Hang Up</button>
+  <div id="status"></div>
+
+  <script>
+    const callButton = document.getElementById("call");
+    const hangUpButton = document.getElementById("hangup");
+    const statusElement = document.getElementById("status");
+    let token;
+    const client = new vonageClientSDK.VonageClient();
+    let callId = null;
+    const user = 'Alice' // Just setting this so can quickly create a token and make a call with one click. In a production app, you'll want to authenticate a user before allowing them to make a call.
+
+    client.on('legStatusUpdate', (callId, legId, status) => {
+      if (status === "ANSWERED") {
+        callButton.style.display = "none";
+        callButton.disabled = false;
+        hangUpButton.style.display = "inline";
+        statusElement.innerText = "On a call";
+      }
+      if (status === "COMPLETED") {
+        callId = null;
+        callButton.style.display = "inline";
+        callButton.disabled = false;
+        hangUpButton.style.display = "none";
+        statusElement.innerText = "";
+      }
+    });
+
+    callButton.addEventListener("click", event => {
+      const destination = document.getElementById("phone-number").value;
+      if (destination) {
+        // Fetch the JWT token for the user from your server
+        fetch(`/token?name=${user}`)
+          .then(response => response.json())
+          .then(data => {
+            token = data.token;
+            client.createSession(token)
+              .then(sessionId => {
+                client.serverCall({ to: destination })
+                  .then((_callId) => {
+                    callId = _callId;
+                    statusElement.innerText = 'Calling ' + destination + '...';
+                    callButton.disabled = true;
+                  })
+                  .catch((error)=>{
+                    console.error(`Error making call: ${error}`);
+                  });
+              })
+              .catch(error  => { 
+                console.error("Error creating session: ", error);
+              });
+          })
+          .catch(error => {
+            console.error("Error fetching token: ", error);
+          });
+      } else {
+        alert("Please enter a phone number.");
+      }
+    });
+
+    hangUpButton.addEventListener("click", () => {
+      client.hangup(callId)
+        .then(() => {
+          hangUpButton.style.display = "none";
+          callButton.style.display = "inline";
+          callButton.disabled = false;
+        })
+        .catch(error => {
+          console.error("Error hanging up call: ", error);
+        });                
+    });
+  </script>
+</body>
+
+</html>

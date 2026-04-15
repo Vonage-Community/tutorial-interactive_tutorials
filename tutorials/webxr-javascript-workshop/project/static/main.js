@@ -5,6 +5,8 @@ import * as xb from 'xrblocks';
 
 import {BallPit} from './BallPit.js';
 
+// ⌄⌄⌄ import Vonage Call Panel and Exit Button ⌄⌄⌄
+
 const depthMeshColliderUpdateFps = xb.getUrlParamFloat(
   'depthMeshColliderUpdateFps',
   5
@@ -31,13 +33,37 @@ options.xrButton = {
 };
 options.physics.RAPIER = RAPIER;
 
+// Ask for Microphone Access
+async function getMicrophoneAccess() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    console.log('Microphone access granted', stream);
+    // You can now use the stream object for your application (e.g., recording, WebRTC)
+    
+    // Optional: Stop the tracks immediately if you just want to check permission state without active recording
+    stream.getTracks().forEach(track => track.stop()); 
+
+  } catch (err) {
+    console.error(`Error getting microphone access: ${err.name}`, err);
+    // Handle specific errors
+    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      alert('Permission denied. Please allow microphone access in your browser settings.');
+    } else if (err.name === 'NotFoundError') {
+      alert('No microphone found.');
+    }
+  }
+}
+
 // Initializes the scene, camera, xrRenderer, controls, and XR button.
 async function start() {
   xb.add(new BallPit());
-  // add Vonage Call Panel and Exit Button
+  // ⌄⌄⌄ add Vonage Call Panel and Exit Button ⌄⌄⌄
   await xb.init(options);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  start();
+  setTimeout(async function () {
+    await getMicrophoneAccess();
+    start();
+  }, 200);
 });

@@ -10,13 +10,13 @@ Here's a coupon to add money to your account:
 If your account is in US dollars:
 
 ```html
-Torc26Web10US
+TorcWebUS2026
 ```
 
 If your account is in Euros:
 
 ```html
-Torc26Web10EUR
+TorcWebEUR2026
 ```
 
 > Note: Make sure to copy your API Key and API Secret somewhere. We will need it in the next step.
