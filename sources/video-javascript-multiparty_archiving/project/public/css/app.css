@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
   background-color: gray;
   height: 100%;
   display: flex;
@@ -6,23 +7,24 @@ body, html {
   align-items: center;
 }
 
-#videos {
-  position: relative;
-  display: flex;
-  align-items: center;
+#participants {
+  margin: auto;
+  width: 75vw;
+  display: grid;
+  height: 75vh;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-#publisher-container {
-  border: 3px solid white;
-  border-radius: 3px;
-  height: fit-content;
-}
-#publisher {
-  width: 360px;
-  height: 240px;
-}
 #publish-video-true {
   display: none;
+}
+
+#publisher-controls {
+  position: absolute;
+  display: flex;
+  bottom: 10px;
+  left: 10px;
 }
 
 /* ⌄⌄⌄ Add CSS for the archiveLink element ⌄⌄⌄ */

@@ -4,15 +4,10 @@ let applicationId;
 let sessionId;
 let token;
 
-
 const publishVideoTrueBtn = document.querySelector('#publish-video-true');
 const publishVideoFalseBtn = document.querySelector('#publish-video-false');
 
-
 // ⌄⌄⌄ get references to archive UI & set stop button display to none ⌄⌄⌄
-
-
-
 
 function handleError(error) {
   if (error) {
@@ -27,30 +22,36 @@ function initializeSession() {
   session.on('streamCreated', (event) => {
     const subscriberOptions = {
       insertMode: 'append',
-      width: '320',
-      height: '240'
+      width: '100%',
+      height: '100%',
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+    session.subscribe(
+      event.stream,
+      'participants',
+      subscriberOptions,
+      handleError
+    );
   });
 
   session.on('sessionDisconnected', (event) => {
     console.log('You were disconnected from the session.', event.reason);
   });
 
-
   // ⌄⌄⌄ add listener for archiveStarted event ⌄⌄⌄
 
-
   // ⌄⌄⌄ add listener for archiveStopped event ⌄⌄⌄
-
 
   // initialize the publisher
   const publisherOptions = {
     insertMode: 'append',
     width: '100%',
-    height: '100%'
+    height: '100%',
   };
-  const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+  const publisher = OT.initPublisher(
+    'participants',
+    publisherOptions,
+    handleError
+  );
 
   // Connect to the session
   session.connect(token, (error) => {
@@ -62,7 +63,7 @@ function initializeSession() {
     }
   });
 
-  publishVideoTrueBtn.addEventListener('click',() => {
+  publishVideoTrueBtn.addEventListener('click', () => {
     publisher.publishVideo(true, (error) => {
       if (error) {
         handleError(error);
@@ -73,10 +74,10 @@ function initializeSession() {
     });
   });
 
-  publishVideoFalseBtn.addEventListener('click',() => {
+  publishVideoFalseBtn.addEventListener('click', () => {
     publisher.publishVideo(false, (error) => {
       if (error) {
-          alert('error: ', error);
+        alert('error: ', error);
       } else {
         publishVideoFalseBtn.style.display = 'none';
         publishVideoTrueBtn.style.display = 'block';
@@ -87,26 +88,22 @@ function initializeSession() {
 
 // ⌄⌄⌄ function to create POST requests ⌄⌄⌄
 
-
-
-
 // ⌄⌄⌄ function to start an Archive ⌄⌄⌄
-
-
-
 
 // ⌄⌄⌄ function to stop an Archive ⌄⌄⌄
 
-
 fetch('/session')
-.then((response) => response.json())
-.then((json) => {
-  applicationId = json.applicationId;
-  sessionId = json.sessionId;
-  token = json.token;
-  // Initialize a Vonage Video Session object
-  initializeSession();
-}).catch((error) => {
-  handleError(error);
-  alert('Failed to get Vonage Video sessionId and token. Make sure you have updated the config.js file.');
-});
+  .then((response) => response.json())
+  .then((json) => {
+    applicationId = json.applicationId;
+    sessionId = json.sessionId;
+    token = json.token;
+    // Initialize a Vonage Video Session object
+    initializeSession();
+  })
+  .catch((error) => {
+    handleError(error);
+    alert(
+      'Failed to get Vonage Video sessionId and token. Make sure you have updated the config.js file.'
+    );
+  });
