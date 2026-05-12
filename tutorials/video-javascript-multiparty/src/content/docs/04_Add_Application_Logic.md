@@ -89,7 +89,7 @@ const publisherOptions = {
   height: '100%',
   resolution: '1280x720'
 };
-const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+const publisher = OT.initPublisher('participants', publisherOptions, handleError);
 ```
 
 Add a listener to handle if the user denies access to the camera and/or microphone `// Listen for the event fired when the user denies access`:
