@@ -8,6 +8,7 @@ let tutorial: {
   starterFiles: string[];
   capabilities: string[];
   version: string;
+  filename: string;
 } = {
   files: [],
   openFiles: [],
@@ -16,12 +17,14 @@ let tutorial: {
   starterFiles: [],
   capabilities: [],
   version: '',
+  filename: ''
 };
 
 export default defineToolbarApp({
   init(canvas, app, server) {
     const myWindow = document.createElement('astro-dev-toolbar-window');
     const myContent = document.createElement('div');
+    myContent.style.overflowY = 'auto';
     myContent.innerHTML = `
     <details name='steps' open>
       <summary>Step 1: Select panels needed</summary>
@@ -86,7 +89,12 @@ export default defineToolbarApp({
       <input id='version' placeholder='0.0.0'/>
     </details>
     <details name='steps'>
-      <summary>Step 9: Finish up</summary>
+      <summary>Step 9: Enter filename for the zip file</summary>
+      This will be used also for the repo's folder name
+      <br/><input id='filename' placeholder='product_name-language-topic' style='width: 300px;'/>
+    </details>
+    <details name='steps'>
+      <summary>Step 10: Finish up</summary>
       Click to start generating the tutorial: <button id="generate">generate</button>
       <p id="status"></p>
       <span id="complete">
@@ -101,6 +109,15 @@ export default defineToolbarApp({
     canvas.append(myWindow);
 
     const astroToolbarWindow = canvas.querySelector('astro-dev-toolbar-window');
+
+    const filenameInput = astroToolbarWindow?.querySelector(
+      '#filename'
+    ) as HTMLInputElement;
+    filenameInput.value = tutorial.filename !== '' ? tutorial.filename : '';
+    filenameInput?.addEventListener('change', (event) => {
+      tutorial.filename = filenameInput?.value;
+      saveTutorial();
+    });
 
     const versionInput = astroToolbarWindow?.querySelector(
       '#version'
@@ -182,6 +199,7 @@ export default defineToolbarApp({
       }
       versionInput.value = tutorial.version;
       repositoryInput.value = tutorial.repository;
+      filenameInput.value = tutorial.filename;
     }
 
     function checkLocalStorage() {
@@ -432,7 +450,7 @@ export default defineToolbarApp({
           astroToolbarWindow?.querySelector(
             '#download-link'
           ) as HTMLAnchorElement
-        ).href = `${window.location.origin}/product_name-language-topic.zip`;
+        ).href = `${window.location.origin}/${tutorial.filename}.zip`;
         generateButton.disabled = false;
         completeSpan.style.display = 'block';
         // clear local storage

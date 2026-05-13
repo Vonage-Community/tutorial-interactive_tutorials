@@ -6,7 +6,15 @@
     "browser"
   ],
   "repository": "https://github.com/Vonage-Community/sample-video-node-learning_server.git",
-  "starterFiles": [],
+  "starterFiles": [
+    "project/package.json",
+    "project/public/css/app.css",
+    "project/public/js/app.js",
+    "project/public/graphiql.html",
+    "project/public/index.html",
+    "project/routes/index.js"
+  ],
   "capabilities": [],
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "filename": "video-javascript-debugging"
 }
