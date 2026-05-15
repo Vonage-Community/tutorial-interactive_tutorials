@@ -160,9 +160,11 @@ async function main() {
     // 8. Generate Dynamic devcontainer.json
     await generateDevContainer(tutorialName, tutorialConfig, hasExternalApp, hasSetupScript);
 
-    // 9. Generate README
+    // 9. Generate VS Code config for sources editing
+    await generateVSCodeConfig(tutorialName);
+
+    // 10. Generate README
     const codespaceLink = `https://codespaces.new/${REPO_OWNER}/${REPO_NAME}?devcontainer_path=.devcontainer/${tutorialName}/devcontainer.json`;
-    const stackblitzLink = `https://stackblitz.com/github/${REPO_OWNER}/${REPO_NAME}/tree/main/sources/${tutorialName}`;
     const readmeContent = `
 # ${tutorialName}
 Generated Tutorial Environment.
@@ -172,7 +174,11 @@ Generated Tutorial Environment.
 
 ## 🛠️ Edit this Tutorial
 Want to make changes to the lesson, add steps, or update starter files?
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](${stackblitzLink})
+
+1. Clone this repo: \`git clone https://github.com/${REPO_OWNER}/${REPO_NAME}.git\`
+2. Open the \`sources/${tutorialName}\` folder in VS Code
+3. Install dependencies and start the dev server: \`npm install && npm run dev\`
+4. Preview at \`http://localhost:4321\` — open it in VS Code via **Ctrl+Shift+P** → **Simple Browser: Show**
 
 ### Environment Details
 - **Tutorial Steps**: Port 1234
@@ -185,6 +191,44 @@ Want to make changes to the lesson, add steps, or update starter files?
     // 10. Cleanup
     fs.removeSync(path.join(UPLOADS_DIR, zipFilename));
     console.log("🧹 Cleanup complete. Zip removed from uploads.");
+}
+
+async function generateVSCodeConfig(name) {
+    const vscodeDir = path.join(SOURCES_BASE, name, '.vscode');
+    fs.ensureDirSync(vscodeDir);
+
+    const tasks = {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Start Tutorial Editor",
+                "type": "shell",
+                "command": "npm install && npm run dev",
+                "group": {
+                    "kind": "build",
+                    "isDefault": true
+                },
+                "presentation": {
+                    "reveal": "always",
+                    "panel": "new"
+                },
+                "runOptions": {
+                    "runOn": "folderOpen"
+                }
+            }
+        ]
+    };
+
+    const extensions = {
+        "recommendations": [
+            "astro-build.astro-vscode",
+            "ms-vscode.live-server"
+        ]
+    };
+
+    fs.writeFileSync(path.join(vscodeDir, 'tasks.json'), JSON.stringify(tasks, null, 4));
+    fs.writeFileSync(path.join(vscodeDir, 'extensions.json'), JSON.stringify(extensions, null, 4));
+    console.log(`✅ Generated .vscode config in sources/${name}`);
 }
 
 async function generateDevContainer(name, config, hasExternalApp, hasSetupScript) {

@@ -19,39 +19,65 @@ Interactive Onboarding Tutorials in most cases consist of a code editor on the l
 
 ## Authoring a Tutorial
 
-### Create Tutorial Folder
+### Setup
 
-To create a new tutorial, first clone the repo:
+Clone the repo and install dependencies from the root:
 
 ```bash
 git clone git@github.com:Vonage-Community/tutorial-interactive_tutorials.git
-```
-
-Change directory into the tutorials folder, then install the dependencies:
-
-```bash
-cd tutorials
+cd tutorial-interactive_tutorials
 npm install
 ```
 
-Create a copy of the starter tutorial, giving the target folder your tutorial name. Then change directory into your tutorial folder:
+### Create a New Tutorial
+
+Run the create command from the repo root:
 
 ```bash
-cp -r 00_Starter-Tutorial product_name-language-topic
-cd product_name-language-topic
+npm run create-tutorial
+```
+
+You will be prompted for a tutorial name. You can also pass the name directly:
+
+```bash
+npm run create-tutorial -- messages_api-node-whatsapp
 ```
 
 > Keep to the tutorial name taxonomy, `product_name-language-topic`. For example a Messages API WhatsApp tutorial in Node.js would be `messages_api-node-whatsapp`.
 
+This will scaffold a new tutorial folder under `tutorials/` with the correct structure and placeholder content.
+
+### Edit an Existing Tutorial
+
+Run the edit command from the repo root:
+
+```bash
+npm run edit-tutorial
+```
+
+This will show an interactive list of tutorials to choose from. You can also pass the name directly:
+
+```bash
+npm run edit-tutorial -- messages_api-node-whatsapp
+```
+
+The command will:
+1. Open the tutorial folder in VS Code
+2. Start the Astro dev server
+3. Open `http://localhost:4321` in your browser automatically
+
+Press **Ctrl+C** in the terminal to stop the dev server.
+
 ### Create the Tutorial Content
 
-The tutorials are static websites built with [Astro](https://astro.build). Start the development server:
+The tutorials are static websites built with [Astro](https://astro.build). Use `npm run edit-tutorial` from the repo root to open your tutorial and start the dev server automatically, or start it manually from your tutorial's folder:
 
-```
+```bash
+cd tutorials/your-tutorial-name
 npm run dev
 ```
 
-This will start your site on your local machine. You can now edit the tutorial content in the `src` folder. Tutorials support markdown, markdoc, and HTML. Once you are done, add a small synopsis to the README.md file in your tutorial's folder.
+You can now edit the tutorial content in the `src` folder. Tutorials support markdown, markdoc, and HTML. Once you are done, add a small synopsis to the README.md file in your tutorial's folder.
 
 ### Create the Tutorial Config
 
