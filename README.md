@@ -1,6 +1,6 @@
 # Vonage Interactive Onboarding Tutorials
 
-Preferred and quickets way to creating a tutorial:
+Preferred and quickest way to creating a tutorial:
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage-Community/tutorial-interactive_tutorials/tree/main/toolbar-app/)
 
