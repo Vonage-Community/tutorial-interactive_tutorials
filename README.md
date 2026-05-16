@@ -79,6 +79,41 @@ npm run dev
 
 You can now edit the tutorial content in the `src` folder. Tutorials support markdown, markdoc, and HTML. Once you are done, add a small synopsis to the README.md file in your tutorial's folder.
 
+### Using AI to Draft Tutorial Content
+
+Every tutorial includes authoring instructions that guide AI tools to produce consistent output — correct file naming, structure, frontmatter, and Markdoc components — without any per-developer setup.
+
+#### VS Code Copilot Chat / GitHub Copilot CLI
+
+`.github/copilot-instructions.md` is automatically loaded for every Copilot conversation in the tutorial workspace. Just describe what you want and Copilot will follow the conventions.
+
+To create a new step using the guided prompt:
+1. Open Copilot Chat in VS Code
+2. Run the command **`Chat: Use Prompt...`**
+3. Select **`new-step`**
+4. Answer the questions (step number, name, description, code)
+
+Copilot will create the correctly named and formatted file in `src/content/docs/`.
+
+#### OpenCode / OpenAI Codex CLI
+
+`AGENTS.md` in the tutorial root is automatically read by OpenCode and Codex CLI. The same naming and structure rules apply — just describe the step you want.
+
+#### Vim, Neovim, or any other AI tool
+
+Include `AGENTS.md` as context for your AI tool. Most plugins support a `#file:` reference or a system prompt file. For example, with avante.nvim:
+
+```lua
+-- In your Neovim config or a project .nvim.lua:
+require('avante').setup({ system_prompt = vim.fn.readfile('AGENTS.md') })
+```
+
+Or simply paste the contents of `AGENTS.md` into your tool's system prompt / context window.
+
+#### Reference example
+
+`src/content/docs/02-step-template.md` is an annotated example of a complete, well-formed tutorial step. Use it as a starting point or reference when writing manually.
+
 ### Create the Tutorial Config
 
 The final part of creating a tutorial is to create a configuration file. This allows for the Vonage Cloud Runtime Workspace to be created for you and set up with the correct panels and files you need. There is a small app in the astro development toolbar to help you generate this file. 
