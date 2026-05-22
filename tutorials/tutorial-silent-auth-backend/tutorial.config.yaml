@@ -1,0 +1,43 @@
+version: 1
+tutorial:
+  id: silent-auth-tutorial
+  title: silent-auth-tutorial
+  description: 'Interactive tutorial: silent-auth-tutorial'
+content:
+  format: markdown
+  docsDir: src/content/docs
+  indexFile: index.md
+runtime:
+  type: node
+  workingDirectory: workspace
+  installCommand: npm install
+  startCommand: npm run dev
+application:
+  port: 3000
+  protocol: http
+  host: 0.0.0.0
+ports:
+  - name: app
+    port: 3000
+    protocol: http
+    visibility: public
+    description: Main application endpoint
+tutorialServer:
+  enabled: true
+  port: 1234
+  host: 0.0.0.0
+  installCommand: npm install
+  startCommand: npm run dev -- --host 0.0.0.0 --port 1234
+  autoInstall: true
+  autoStart: true
+devcontainer:
+  enabled: true
+  forwardPorts:
+    - 3000
+    - 1234
+  postCreateCommand: cd workspace && npm install
+steps:
+  naming: numeric-prefix
+  defaultExtension: md
+output:
+  siteDir: dist
