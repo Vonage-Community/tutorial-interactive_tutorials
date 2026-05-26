@@ -1,6 +1,5 @@
 {
   "name": "tutorial-interactive-tutorials",
-  "type": "module",
   "scripts": {
     "create-tutorial": "node create-tutorial.js",
     "edit-tutorial": "node edit-tutorial.js"
