@@ -165,6 +165,8 @@ async function main() {
 
     // 10. Generate README
     const codespaceLink = `https://codespaces.new/${REPO_OWNER}/${REPO_NAME}?devcontainer_path=.devcontainer/${tutorialName}/devcontainer.json`;
+    
+    const stackblitzLink = `https://stackblitz.com/github/${REPO_OWNER}/${REPO_NAME}/tree/main/sources/${tutorialName}`;
     const readmeContent = `
 # ${tutorialName}
 Generated Tutorial Environment.
