@@ -174,7 +174,7 @@ Generated Tutorial Environment.
 
 ## 🛠️ Edit this Tutorial
 Want to make changes to the lesson, add steps, or update starter files?
-
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](${stackblitzLink})
 1. Clone this repo: \`git clone https://github.com/${REPO_OWNER}/${REPO_NAME}.git\`
 2. Open the \`sources/${tutorialName}\` folder in VS Code
 3. Install dependencies and start the dev server: \`npm install && npm run dev\`
