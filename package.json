@@ -1,4 +1,9 @@
 {
+  "name": "tutorial-interactive-tutorials",
+  "scripts": {
+    "create-tutorial": "node create-tutorial.js",
+    "edit-tutorial": "node edit-tutorial.js"
+  },
   "dependencies": {
     "fs-extra": "^11.3.5",
     "unzipper": "^0.12.3"

@@ -19,39 +19,100 @@ Interactive Onboarding Tutorials in most cases consist of a code editor on the l
 
 ## Authoring a Tutorial
 
-### Create Tutorial Folder
+### Setup
 
-To create a new tutorial, first clone the repo:
+Clone the repo and install dependencies from the root:
 
 ```bash
 git clone git@github.com:Vonage-Community/tutorial-interactive_tutorials.git
-```
-
-Change directory into the tutorials folder, then install the dependencies:
-
-```bash
-cd tutorials
+cd tutorial-interactive_tutorials
 npm install
 ```
 
-Create a copy of the starter tutorial, giving the target folder your tutorial name. Then change directory into your tutorial folder:
+### Create a New Tutorial
+
+Run the create command from the repo root:
 
 ```bash
-cp -r 00_Starter-Tutorial product_name-language-topic
-cd product_name-language-topic
+npm run create-tutorial
+```
+
+You will be prompted for a tutorial name. You can also pass the name directly:
+
+```bash
+npm run create-tutorial -- messages_api-node-whatsapp
 ```
 
 > Keep to the tutorial name taxonomy, `product_name-language-topic`. For example a Messages API WhatsApp tutorial in Node.js would be `messages_api-node-whatsapp`.
 
+This will scaffold a new tutorial folder under `tutorials/` with the correct structure and placeholder content.
+
+### Edit an Existing Tutorial
+
+Run the edit command from the repo root:
+
+```bash
+npm run edit-tutorial
+```
+
+This will show an interactive list of tutorials to choose from. You can also pass the name directly:
+
+```bash
+npm run edit-tutorial -- messages_api-node-whatsapp
+```
+
+The command will:
+1. Open the tutorial folder in VS Code
+2. Start the Astro dev server
+3. Open `http://localhost:4321` in your browser automatically
+
+Press **Ctrl+C** in the terminal to stop the dev server.
+
 ### Create the Tutorial Content
 
-The tutorials are static websites built with [Astro](https://astro.build). Start the development server:
+The tutorials are static websites built with [Astro](https://astro.build). Use `npm run edit-tutorial` from the repo root to open your tutorial and start the dev server automatically, or start it manually from your tutorial's folder:
 
-```
+```bash
+cd tutorials/your-tutorial-name
 npm run dev
 ```
 
-This will start your site on your local machine. You can now edit the tutorial content in the `src` folder. Tutorials support markdown, markdoc, and HTML. Once you are done, add a small synopsis to the README.md file in your tutorial's folder.
+You can now edit the tutorial content in the `src` folder. Tutorials support markdown, markdoc, and HTML. Once you are done, add a small synopsis to the README.md file in your tutorial's folder.
+
+### Using AI to Draft Tutorial Content
+
+Every tutorial includes authoring instructions that guide AI tools to produce consistent output — correct file naming, structure, frontmatter, and Markdoc components — without any per-developer setup.
+
+#### VS Code Copilot Chat / GitHub Copilot CLI
+
+`.github/copilot-instructions.md` is automatically loaded for every Copilot conversation in the tutorial workspace. Just describe what you want and Copilot will follow the conventions.
+
+To create a new step using the guided prompt:
+1. Open Copilot Chat in VS Code
+2. Run the command **`Chat: Use Prompt...`**
+3. Select **`new-step`**
+4. Answer the questions (step number, name, description, code)
+
+Copilot will create the correctly named and formatted file in `src/content/docs/`.
+
+#### OpenCode / OpenAI Codex CLI
+
+`AGENTS.md` in the tutorial root is automatically read by OpenCode and Codex CLI. The same naming and structure rules apply — just describe the step you want.
+
+#### Vim, Neovim, or any other AI tool
+
+Include `AGENTS.md` as context for your AI tool. Most plugins support a `#file:` reference or a system prompt file. For example, with avante.nvim:
+
+```lua
+-- In your Neovim config or a project .nvim.lua:
+require('avante').setup({ system_prompt = vim.fn.readfile('AGENTS.md') })
+```
+
+Or simply paste the contents of `AGENTS.md` into your tool's system prompt / context window.
+
+#### Reference example
+
+`src/content/docs/02-step-template.md` is an annotated example of a complete, well-formed tutorial step. Use it as a starting point or reference when writing manually.
 
 ### Create the Tutorial Config
 
