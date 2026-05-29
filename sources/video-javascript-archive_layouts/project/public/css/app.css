@@ -1,0 +1,35 @@
+body,
+html {
+  background-color: gray;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#participants {
+  margin: auto;
+  width: 75vw;
+  display: grid;
+  height: 75vh;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+#publish-video-true {
+  display: none;
+}
+
+#publisher-controls {
+  position: absolute;
+  display: flex;
+  bottom: 10px;
+  left: 10px;
+}
+
+#archiveLink>a {
+  padding: 5px;
+  background-color: white;
+}
+
+/* ⌄⌄⌄ Add CSS for the layout-controls section ⌄⌄⌄ */
