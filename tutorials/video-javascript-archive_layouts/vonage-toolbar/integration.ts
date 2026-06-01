@@ -45,6 +45,15 @@ export default {
         }
       });
 
+      toolbar.on('vonage-app:save-config', async (data: any) => {
+        try {
+          const configData = JSON.stringify(data.tutorial, null, 2);
+          await fs.writeFile('tutorial-config.json', configData);
+        } catch (err) {
+          console.error('Error saving config:', err);
+        }
+      });
+
       toolbar.on('vonage-app:generate', async (data: any) => {
         try {
           // create tutorial-config.json file

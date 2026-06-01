@@ -116,7 +116,7 @@ export default defineToolbarApp({
     filenameInput.value = tutorial.filename !== '' ? tutorial.filename : '';
     filenameInput?.addEventListener('change', (event) => {
       tutorial.filename = filenameInput?.value;
-      saveTutorial();
+      saveConfig();
     });
 
     const versionInput = astroToolbarWindow?.querySelector(
@@ -125,7 +125,7 @@ export default defineToolbarApp({
     versionInput.value = tutorial.version !== '' ? tutorial.version : '';
     versionInput?.addEventListener('change', (event) => {
       tutorial.version = versionInput?.value;
-      saveTutorial();
+      saveConfig();
     });
 
     const repositoryInput = astroToolbarWindow?.querySelector(
@@ -135,45 +135,18 @@ export default defineToolbarApp({
       tutorial.repository !== '' ? tutorial.repository : '';
     repositoryInput?.addEventListener('change', (event) => {
       tutorial.repository = repositoryInput?.value;
-      saveTutorial();
+      saveConfig();
     });
 
-    // check for tutorial-config.json
-    function checkConfig() {
-      server.send('vonage-app:config-check', {});
-    }
-
-    if (localStorage.getItem('config-checked')) {
-      // if config-checked exists
-      // check local storage for tutorial config and load if it exists
-      console.log('config-checked exists');
-      checkLocalStorage();
-    } else {
-      console.log('config checked not there');
-      // if config-checked doesn't exist
-      // - check for tutorial config file
-      checkConfig();
-      //localStorage.setItem('config-checked', 'false');
-    }
+    // Always read tutorial-config.json from disk on toolbar open
+    server.send('vonage-app:config-check', {});
 
     server.on('config-checked', (data: any) => {
-      console.log('config data: ', data);
-      // - if tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI(), and set config-checked to true
       if (data.found) {
-        console.log(
-          'tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI()'
-        );
         tutorial = data.tutorial;
-        saveTutorial();
+        saveConfig();
         updateUI();
-      } else {
-        // - if tutorial config file does not exist, check local storage for tutorial config, load if it exists, and set config-checked to true
-        console.log(
-          'config file does not exist, check local storage for tutorial config, load if it exists'
-        );
-        checkLocalStorage();
       }
-      localStorage.setItem('config-checked', 'true');
     });
 
     function updateUI() {
@@ -202,13 +175,6 @@ export default defineToolbarApp({
       filenameInput.value = tutorial.filename;
     }
 
-    function checkLocalStorage() {
-      if (localStorage.getItem('tutorial')) {
-        console.log('localStorage.getItem tutorial');
-        tutorial = JSON.parse(localStorage.getItem('tutorial') || '{}');
-        updateUI();
-      }
-    }
 
     const completeSpan = astroToolbarWindow?.querySelector(
       '#complete'
@@ -226,7 +192,7 @@ export default defineToolbarApp({
       panelsChecked?.forEach((panel) => {
         tutorial.panels.push(panel.id);
       });
-      saveTutorial();
+      saveConfig();
     });
 
     const capabilitiesForm = astroToolbarWindow?.querySelector('#capabilities');
@@ -240,11 +206,11 @@ export default defineToolbarApp({
       capabilitiesChecked?.forEach((capability) => {
         tutorial.capabilities.push(capability.id);
       });
-      saveTutorial();
+      saveConfig();
     });
 
-    function saveTutorial() {
-      localStorage.setItem('tutorial', JSON.stringify(tutorial));
+    function saveConfig() {
+      server.send('vonage-app:save-config', { tutorial });
     }
 
     function refreshFilesList() {
@@ -278,7 +244,7 @@ export default defineToolbarApp({
         fileLi.appendChild(fileButton);
         fileUl.appendChild(fileLi);
       });
-      saveTutorial();
+      saveConfig();
     }
 
     const fileInputError = astroToolbarWindow?.querySelector(
@@ -335,7 +301,7 @@ export default defineToolbarApp({
         fileLi.appendChild(fileButton);
         fileUl.appendChild(fileLi);
       });
-      saveTutorial();
+      saveConfig();
     }
 
     const fileOpenInputError = astroToolbarWindow?.querySelector(
@@ -395,7 +361,7 @@ export default defineToolbarApp({
         fileLi.appendChild(fileButton);
         fileUl.appendChild(fileLi);
       });
-      saveTutorial();
+      saveConfig();
     }
 
     const starterFileInputError = astroToolbarWindow?.querySelector(
@@ -453,8 +419,6 @@ export default defineToolbarApp({
         ).href = `${window.location.origin}/${tutorial.filename}.zip`;
         generateButton.disabled = false;
         completeSpan.style.display = 'block';
-        // clear local storage
-        localStorage.clear();
       }
     });
   },
