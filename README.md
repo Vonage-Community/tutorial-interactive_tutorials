@@ -8,15 +8,6 @@ Follow the steps in the Vonage Toolbar App
 
 ![Vonage Astro Toolbar](.github/images/toolbar.png)
 
-
-## Ignore the following steps for now since we are not using Code Hub:
-
-The repo contains the source code for Vonage Interactive Onboarding Tutorials on [Code Hub](https://developer.vonage.com/en/cloud-runtime). The onboarding tutorials provides a step by step walkthrough of Vonage APIs using Vonage Cloud Runtime Workspaces. This allows for the tutorials to be followed with the only requirement of a Vonage API account.
-
-![Example Tutorial](.github/images/example.png)
-
-Interactive Onboarding Tutorials in most cases consist of a code editor on the left and a tutorial on the right and a terminal at the bottom. Tutorials that require a frontend will have an additional browser window on the right. This is all configurable by the author of the tutorial.
-
 ## Authoring a Tutorial
 
 ### Setup
