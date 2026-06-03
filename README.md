@@ -1,5 +1,8 @@
 # Vonage Interactive Onboarding Tutorials
 
+
+# Method 1: (In-browser)
+
 Preferred and quickest way to creating a tutorial:
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage-Community/tutorial-interactive_tutorials/tree/main/toolbar-app/)
@@ -7,6 +10,10 @@ Preferred and quickest way to creating a tutorial:
 Follow the steps in the Vonage Toolbar App
 
 ![Vonage Astro Toolbar](.github/images/toolbar.png)
+
+For a step by step guide, please see the [documentation](https://docs.google.com/document/d/169riUGAp_mgKdI8zxN0pfMsoe2OI__Jw8FLYg1vN_dg/edit?usp=sharing)
+
+# Method 2: (Locally)
 
 ## Authoring a Tutorial
 
