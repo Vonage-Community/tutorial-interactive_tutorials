@@ -1,0 +1,16 @@
+{
+  "name": "advanced-video-core-api-features-project",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --watch server.js",
+    "setup-credentials": "node setup-credentials.js"
+  },
+  "dependencies": {
+    "@vonage/server-sdk": "^3.0",
+    "@vonage/video": "^1.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
