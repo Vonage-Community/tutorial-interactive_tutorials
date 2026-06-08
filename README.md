@@ -133,20 +133,3 @@ This will create a `tutorial-config.json` file. For example:
 ```
 
 > Make sure that you update the version of the tutorial in subsequent updates to the tutorial using [semver](https://semver.org) or your publishing step will fail. 
-
-## Publishing a Tutorial
-
-To publish your tutorial, create a PR to the repo with your changes. You can add the "Preview" label to your PR to generate a preview deploy of your tutorial. Once your PR is approved, merge it in to kick off the publishing workflow. After a few minutes a [release](https://github.com/Vonage-Community/tutorial-interactive_tutorials/releases) will automatically be created for you. This release contains a `ws.zip`. this is the zip file you need to upload to Code Hub as part of that process.
-
-![Tutorial Release](.github/images/release.png)
-
-## Updating a Tutorial
-
-To update a tutorial:
-
-* Make changes to the `src`.
-* Update the configuration file either manually or with the toolbar app.
-    * Ensure the version number is updated. 
-* Create a PR
-
-The rest of the steps are the same.
