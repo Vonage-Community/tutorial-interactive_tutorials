@@ -80,6 +80,22 @@ async function main() {
             fs.removeSync(tempCloneDir);
         }
     }
+    
+    // Check if the zip itself contained a 'project' folder with a package.json
+    if (!hasExternalApp) {
+        const zippedProjectDir = path.join(sourceDir, 'project');
+        const zippedProjectPackageJson = path.join(zippedProjectDir, 'package.json');
+
+        if (
+            fs.existsSync(zippedProjectDir) &&
+            fs.statSync(zippedProjectDir).isDirectory() &&
+            fs.existsSync(zippedProjectPackageJson)
+        ) {
+            console.log("📦 Found 'project' folder with package.json in zip. Setting hasExternalApp = true.");
+            hasExternalApp = true;
+        }
+    }
+
 
     // 5. THE OVERLAY (Apply Starter Files & Config on top of the cloned repo)
     console.log("📂 Applying starter files and configuration overlay...");
