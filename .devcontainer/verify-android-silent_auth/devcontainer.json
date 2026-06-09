@@ -50,7 +50,8 @@
                     "README.md": true,
                     "public": true,
                     "download-toolbar.js": true
-                }
+                },
+                "terminal.integrated.cwd": "${workspaceFolder}/project"
             }
         },
         "codespaces": {
