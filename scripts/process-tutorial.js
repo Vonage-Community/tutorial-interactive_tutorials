@@ -376,7 +376,8 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
                 "extensions": [],
                 "settings": {
                     "editor.formatOnSave": true,
-                    "files.exclude": filesExclude
+                    "files.exclude": filesExclude,
+                    ...(hasExternalApp && { "terminal.integrated.cwd": "${workspaceFolder}/project" })
                 }
             },
             "codespaces": {
