@@ -49,7 +49,7 @@
         },
         "codespaces": {
             "openFiles": [
-                "workspace/server.js"
+                "project/server.js"
             ]
         }
     }

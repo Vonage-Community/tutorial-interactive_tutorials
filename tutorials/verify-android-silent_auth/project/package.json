@@ -1,0 +1,12 @@
+{
+  "name": "verify-android-silent_auth",
+  "version": "0.0.2",
+  "type": "module",
+  "scripts": {
+    "start": "node --watch server.js"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
