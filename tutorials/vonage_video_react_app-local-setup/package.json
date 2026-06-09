@@ -1,0 +1,10 @@
+{
+  "name": "vonage_video_react_app-local-setup",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node download-toolbar.js && astro dev",
+    "start": "node download-toolbar.js && astro dev",
+    "build": "astro build"
+  }
+}
