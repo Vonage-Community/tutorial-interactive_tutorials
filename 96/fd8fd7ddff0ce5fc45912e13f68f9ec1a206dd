@@ -1,0 +1,51 @@
+tutorials/video-react-app-local-setup/markdoc.config.mjs
+  s_cf4b778e314418::t_98c6c9283d66a3 1-6
+tutorials/video-react-app-local-setup/astro.config.mjs
+  s_cf4b778e314418::t_2be59b034b3816 1-27
+tutorials/video-react-app-local-setup/tsconfig.json
+  s_cf4b778e314418::t_36994d16572325 1-3
+tutorials/video-react-app-local-setup/src/content/docs/index.mdx
+  s_cf4b778e314418::t_39d7615c7dfa2f 1-7
+tutorials/video-react-app-local-setup/package.json
+  h_5ddc9d372ac6a1 4-5,9-25
+  s_cf4b778e314418::t_1ecc44dd820aca 1-3,6-8,26-27
+tutorials/video-react-app-local-setup/src/content/docs/01-welcome.md
+  s_cf4b778e314418::t_ae58679403cba2 1-23
+tutorials/video-react-app-local-setup/src/content/docs/06-run-the-app.md
+  s_cf4b778e314418::t_b731d6b79de60d 1-34
+tutorials/video-react-app-local-setup/src/content/docs/05-configure-environment.md
+  s_cf4b778e314418::t_68037f01f06ce7 1-48
+tutorials/video-react-app-local-setup/src/content/docs/03-create-vonage-account.md
+  s_cf4b778e314418::t_6e4a6cfb33fbcf 1-23
+tutorials/video-react-app-local-setup/src/content/docs/07-whats-next.md
+  s_cf4b778e314418::t_eaa8e10e3bc7d1 1-27
+tutorials/video-react-app-local-setup/src/content/docs/02-prerequisites.md
+  s_cf4b778e314418::t_feb7b6d4b95655 1-45
+tutorials/video-react-app-local-setup/AGENTS.md
+  s_cf4b778e314418::t_dcbfca040d84bc 1-183
+tutorials/video-react-app-local-setup/src/content/docs/04-create-application.md
+  s_cf4b778e314418::t_7bd76dc61841ec 1-35
+tutorials/video-react-app-local-setup/download-toolbar.js
+  s_cf4b778e314418::t_d58ecbece98b9b 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "96fd8fd7ddff0ce5fc45912e13f68f9ec1a206dd",
+  "prompts": {},
+  "humans": {
+    "h_5ddc9d372ac6a1": {
+      "author": "Ivan <210490533+VZaphod@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_cf4b778e314418": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "b4c4484a-2299-4507-b444-ed143bb86ef0",
+        "model": "claude-opus-4.6"
+      },
+      "human_author": "Ivan <210490533+VZaphod@users.noreply.github.com>"
+    }
+  }
+}
