@@ -5,14 +5,20 @@
     "waitFor": "onCreateCommand",
     "updateContentCommand": "npm install",
     "postCreateCommand": "",
-    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & echo '' && cd project && node setup-project.js && wait",
+    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & cd project && (sleep 4 && echo -e \"\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n\" &) && (nohup sh -c \"sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME\" > /dev/null 2>&1 &) && npm start",
     "forwardPorts": [
-        "1234"
+        "1234",
+        "3000"
     ],
     "portsAttributes": {
         "1234": {
             "label": "Tutorial Guide",
             "onAutoForward": "openPreview"
+        },
+        "3000": {
+            "label": "My Backend Service",
+            "onAutoForward": "notify",
+            "visibility": "public"
         }
     },
     "features": {

@@ -9,7 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "start:tutorial": "http-server steps -p 1234 --cors -c-1"
+    "start:tutorial": "http-server steps -p 1234 --cors -c-1",
+    "postinstall": "cd project && npm install"
   },
   "dependencies": {
     "@astrojs/markdoc": "^0.15.10",
