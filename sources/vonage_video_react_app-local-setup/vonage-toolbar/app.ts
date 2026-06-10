@@ -63,7 +63,7 @@ export default defineToolbarApp({
     </details>
     <details name='steps'>
       <summary>Step 5: Create steps</summary>
-      In the src -> content -> docs folder, please add the steps for the tutorial and delete reference.mdoc when finished.
+      In the src -> content -> docs folder, please add the steps for the tutorial. If you are using any components from the Reference page, please rename the file type from '.md' to '.mdoc' Delete reference.mdoc when finished.
       <br><br>See <a href='https://vonage-community.github.io/tutorial-interactive_tutorials/toolbar-app' target='blank' style='color: white'>Reference</a> for components you can add.<br><br>
     </details>
     <details name='steps'>
