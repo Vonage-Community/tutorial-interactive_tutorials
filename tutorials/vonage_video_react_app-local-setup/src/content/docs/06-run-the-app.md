@@ -6,7 +6,13 @@ title: Run the App
 
 With everything configured, you can now start the application locally.
 
-From the project root, run:
+From the project root, run yarn to install the dependencies:
+
+```sh
+yarn
+```
+
+After the dependencies are installed then run:
 
 ```sh
 yarn dev
@@ -15,7 +21,7 @@ yarn dev
 This single command starts both:
 
 - The **backend server** on port `3345`
-- The **frontend Vite dev server** on port `5173`
+- The **frontend dev server** on port `5173`
 
 Once both servers are running, open your browser and navigate to:
 

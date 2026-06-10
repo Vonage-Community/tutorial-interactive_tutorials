@@ -8,7 +8,7 @@ You need a Vonage application with Video capabilities enabled. This application 
 
 {% steps %}
 
-1. Log in to the [Vonage API Dashboard](https://dashboard.nexmo.com/).
+1. Log in to the [Vonage API Dashboard](https://dashboard.vonage.com/).
 
 2. Navigate to **Applications** from the main menu on the left.
 
