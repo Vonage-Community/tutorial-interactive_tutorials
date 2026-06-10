@@ -1,0 +1,27 @@
+{
+  "files": [],
+  "openFiles": [
+    "project/public/app/exercise-hooks.js",
+    "project/src/advanced-video-server-hooks.js"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "",
+  "starterFiles": [
+    "project/public/app/index.html",
+    "project/public/app/app.js",
+    "project/public/app/exercise-hooks.js",
+    "project/src/advanced-video-routes.js",
+    "project/src/advanced-video-server-hooks.js",
+    "project/src/advanced-video-state.js",
+    "project/server.js",
+    "project/setup-credentials.js",
+    "project/package.json",
+    "project/.env.example"
+  ],
+  "capabilities": [],
+  "version": "0.0.1",
+  "filename": "advanced-video-core-api-features"
+}
