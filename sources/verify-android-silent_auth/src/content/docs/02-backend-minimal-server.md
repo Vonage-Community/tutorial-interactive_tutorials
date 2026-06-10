@@ -7,15 +7,9 @@ Before adding any Vonage logic, let's get a working Express server running. This
 
 ---
 
-## How auto-reload works in Codespaces
-
-**nodemon** is pre-installed in this Codespaces environment. It watches your `server.js` file and restarts the Node.js process every time you save a change. You don't need to install anything or stop/start the server manually during this tutorial — just save and nodemon handles the rest.
-
----
-
 ## Create `server.js`
 
-Inside the `workspace/` folder, open the file called `server.js` and add the following:
+Inside the `project/` folder, open the file called `server.js` and add the following:
 
 ```js
 const express = require("express");
@@ -49,11 +43,10 @@ What this does:
 ## Test the health endpoint
 
 
-Your project already uses `nodemon` to auto-reload `server.js`, so there is no need to manually restart the process. Save the file. You should see it restart automatically in the terminal:
+Save the file. You should see it restart automatically in the terminal:
 
 ```
-[nodemon] restarting due to changes...
-[nodemon] starting `node server.js`
+Restarting `server.js`
 Backend listening on port 3000
 ```
 
@@ -76,7 +69,7 @@ If you see that response, the server is working correctly.
 
 ## Checkpoint
 
-- [ ] `workspace/server.js` exists
+- [ ] `project/server.js` exists
 - [ ] `nodemon server.js` starts without errors
 - [ ] `curl http://localhost:3000/health` returns `{ "status": "ok" }`
 - [ ] Saving a change to `server.js` triggers an automatic restart

@@ -31,7 +31,7 @@ Here's what each package does:
 
 Two things must never end up in git: `node_modules` and your credentials.
 
-Create a `.gitignore` file inside `workspace/` and add the following:
+Create a `.gitignore` file inside `project/` and add the following:
 
 ```
 node_modules
@@ -52,7 +52,7 @@ echo "private.key" >> .gitignore
 ## Your project structure so far
 
 ```
-workspace/
+project/
 ├── node_modules/        ← installed packages (ignored by git)
 ├── server.js
 ├── .gitignore
@@ -65,9 +65,9 @@ workspace/
 
 Before moving on, confirm:
 
-- [ ] `workspace/package.json` exists
-- [ ] `workspace/node_modules/` exists and contains `express`, `@vonage/auth`, `@vonage/verify2`
-- [ ] `workspace/.gitignore` has `node_modules`, `.env`, and `private.key`
+- [ ] `project/package.json` exists
+- [ ] `project/node_modules/` exists and contains `express`, `@vonage/auth`, `@vonage/verify2`
+- [ ] `project/.gitignore` has `node_modules`, `.env`, and `private.key`
 
 Run this to confirm the key packages are present:
 

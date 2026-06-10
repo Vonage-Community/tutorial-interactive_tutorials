@@ -103,7 +103,7 @@ Vonage processes channels in order. It tries Silent Authentication first. If it 
 
 ## Test with cURL
 
-Save `server.js` (`nodemon` restarts), then test the endpoint. Replace the phone number with a real number in E.164 format:
+Save `server.js`, then test the endpoint. Replace the phone number with a real number in E.164 format:
 
 ```bash
 curl -X POST http://localhost:3000/verification \
@@ -143,7 +143,7 @@ Expected response:
 
 ## Check the server logs
 
-In the nodemon terminal you should see:
+In the terminal you should see:
 
 ```
 Received verification request for: +34600000000

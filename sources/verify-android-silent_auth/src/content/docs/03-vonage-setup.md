@@ -11,7 +11,7 @@ The Vonage Verify API uses **JWT authentication**. Your backend signs each reque
 
 ## Step 1: Add the private key to your project
 
-Upload (or copy) the downloaded `private.key` file into the `workspace/` folder of your project.
+Upload (or copy) the downloaded `private.key` file into the `project/` folder.
 
 The `.gitignore` you created in the previous step already excludes `private.key` from git. Double-check:
 
@@ -29,7 +29,7 @@ echo "private.key" >> .gitignore
 
 ## Step 2: Create the `.env` file
 
-Create a file called `.env` inside `workspace/` and add the following, replacing the placeholder values with your own:
+Create a file called `.env` inside `project/` and add the following, replacing the placeholder values with your own:
 
 ```
 VONAGE_APP_ID=your_application_id_here
@@ -37,7 +37,7 @@ VONAGE_PRIVATE_KEY=./private.key
 ```
 
 - `VONAGE_APP_ID` — the Application ID you copied from the Dashboard
-- `VONAGE_PRIVATE_KEY` — a relative path to the private key file; `./private.key` works if both files are in `workspace/`
+- `VONAGE_PRIVATE_KEY` — a relative path to the private key file; `./private.key` works if both files are in `project/`
 
 > Using a relative path like `./private.key` keeps the project portable — it works on any machine regardless of the absolute path.
 
@@ -65,14 +65,14 @@ app.listen(PORT, () => {
 });
 ```
 
-Save the file. nodemon restarts automatically. Check the terminal, you should see your Application ID printed:
+Save the file. Check the terminal, you should see your Application ID printed:
 
 ```
 Backend listening on port 3000
 Vonage App ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-If you see `Vonage App ID: undefined`, the `.env` file is in the wrong location or has a typo. Make sure it's inside the `workspace/` folder and that the variable names match exactly.
+If you see `Vonage App ID: undefined`, the `.env` file is in the wrong location or has a typo. Make sure it's inside the `project/` folder and that the variable names match exactly.
 
 Once confirmed, you can remove the `console.log` for the App ID (it's not a secret, but there's no need to log it in production).
 
@@ -81,7 +81,7 @@ Once confirmed, you can remove the `console.log` for the App ID (it's not a secr
 ## Your project structure so far
 
 ```
-workspace/
+project/
 ├── node_modules/
 ├── .env               ← credentials (ignored by git)
 ├── .gitignore
@@ -95,6 +95,6 @@ workspace/
 ## Checkpoint
 
 - [ ] Vonage Application created in the Dashboard with Network Registry enabled
-- [ ] `private.key` is in `workspace/` and listed in `.gitignore`
-- [ ] `worspace/.env` has `VONAGE_APP_ID` and `VONAGE_PRIVATE_KEY`
-- [ ] `nodemon server.js` starts and shows the correct Application ID in the logs
+- [ ] `private.key` is in `project/` and listed in `.gitignore`
+- [ ] `project/.env` has `VONAGE_APP_ID` and `VONAGE_PRIVATE_KEY`
+- [ ] `server.js` reruns and shows the correct Application ID in the logs

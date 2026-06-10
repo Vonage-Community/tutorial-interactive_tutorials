@@ -70,15 +70,14 @@ app.listen(PORT, () => {
 
 ## Confirm the server still starts cleanly
 
-Save `server.js`. nodemon restarts automatically. Check the terminal — you should see no errors:
+Save `server.js`. Check the terminal — you should see no errors:
 
 ```
-[nodemon] restarting due to changes...
-[nodemon] starting `node server.js`
+Restarting `server.js`
 Backend listening on port 3000
 ```
 
-If you see an error like `Cannot find module '@vonage/auth'`, make sure you ran `npm install` from inside the `workspace/` folder.
+If you see an error like `Cannot find module '@vonage/auth'`, make sure you ran `npm install` from inside the `project/` folder.
 
 Test the health endpoint to confirm everything is still working:
 
