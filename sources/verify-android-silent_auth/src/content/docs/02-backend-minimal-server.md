@@ -70,6 +70,6 @@ If you see that response, the server is working correctly.
 ## Checkpoint
 
 - [ ] `project/server.js` exists
-- [ ] `nodemon server.js` starts without errors
+- [ ] `server.js` restarts without errors
 - [ ] `curl http://localhost:3000/health` returns `{ "status": "ok" }`
 - [ ] Saving a change to `server.js` triggers an automatic restart
