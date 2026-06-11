@@ -3,8 +3,6 @@ title: "Join from two windows"
 description: "Subscriber quality"
 ---
 
-# Join from two windows
-
 Reload `/app` in two browser windows.
 
 Join the same room in both windows.

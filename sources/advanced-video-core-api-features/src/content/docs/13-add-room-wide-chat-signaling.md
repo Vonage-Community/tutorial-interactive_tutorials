@@ -3,8 +3,6 @@ title: "Add room-wide chat signaling"
 description: "Signaling chat"
 ---
 
-# Add room-wide chat signaling
-
 Replace `setupSignalingChat` with this snippet:
 
 ```js

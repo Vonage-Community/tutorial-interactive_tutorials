@@ -3,8 +3,6 @@ title: "Add publisher profiles"
 description: "Publisher tuning"
 ---
 
-# Add publisher profiles
-
 Replace the publisher tuning functions with this snippet:
 
 ```js

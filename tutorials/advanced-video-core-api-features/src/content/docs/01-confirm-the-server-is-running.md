@@ -3,8 +3,6 @@ title: "Confirm the server is running"
 description: "Workspace setup"
 ---
 
-# Confirm the server is running
-
 The Codespace should start the local app server automatically in the server terminal.
 Leave that terminal running for the whole Advanced path.
 

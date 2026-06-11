@@ -3,8 +3,6 @@ title: "Add the browser event logger"
 description: "Debug timeline"
 ---
 
-# Add the browser event logger
-
 Replace `registerDebugLogging` with this snippet:
 
 ```js

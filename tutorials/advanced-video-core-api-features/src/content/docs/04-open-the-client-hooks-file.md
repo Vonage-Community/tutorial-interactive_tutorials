@@ -3,8 +3,6 @@ title: "Open the client hooks file"
 description: "Debug timeline"
 ---
 
-# Open the client hooks file
-
 In the Codespace editor, open:
 
 ```text

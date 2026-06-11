@@ -3,8 +3,6 @@ title: "Check publisher diagnostics"
 description: "Publisher tuning"
 ---
 
-# Check publisher diagnostics
-
 Open this path on the same preview:
 
 ```text

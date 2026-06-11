@@ -3,8 +3,6 @@ title: "Validate subscriber quality"
 description: "Subscriber quality"
 ---
 
-# Validate subscriber quality
-
 You have finished the Subscriber quality work in Codespaces.
 
 **Go back to Learning Center** and validate the Subscriber quality exercise. Continue the tutorial there until it asks you to start Recording layout.

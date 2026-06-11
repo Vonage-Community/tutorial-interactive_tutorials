@@ -3,8 +3,6 @@ title: "Add layout preview"
 description: "Recording layout"
 ---
 
-# Add layout preview
-
 Replace `getRecordingLayoutPreview` with this snippet:
 
 ```js

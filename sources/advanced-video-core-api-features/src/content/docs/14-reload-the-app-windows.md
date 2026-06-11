@@ -3,8 +3,6 @@ title: "Reload the app windows"
 description: "Signaling chat"
 ---
 
-# Reload the app windows
-
 Reload `/app` in two browser windows.
 
 Join the same room in both windows.

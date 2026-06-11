@@ -3,8 +3,6 @@ title: "Configure your Vonage credentials"
 description: "Workspace setup"
 ---
 
-# Configure your Vonage credentials
-
 Open a new terminal in the Codespace, then run:
 
 ```sh

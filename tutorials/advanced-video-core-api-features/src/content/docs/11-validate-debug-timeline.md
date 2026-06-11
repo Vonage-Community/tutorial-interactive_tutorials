@@ -3,8 +3,6 @@ title: "Validate debug timeline"
 description: "Debug timeline"
 ---
 
-# Validate debug timeline
-
 You have finished the Debug timeline work in Codespaces.
 
 **Go back to Learning Center** and validate the Debug timeline exercise. Continue the tutorial there until it asks you to start Signaling chat.

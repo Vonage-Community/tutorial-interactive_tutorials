@@ -3,8 +3,6 @@ title: "Reload the app"
 description: "Publisher tuning"
 ---
 
-# Reload the app
-
 Reload `/app`.
 
 The profile dropdown should include `Balanced` and `Low Bandwidth`.

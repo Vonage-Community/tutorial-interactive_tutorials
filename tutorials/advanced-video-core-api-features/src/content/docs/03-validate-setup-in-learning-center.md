@@ -3,8 +3,6 @@ title: "Validate setup in Learning Center"
 description: "Workspace setup"
 ---
 
-# Validate setup in Learning Center
-
 You have finished the workspace setup in the Codespace.
 
 **Copy this App URL** and paste it into the setup exercise in Learning Center.

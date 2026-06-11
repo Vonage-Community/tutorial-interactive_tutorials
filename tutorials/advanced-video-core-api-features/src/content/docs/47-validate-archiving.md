@@ -3,8 +3,6 @@ title: "Validate archiving"
 description: "Archiving"
 ---
 
-# Validate archiving
-
 You have finished the Archiving work in Codespaces.
 
 **Go back to Learning Center** and validate the Archiving exercise.

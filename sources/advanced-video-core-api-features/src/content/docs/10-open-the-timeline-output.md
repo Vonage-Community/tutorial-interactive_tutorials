@@ -3,8 +3,6 @@ title: "Open the timeline output"
 description: "Debug timeline"
 ---
 
-# Open the timeline output
-
 Open the debug timeline link in the app, or open this path on the same preview:
 
 ```text

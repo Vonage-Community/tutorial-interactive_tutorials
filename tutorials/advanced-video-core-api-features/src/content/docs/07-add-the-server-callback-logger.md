@@ -3,8 +3,6 @@ title: "Add the server callback logger"
 description: "Debug timeline"
 ---
 
-# Add the server callback logger
-
 Replace `recordClientDebugEvent` and `recordVideoCallback` with this snippet:
 
 ```js

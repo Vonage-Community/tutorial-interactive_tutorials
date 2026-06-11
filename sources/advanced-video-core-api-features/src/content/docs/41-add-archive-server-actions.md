@@ -3,8 +3,6 @@ title: "Add archive server actions"
 description: "Archiving"
 ---
 
-# Add archive server actions
-
 Replace the archive functions with this snippet:
 
 ```js

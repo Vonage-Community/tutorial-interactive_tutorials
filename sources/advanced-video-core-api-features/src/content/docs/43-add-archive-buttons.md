@@ -3,8 +3,6 @@ title: "Add archive buttons"
 description: "Archiving"
 ---
 
-# Add archive buttons
-
 Replace `setupArchivingControls` with this snippet:
 
 ```js

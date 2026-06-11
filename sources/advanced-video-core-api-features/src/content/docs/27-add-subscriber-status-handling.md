@@ -3,8 +3,6 @@ title: "Add subscriber status handling"
 description: "Subscriber quality"
 ---
 
-# Add subscriber status handling
-
 Replace `setupSubscriberQuality` with this snippet:
 
 ```js

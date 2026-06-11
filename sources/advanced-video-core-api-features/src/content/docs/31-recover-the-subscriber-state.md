@@ -3,8 +3,6 @@ title: "Recover the subscriber state"
 description: "Subscriber quality"
 ---
 
-# Recover the subscriber state
-
 Click `Simulate recovered`.
 
 The subscriber quality label should return to `normal`.
