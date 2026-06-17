@@ -6,12 +6,12 @@
     "updateContentCommand": "npm install",
     "postCreateCommand": "",
 
-    // 1. CREATE TASKS CONFIGURATION: Dynamically writes the native workspace auto-start layout rules
-    "postCreateCommand": "mkdir -p .vscode && echo '{\"version\":\"2.0.0\",\"tasks\":[{\"label\":\"OpenTutorialPane\",\"type\":\"shell\",\"command\":\"code --command livePreview.start\",\"runOptions\":{\"runOn\":\"folderOpen\"}}]}' > .vscode/tasks.json",
+    // 1. UPDATE POSTCREATE: Replaces tasks.json with a native workspace layout debugger configuration
+    "postCreateCommand": "mkdir -p .vscode && echo '{\"version\":\"0.2.0\",\"configurations\":[{\"type\":\"chrome\",\"request\":\"launch\",\"name\":\"Open Tutorial\",\"url\":\"http://127.0.0.1:1234\",\"webRoot\":\"${workspaceFolder}\",\"presentation\":{\"group\":\"navigation\",\"order\":1}}]}' > .vscode/launch.json",
     
-    // 2. CLEAN UP POSTATTACH: Pure server boot tasks, no UI triggers here to conflict with layouts
+    // 2. STABLE SERVER CHAINS: Simple server boots, completely separated from unstable UI scripting
     "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
-               
+                       
     "forwardPorts": [
         "3000"
     ],
