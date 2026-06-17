@@ -6,10 +6,10 @@
     "updateContentCommand": "npm install",
     "postCreateCommand": "",
 
-    // 1. UPDATE POSTCREATE: Replaces tasks.json with a native workspace layout debugger configuration
-    "postCreateCommand": "mkdir -p .vscode && echo '{\"version\":\"0.2.0\",\"configurations\":[{\"type\":\"chrome\",\"request\":\"launch\",\"name\":\"Open Tutorial\",\"url\":\"http://127.0.0.1:1234\",\"webRoot\":\"${workspaceFolder}\",\"presentation\":{\"group\":\"navigation\",\"order\":1}}]}' > .vscode/launch.json",
+    // 1. GENERATE THE AUTOMATION BRIDGE FILES
+    "postCreateCommand": "mkdir -p .vscode && echo '{\"version\":\"2.0.0\",\"tasks\":[{\"label\":\"PassThrough\",\"type\":\"shell\",\"command\":\"echo \\\"Tutorial initialization listening hook active...\\\"\",\"isBackground\":true,\"runOptions\":{\"runOn\":\"folderOpen\"}}]}' > .vscode/tasks.json && echo '{\"version\":\"0.2.0\",\"configurations\":[{\"type\":\"node\",\"request\":\"launch\",\"name\":\"Auto Open Tutorial\",\"preLaunchTask\":\"PassThrough\",\"serverReadyAction\":{\"pattern\":\"APPLICATION READY\",\"action\":\"runCommand\",\"command\":\"livePreview.start\"}}]}' > .vscode/launch.json",
     
-    // 2. STABLE SERVER CHAINS: Simple server boots, completely separated from unstable UI scripting
+    // 2. THE SERVER CHAIN (UNCHANGED, but matches the pattern above)
     "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
                        
     "forwardPorts": [
@@ -37,6 +37,7 @@
             ],
             "settings": {
                 "livePreview.defaultPreviewPath": "http://127.0.0.1:1234",
+                "livePreview.openPreviewTarget": "Embedded Preview",
                 "editor.formatOnSave": true,
                 "files.exclude": {
                     "node_modules": true,
