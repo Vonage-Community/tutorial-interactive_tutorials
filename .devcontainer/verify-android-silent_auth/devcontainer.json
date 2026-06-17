@@ -6,9 +6,8 @@
     "updateContentCommand": "npm install",
     "postCreateCommand": "",
     
-    // MOVE THE COMMAND TO THE FRONT: Run the preview window command instantly before booting the servers
-    "postAttachCommand": "code --command livePreview.start && nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
-    
+    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+        
     "forwardPorts": [
         "3000"
     ],
@@ -34,6 +33,7 @@
             ],
             "settings": {
                 "livePreview.defaultPreviewPath": "http://127.0.0.1:1234",
+                "livePreview.autoShowPreviewPage": true,
                 "editor.formatOnSave": true,
                 "files.exclude": {
                     "node_modules": true,
@@ -62,6 +62,7 @@
         },
         "codespaces": {
             "openFiles": [
+                "project/tutorial.html",
                 "project/server.js"
             ]
         }
