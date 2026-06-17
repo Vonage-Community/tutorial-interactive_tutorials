@@ -258,6 +258,10 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
     // We use direct path to run http-server directly, bypassing package.json scripts to avoid Astro conflicts
     let commandChain = "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & ";
 
+    // NEW: Trigger the split-screen Live Preview browser window after 3 seconds in the background.
+    // This allows your main chain to immediately proceed to Step 2 without waiting.
+    commandChain += '(nohup sh -c "sleep 3 && code --command livePreview.start" > /dev/null 2>&1 &) && ';
+    
     // 2. Prepare the directory
     if (hasSetupScript) {
         commandChain += "echo '' && cd project && node setup-project.js && ";
@@ -294,11 +298,13 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
     }
 
     // --- PORT CONFIGURATION ---
-    const portsAttributes = {
-        "1234": { "label": "Tutorial Guide", "onAutoForward": "openPreview" }
-    };
+    // const portsAttributes = {
+    //     "1234": { "label": "Tutorial Guide", "onAutoForward": "openPreview" }
+    // };
+    const portsAttributes = {};
     
-    const forwardPortsList = ["1234"];
+    // const forwardPortsList = ["1234"];
+    const forwardPortsList = [];
 
     if (config.panels && config.panels.includes('browser')) {
         portsAttributes["8080"] = {
@@ -373,8 +379,11 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
         },
         "customizations": {
             "vscode": {
-                "extensions": [],
+                "extensions": [
+                    "ms-vscode.live-server"
+                ],
                 "settings": {
+                    "livePreview.defaultPreviewPath": "http://127.0.0.1:1234",
                     "editor.formatOnSave": true,
                     "files.exclude": filesExclude,
                     ...(hasExternalApp && { "terminal.integrated.cwd": "${workspaceFolder}/project" })
