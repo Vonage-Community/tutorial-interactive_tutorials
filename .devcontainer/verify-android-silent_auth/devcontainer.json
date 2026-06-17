@@ -1,6 +1,6 @@
-json{
+{
     "name": "Tutorial: verify-android-silent_auth",
-    "image": "://microsoft.com",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
     "workspaceFolder": "/workspaces/tutorial-interactive_tutorials/tutorials/verify-android-silent_auth",
     "waitFor": "onCreateCommand",
     "updateContentCommand": "npm install",
