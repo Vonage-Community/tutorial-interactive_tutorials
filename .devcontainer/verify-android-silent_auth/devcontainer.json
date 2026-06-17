@@ -1,13 +1,13 @@
-{
+json{
     "name": "Tutorial: verify-android-silent_auth",
-    "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+    "image": "://microsoft.com",
     "workspaceFolder": "/workspaces/tutorial-interactive_tutorials/tutorials/verify-android-silent_auth",
     "waitFor": "onCreateCommand",
     "updateContentCommand": "npm install",
     "postCreateCommand": "",
     
-    // 1. SIMPLIFY THIS STRING: Strip the "code --command" segment out of the terminal chain completely!
-    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+    // MOVE THE COMMAND TO THE FRONT: Run the preview window command instantly before booting the servers
+    "postAttachCommand": "code --command livePreview.start && nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
     
     "forwardPorts": [
         "3000"
@@ -18,10 +18,9 @@
             "onAutoForward": "notify",
             "visibility": "public"
         },
-        // 2. ADD THIS: This completely kills the automatic external forwarding for 1234
         "1234": {
             "label": "Internal Tutorial Server",
-            "onAutoForward": "ignore", 
+            "onAutoForward": "ignore",
             "elevationRequired": false
         }
     },
@@ -36,8 +35,6 @@
             "settings": {
                 "livePreview.defaultPreviewPath": "http://127.0.0.1:1234",
                 "editor.formatOnSave": true,
-                // 3. ADD THIS: This forces the extension to natively open on layout generation, bypasses browser popup blocks!
-                "livePreview.autoShowPreviewPage": true,
                 "files.exclude": {
                     "node_modules": true,
                     "dist": true,
