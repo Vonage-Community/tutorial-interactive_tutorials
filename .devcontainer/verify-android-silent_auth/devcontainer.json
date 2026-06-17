@@ -5,7 +5,10 @@
     "waitFor": "onCreateCommand",
     "updateContentCommand": "npm install",
     "postCreateCommand": "",
-    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & (nohup sh -c 'sleep 3 && code --command livePreview.start' > /dev/null 2>&1 &) && cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+    
+    // 1. SIMPLIFY THIS STRING: Strip the "code --command" segment out of the terminal chain completely!
+    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+    
     "forwardPorts": [
         "3000"
     ],
@@ -14,6 +17,12 @@
             "label": "My Backend Service",
             "onAutoForward": "notify",
             "visibility": "public"
+        },
+        // 2. ADD THIS: This completely kills the automatic external forwarding for 1234
+        "1234": {
+            "label": "Internal Tutorial Server",
+            "onAutoForward": "ignore", 
+            "elevationRequired": false
         }
     },
     "features": {
@@ -27,6 +36,8 @@
             "settings": {
                 "livePreview.defaultPreviewPath": "http://127.0.0.1:1234",
                 "editor.formatOnSave": true,
+                // 3. ADD THIS: This forces the extension to natively open on layout generation, bypasses browser popup blocks!
+                "livePreview.autoShowPreviewPage": true,
                 "files.exclude": {
                     "node_modules": true,
                     "dist": true,
