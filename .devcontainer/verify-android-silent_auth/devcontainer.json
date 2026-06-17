@@ -43,7 +43,7 @@
                     "dist": true,
                     "steps": true,
                     ".devcontainer": true,
-                    ".vscode": true,
+                    ".vscode": false,
                     "package.json": true,
                     "package-lock.json": true,
                     "tutorial-config.json": true,
