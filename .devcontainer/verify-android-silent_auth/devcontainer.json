@@ -28,7 +28,8 @@
     "postAttachCommand": "cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
  
     "forwardPorts": [
-        "3000"
+        "3000",
+        "1234"
     ],
     "portsAttributes": {
         "3000": {
