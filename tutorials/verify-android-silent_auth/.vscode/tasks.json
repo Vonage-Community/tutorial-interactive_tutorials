@@ -3,30 +3,22 @@
     "tasks": [
         {
             "label": "Auto Open Live Preview",
-            "type": "shell",
-            "command": "code -r project/server.js && sleep 3 && echo '🚀 Starting Preview Layout...' && sleep 2 && echo 'APPLICATION READY'",
-            "isBackground": true,
-            "problemMatcher": {
-                "owner": "custom",
-                "pattern": { "regexp": "^$" },
-                "background": {
-                    "activeOnStart": true,
-                    "beginsPattern": "Starting Preview",
-                    "endsPattern": "READY"
-                }
-            },
+            "command": "${input:launchLivePreview}",
+            "problemMatcher": [],
             "runOptions": {
                 "runOn": "folderOpen"
             },
             "presentation": {
                 "reveal": "silent",
                 "panel": "shared"
-            },
-            "serverReadyAction": {
-                "pattern": "APPLICATION READY",
-                "action": "runCommand",
-                "command": "livePreview.start"
             }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "launchLivePreview",
+            "type": "command",
+            "command": "livePreview.start"
         }
     ]
 }
