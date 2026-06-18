@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Auto Open Live Preview",
+            "type": "shell",
+            // This runs a simple long-running task that outputs the trigger phrase
+            "command": "echo '🚀 Starting Preview Layout Trigger...' && sleep 2 && echo 'APPLICATION READY'",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": { "regexp": "^$" },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Starting Preview",
+                    "endsPattern": "READY"
+                }
+            },
+            "runOptions": {
+                // This forces VS Code to execute this task automatically on workspace open
+                "runOn": "folderOpen"
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            },
+            // The magic line: Once "APPLICATION READY" is printed, VS Code fires the internal command
+            "serverReadyAction": {
+                "pattern": "APPLICATION READY",
+                "action": "runCommand",
+                "command": "livePreview.start"
+            }
+        }
+    ]
+}
