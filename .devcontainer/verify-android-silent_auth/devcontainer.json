@@ -19,8 +19,11 @@
     // "postAttachCommand": "code --extension ms-vscode.live-server && nohup node -e \"const http = require('http'), fs = require('fs'), path = require('path'); http.createServer((req, res) => { res.setHeader('X-Frame-Options', 'ALLOWALL'); res.setHeader('Access-Control-Allow-Origin', '*'); let f = path.join('steps', req.url === '/' ? 'index.html' : req.url); fs.readFile(f, (err, data) => { if (err) { res.writeHead(404); res.end('Not Found'); } else { res.end(data); } }); }).listen(1234);\" > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
 
     // CLEAN ATTACH CHAIN: No web commands, no custom node servers. Only starts your backend service.
-    "postAttachCommand": "cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
- 
+    // "postAttachCommand": "cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+
+    // UPDATED ATTACH CHAIN: Bypasses terminal CLI limitations by running a background loop that safely executes the internal UI preview window
+    "postAttachCommand": "(sleep 5 && node -e \"const cp = require('child_process'); cp.exec('mkdir -p .vscode && echo \\\"{\\\\\\\"version\\\\\\\":\\\\\\\"2.0.0\\\\\\\",\\\\\\\"tasks\\\\\\\":[{\\\\\\\"label\\\\\\\":\\\\\\\"LivePreview\\\\\\\",\\\\\\\"type\\\\\\\":\\\\\\\"shell\\\\\\\",\\\\\\\"command\\\\\\\":\\\\\\\"echo Workspace Canvas Ready\\\\\\\",\\\\\\\"runOptions\\\\\\\":{\\\\\\\"runOn\\\\\\\":\\\\\\\"folderOpen\\\\\\\"},\\\\\\\"serverReadyAction\\\\\\\":{\\\\\\\"pattern\\\\\\\":\\\\\\\"Ready\\\\\\\",\\\\\\\"action\\\\\\\":\\\\\\\"runCommand\\\\\\\",\\\\\\\"command\\\\\\\":\\\\\\\"livePreview.start\\\\\\\"}}]}\\\\\" > .vscode/tasks.json');\" &) && cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+     
     "forwardPorts": [
         "3000"
     ],
@@ -67,7 +70,8 @@
                     "download-toolbar.js": true
                 },
                 "terminal.integrated.cwd": "${workspaceFolder}/project",
-                "task.allowAutomaticTasks": "on"
+                "task.allowAutomaticTasks": "on",
+                "task.quickOpen.skipOnBacklog": false
             }
         },
         "codespaces": {
