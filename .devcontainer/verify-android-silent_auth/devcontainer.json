@@ -16,22 +16,19 @@
     // "postAttachCommand": "code --command livePreview.start && cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
 
     // METHOD 2 IMPLEMENTED: Replaced broken --command with correct --extension call to focus the panel safely
-    "postAttachCommand": "code --extension ms-vscode.live-server && nohup node -e \"const http = require('http'), fs = require('fs'), path = require('path'); http.createServer((req, res) => { res.setHeader('X-Frame-Options', 'ALLOWALL'); res.setHeader('Access-Control-Allow-Origin', '*'); let f = path.join('steps', req.url === '/' ? 'index.html' : req.url); fs.readFile(f, (err, data) => { if (err) { res.writeHead(404); res.end('Not Found'); } else { res.end(data); } }); }).listen(1234);\" > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
-      
+    // "postAttachCommand": "code --extension ms-vscode.live-server && nohup node -e \"const http = require('http'), fs = require('fs'), path = require('path'); http.createServer((req, res) => { res.setHeader('X-Frame-Options', 'ALLOWALL'); res.setHeader('Access-Control-Allow-Origin', '*'); let f = path.join('steps', req.url === '/' ? 'index.html' : req.url); fs.readFile(f, (err, data) => { if (err) { res.writeHead(404); res.end('Not Found'); } else { res.end(data); } }); }).listen(1234);\" > /dev/null 2>&1 & cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+
+    // CLEAN ATTACH CHAIN: No web commands, no custom node servers. Only starts your backend service.
+    "postAttachCommand": "cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+ 
     "forwardPorts": [
-        "3000",
-        "1234"
+        "3000"
     ],
     "portsAttributes": {
         "3000": {
             "label": "My Backend Service",
             "onAutoForward": "notify",
             "visibility": "public"
-        },
-        "1234": {
-            "label": "Internal Tutorial Server",
-            "onAutoForward": "openPreview",
-            "elevationRequired": false
         }
     },
     "features": {
@@ -43,7 +40,8 @@
                 "ms-vscode.live-server"
             ],
             "settings": {
-                "livePreview.defaultPreviewPath": "http://127.0.0.1:1234",
+                "livePreview.defaultPreviewPath": "/steps/index.html",
+                "livePreview.autoGeneratePreviewTarget": "workspace",
                 "livePreview.openPreviewTarget": "Embedded Preview",
                 "editor.formatOnSave": true,
                 "files.exclude": {
