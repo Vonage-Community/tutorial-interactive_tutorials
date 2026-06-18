@@ -22,8 +22,11 @@
     // "postAttachCommand": "cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
 
     // UPDATED ATTACH CHAIN: Bypasses terminal CLI limitations by running a background loop that safely executes the internal UI preview window
-    "postAttachCommand": "(sleep 5 && node -e \"const cp = require('child_process'); cp.exec('mkdir -p .vscode && echo \\\"{\\\\\\\"version\\\\\\\":\\\\\\\"2.0.0\\\\\\\",\\\\\\\"tasks\\\\\\\":[{\\\\\\\"label\\\\\\\":\\\\\\\"LivePreview\\\\\\\",\\\\\\\"type\\\\\\\":\\\\\\\"shell\\\\\\\",\\\\\\\"command\\\\\\\":\\\\\\\"echo Workspace Canvas Ready\\\\\\\",\\\\\\\"runOptions\\\\\\\":{\\\\\\\"runOn\\\\\\\":\\\\\\\"folderOpen\\\\\\\"},\\\\\\\"serverReadyAction\\\\\\\":{\\\\\\\"pattern\\\\\\\":\\\\\\\"Ready\\\\\\\",\\\\\\\"action\\\\\\\":\\\\\\\"runCommand\\\\\\\",\\\\\\\"command\\\\\\\":\\\\\\\"livePreview.start\\\\\\\"}}]}\\\\\" > .vscode/tasks.json');\" &) && cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
-     
+    //"postAttachCommand": "(sleep 5 && node -e \"const cp = require('child_process'); cp.exec('mkdir -p .vscode && echo \\\"{\\\\\\\"version\\\\\\\":\\\\\\\"2.0.0\\\\\\\",\\\\\\\"tasks\\\\\\\":[{\\\\\\\"label\\\\\\\":\\\\\\\"LivePreview\\\\\\\",\\\\\\\"type\\\\\\\":\\\\\\\"shell\\\\\\\",\\\\\\\"command\\\\\\\":\\\\\\\"echo Workspace Canvas Ready\\\\\\\",\\\\\\\"runOptions\\\\\\\":{\\\\\\\"runOn\\\\\\\":\\\\\\\"folderOpen\\\\\\\"},\\\\\\\"serverReadyAction\\\\\\\":{\\\\\\\"pattern\\\\\\\":\\\\\\\"Ready\\\\\\\",\\\\\\\"action\\\\\\\":\\\\\\\"runCommand\\\\\\\",\\\\\\\"command\\\\\\\":\\\\\\\"livePreview.start\\\\\\\"}}]}\\\\\" > .vscode/tasks.json');\" &) && cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+
+    // CLEANED ATTACH CHAIN: All complex UI script generation removed. It only boots your backend.
+    "postAttachCommand": "cd project && (sleep 4 && echo -e '\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n' &) && (nohup sh -c 'sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME' > /dev/null 2>&1 &) && npm start",
+ 
     "forwardPorts": [
         "3000"
     ],
@@ -70,8 +73,7 @@
                     "download-toolbar.js": true
                 },
                 "terminal.integrated.cwd": "${workspaceFolder}/project",
-                "task.allowAutomaticTasks": "on",
-                "task.quickOpen.skipOnBacklog": false
+                "task.allowAutomaticTasks": "on"
             }
         },
         "codespaces": {
