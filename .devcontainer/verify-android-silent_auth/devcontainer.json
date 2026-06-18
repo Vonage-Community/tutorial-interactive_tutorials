@@ -38,7 +38,7 @@
         },
         "1234": {
             "label": "Live Preview Isolated Core",
-            "onAutoForward": "ignore",
+            "onAutoForward": "notify",
             "elevationRequired": false
         }
     },
@@ -53,7 +53,7 @@
             "settings": {
                 "livePreview.serverPort": 1234,
                 "livePreview.defaultPreviewPath": "/steps/index.html",
-                "livePreview.autoGeneratePreviewTarget": "workspace",
+                "livePreview.autoGeneratePreviewTarget": "file",
                 "livePreview.openPreviewTarget": "Embedded Preview",
                 "editor.formatOnSave": true,
                 "files.exclude": {
