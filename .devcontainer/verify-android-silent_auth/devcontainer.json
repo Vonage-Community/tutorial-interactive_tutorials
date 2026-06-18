@@ -35,6 +35,11 @@
             "label": "My Backend Service",
             "onAutoForward": "notify",
             "visibility": "public"
+        },
+        "1234": {
+            "label": "Live Preview Isolated Core",
+            "onAutoForward": "ignore",
+            "elevationRequired": false
         }
     },
     "features": {
@@ -46,6 +51,7 @@
                 "ms-vscode.live-server"
             ],
             "settings": {
+                "livePreview.serverPort": 1234,
                 "livePreview.defaultPreviewPath": "/steps/index.html",
                 "livePreview.autoGeneratePreviewTarget": "workspace",
                 "livePreview.openPreviewTarget": "Embedded Preview",
