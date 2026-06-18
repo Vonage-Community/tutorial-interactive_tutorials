@@ -38,8 +38,10 @@
         },
         "1234": {
             "label": "Live Preview Isolated Core",
-            "onAutoForward": "notify",
-            "elevationRequired": false
+            "onAutoForward": "openBrowser",
+            "elevationRequired": false,
+            "requireLocalPort": false,
+            "protocol": "http"
         }
     },
     "features": {
