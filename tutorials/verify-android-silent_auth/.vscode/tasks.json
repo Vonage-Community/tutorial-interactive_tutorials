@@ -4,8 +4,7 @@
         {
             "label": "Auto Open Live Preview",
             "type": "shell",
-            // This runs a simple long-running task that outputs the trigger phrase
-            "command": "echo '🚀 Starting Preview Layout Trigger...' && sleep 2 && echo 'APPLICATION READY'",
+            "command": "code -r project/server.js && sleep 3 && echo '🚀 Starting Preview Layout...' && sleep 2 && echo 'APPLICATION READY'",
             "isBackground": true,
             "problemMatcher": {
                 "owner": "custom",
@@ -17,14 +16,12 @@
                 }
             },
             "runOptions": {
-                // This forces VS Code to execute this task automatically on workspace open
                 "runOn": "folderOpen"
             },
             "presentation": {
                 "reveal": "silent",
                 "panel": "shared"
             },
-            // The magic line: Once "APPLICATION READY" is printed, VS Code fires the internal command
             "serverReadyAction": {
                 "pattern": "APPLICATION READY",
                 "action": "runCommand",
