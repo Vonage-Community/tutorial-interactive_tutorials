@@ -4,7 +4,6 @@
         {
             "label": "Auto Open Live Preview",
             "type": "shell",
-            // The '#' trick safely fires the UI command internally without throwing a shell path execution error
             "command": "echo 'Initializing secure viewport layout...' # ${input:launchLivePreview}",
             "runOptions": {
                 "runOn": "folderOpen"
