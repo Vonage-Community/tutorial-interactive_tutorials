@@ -62,7 +62,7 @@
         },
         "codespaces": {
             "openFiles": [
-                "project/vcrBuild.env.sh"
+                "project/backend/.env"
             ]
         }
     }
