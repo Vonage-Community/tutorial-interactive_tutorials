@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "fs-extra": "^11.3.5",
-    "unzipper": "^0.12.3"
+    "unzipper": "^0.12.5"
   }
 }

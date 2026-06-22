@@ -1,0 +1,66 @@
+name: Deploy to VCR
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types: [closed]
+
+permissions:
+  contents: read
+
+env:
+  DOMAIN: ${{secrets.DOMAIN}}
+
+jobs:
+  build-and-test:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify Node & Yarn versions
+        run: |
+          node -v
+          yarn -v
+
+      - name: Building artefact
+        run: |
+          sed -i "s/<DOMAIN>/${DOMAIN}/g" "${{ github.workspace }}/vcr-gha.yml"
+          ./vcrBuild.sh
+
+      - name: Install VCR CLI
+        uses: ./.github/actions/install-vcr-cli
+
+      - name: Deploy vcr
+        uses: ./.github/actions/deploy-vcr
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          api-key: ${{ secrets.VCR_API_KEY }}
+          api-secret: ${{ secrets.VCR_API_SECRET }}
+          filename: vcr-gha.yml
+
+      - name: Slack notification on success
+        uses: ./.github/actions/slack-notify
+        with:
+          slack-bot-token: ${{ secrets.SLACK_NOTIFICATION }}
+          color: '28a745'
+          message: "Vera pull request *<https://github.com/Vonage/vonage-video-react-app/pull/${{ github.event.number }}|${{ github.event.pull_request.title }}>* \n with commit hash: ${{ github.sha }} \n is merged and deployed to VCR \n*<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Click here to go to build logs>* \n :large_green_circle: :large_green_circle: :large_green_circle: :large_green_circle:"
+        if: success()
+        continue-on-error: true
+
+      - name: Slack notification on failure
+        uses: ./.github/actions/slack-notify
+        with:
+          slack-bot-token: ${{ secrets.SLACK_NOTIFICATION }}
+          color: FF0000
+          message: "Vera pull request *<https://github.com/Vonage/vonage-video-react-app/pull/${{ github.event.number }}|${{ github.event.pull_request.title }}>* \n with commit hash: ${{ github.sha }} \n is merged but FAILED to deploy to VCR \n *<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Click here to go to build logs>* \n :red_circle: :red_circle: :red_circle: :red_circle:"
+        if: failure()
+        continue-on-error: true

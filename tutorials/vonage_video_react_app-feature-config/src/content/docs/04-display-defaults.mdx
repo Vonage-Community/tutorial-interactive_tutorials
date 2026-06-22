@@ -1,0 +1,68 @@
+---
+title: Display Defaults
+---
+
+Beyond feature flags, `vcrBuild.env.sh` also controls the default visual and performance settings of the video room — the starting resolution, room layout, bitrate limits, and available frame rates.
+
+## Video Resolution
+
+`DEFAULT_RESOLUTION` sets the outgoing video resolution when a participant joins.
+
+| Value | Description |
+|-------|-------------|
+| `1920x1080` | Full HD |
+| `1280x960` | HD (4:3) |
+| `1280x720` | HD 720p **(default)** |
+| `640x480` | SD (4:3) |
+| `640x360` | SD 360p |
+| `320x240` | Low (4:3) |
+| `320x180` | Low 180p |
+
+```bash
+export DEFAULT_RESOLUTION='1280x720'
+```
+
+## Room Layout
+
+`DEFAULT_LAYOUT_MODE` controls which layout is shown when a participant first enters the room.
+
+| Value | Description |
+|-------|-------------|
+| `active-speaker` | Highlights the current speaker **(default)** |
+| `grid` | Shows all participants in an equal grid |
+
+```bash
+export DEFAULT_LAYOUT_MODE='active-speaker'
+```
+
+{% aside type="caution" %}
+Changing `DEFAULT_LAYOUT_MODE` requires the participant to **rejoin the room** to take effect — a running session does not update dynamically.
+{% /aside %}
+
+## Custom Video Bitrate Range
+
+These settings control the minimum and maximum selectable bitrate in the **Advanced Settings** dialog.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MIN_CUSTOM_VIDEO_BITRATE_BPS` | `5000` | Minimum selectable bitrate in bps |
+| `MAX_CUSTOM_VIDEO_BITRATE_BPS` | `10000000` | Maximum selectable bitrate in bps |
+
+```bash
+export MIN_CUSTOM_VIDEO_BITRATE_BPS=5000
+export MAX_CUSTOM_VIDEO_BITRATE_BPS=10000000
+```
+
+## Supported Frame Rates
+
+`SUPPORTED_FRAME_RATES` defines the frame rate options shown in the Advanced Settings video tab. Values are positive integers separated by `|`.
+
+```bash
+export SUPPORTED_FRAME_RATES='30|15|7|1'
+```
+
+{% aside type="tip" %}
+Lowering `DEFAULT_RESOLUTION` or restricting `SUPPORTED_FRAME_RATES` can significantly reduce bandwidth usage — useful when you know participants may be on slower connections.
+{% /aside %}
+
+You have configured the display defaults. In the next step, you will apply all your changes and verify them.

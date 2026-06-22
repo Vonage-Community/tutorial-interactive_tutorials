@@ -1,0 +1,53 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "integration-tests",
+  "projectType": "application",
+  "root": "integration-tests",
+  "sourceRoot": "integration-tests",
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "description": "Run all Playwright tests in Chrome, Firefox, and Mobile Chrome",
+      "options": {
+        "cwd": "integration-tests",
+        "command": "playwright test --project='Google Chrome Fake Devices' --project=firefox --project='Mobile Chrome'"
+      }
+    },
+    "postinstall": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "integration-tests",
+        "command": "playwright install"
+      }
+    },
+    "ts-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "integration-tests",
+        "command": "tsc -p tsconfig.json --pretty true --noEmit"
+      }
+    },
+    "ts-check:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "integration-tests",
+        "command": "tsc -p tsconfig.json --noEmit --watch --preserveWatchOutput"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "integration-tests",
+        "command": "eslint '**/*.ts' --report-unused-disable-directives --max-warnings 0"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "integration-tests",
+        "command": "eslint '**/*.ts' --fix --report-unused-disable-directives --max-warnings 0"
+      }
+    }
+  },
+  "tags": ["e2e", "playwright"]
+}
