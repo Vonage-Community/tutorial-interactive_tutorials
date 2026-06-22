@@ -6,9 +6,7 @@
     "browser"
   ],
   "repository": "https://github.com/Vonage/vonage-video-react-app",
-  "starterFiles": [
-    "project/vcrBuild.env.sh"
-  ],
+  "starterFiles": [],
   "capabilities": [],
   "version": "1.0.0",
   "filename": "vonage_video_react_app-feature-config"
