@@ -1,0 +1,63 @@
+---
+title: Feature Flags
+---
+
+Feature flags let you enable or disable specific capabilities of the app without changing any source code. Each flag is a boolean `true` / `false` value in `vcrBuild.env.sh`.
+
+## Media Controls
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ALLOW_CAMERA_CONTROL` | `true` | Show the camera on/off toggle |
+| `ALLOW_VIDEO_ON_JOIN` | `true` | Start with camera enabled when joining |
+| `ALLOW_MICROPHONE_CONTROL` | `true` | Show the microphone on/off toggle |
+| `ALLOW_AUDIO_ON_JOIN` | `true` | Start with microphone enabled when joining |
+| `ALLOW_ADVANCED_NOISE_SUPPRESSION` | `true` | Enable the advanced noise-suppression toggle |
+| `ALLOW_BACKGROUND_EFFECTS` | `true` | Enable virtual background and blur effects |
+
+## Device Selection
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `WAITING_ROOM_ALLOW_DEVICE_SELECTION` | `true` | Show device selectors in the waiting room |
+| `MEETING_ROOM_ALLOW_DEVICE_SELECTION` | `true` | Show device selectors inside the meeting room |
+
+## In-Call Features
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ALLOW_ARCHIVING` | `true` | Enable meeting recording |
+| `ALLOW_CAPTIONS` | `true` | Enable live captions |
+| `ALLOW_CHAT` | `true` | Enable the in-call group chat |
+| `ALLOW_EMOJIS` | `true` | Enable emoji reactions |
+| `ALLOW_SCREEN_SHARE` | `true` | Enable screen sharing |
+| `SHOW_PARTICIPANT_LIST` | `true` | Show the participant list panel |
+
+## Room Behaviour
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ENABLE_REPORT_ISSUE` | `false` | Show the in-call issue reporting tool |
+| `BYPASS_WAITING_ROOM` | `false` | Skip the waiting room and join directly |
+| `AVOID_FETCHING_APP_CONFIG` | `true` | Skip fetching remote app configuration on startup |
+
+## Example: Minimal Read-Only Viewer
+
+To create a stripped-down experience with no interactive tools, you might disable several flags at once:
+
+```bash
+# vcrBuild.env.sh
+export ALLOW_CHAT=false
+export ALLOW_EMOJIS=false
+export ALLOW_SCREEN_SHARE=false
+export ALLOW_ARCHIVING=false
+export ALLOW_CAPTIONS=false
+export ENABLE_REPORT_ISSUE=false
+export SHOW_PARTICIPANT_LIST=false
+```
+
+{% aside type="tip" %}
+Background effects (`ALLOW_BACKGROUND_EFFECTS`) are only supported in Chromium-based browsers. If your audience uses Firefox or Safari, consider disabling this flag to avoid showing an unsupported feature.
+{% /aside %}
+
+You have reviewed all the feature flags. Next, you will look at display defaults like resolution and room layout.

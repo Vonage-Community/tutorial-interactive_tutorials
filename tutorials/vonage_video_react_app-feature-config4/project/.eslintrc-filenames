@@ -1,0 +1,14 @@
+{
+  "plugins": [
+    "filename-rules"
+  ],
+  "rules": {
+    "filename-rules/match": [
+      2,
+      {
+        ".ts": "camelCase",
+        ".tsx": "camelCase"
+      }
+    ]
+  }
+}

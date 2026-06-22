@@ -1,0 +1,185 @@
+name: 🧑‍💻
+
+on: [pull_request, workflow_dispatch]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  VIDEO_SERVICE_PROVIDER: ${{vars.VIDEO_SERVICE_PROVIDER}}
+  OT_API_KEY: ${{secrets.API_KEY}}
+  OT_API_SECRET: ${{secrets.API_SECRET}}
+  VONAGE_APP_ID: ${{secrets.VONAGE_APP_ID}}
+  VONAGE_PRIVATE_KEY: ${{secrets.VONAGE_PRIVATE_KEY}}
+
+jobs:
+  # ----------------------------------------------------
+  # Unit Tests (Matrix)
+  # ----------------------------------------------------
+  unit-tests:
+    name: Unit Tests - ${{ matrix.project }}
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+
+    strategy:
+      matrix:
+        project: [frontend, backend, ui, core, common, api]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install Dependencies
+        run: yarn --ignore-scripts
+
+      - name: Run ${{ matrix.project }} unit tests
+        run: NX_DAEMON=false yarn nx test ${{ matrix.project }} --configuration=coverage
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.project }}
+          path: |
+            ${{ matrix.project }}/coverage/
+            libs/${{ matrix.project }}/coverage/
+          retention-days: 1
+
+  # ----------------------------------------------------
+  # Integration Tests (Playwright)
+  # ----------------------------------------------------
+  integration-tests:
+    name: 🤖 E2E / ${{ matrix.browser.name }}
+    runs-on: ubuntu-22.04
+    if: github.event.pull_request.head.repo.fork == false
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - name: Chrome
+            project: Google Chrome Fake Devices
+          - name: Firefox
+            project: firefox
+          - name: Mobile Chrome
+            project: Mobile Chrome
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install chrome latest
+        if: matrix.browser.name != 'Firefox'
+        run: |
+          wget --max-redirect=0 -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+          sudo apt update && sudo apt install -y google-chrome-stable 
+          echo "Installed Chrome:"
+          /usr/bin/google-chrome-stable --version
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install Dependencies
+        run: |
+          node -v
+          yarn --ignore-scripts
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ hashFiles('**/package.json') }}
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run integration tests
+        run: |
+          echo "VIDEO_SERVICE_PROVIDER: $VIDEO_SERVICE_PROVIDER"
+          Xvfb :99 & export DISPLAY=:99
+          cd integration-tests && npx playwright test --project='${{ matrix.browser.project }}'
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-${{ matrix.browser.name }}
+          path: integration-tests/playwright-report/
+          retention-days: 7
+
+  # ----------------------------------------------------
+  # SonarCloud Analysis
+  # ----------------------------------------------------
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-22.04
+    needs: [unit-tests]
+    if: github.event.pull_request.head.repo.fork == false
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install Dependencies
+        run: |
+          node -v
+          yarn --ignore-scripts
+
+      - name: Download all coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-*
+          merge-multiple: false
+
+      - name: List coverage files
+        run: |
+          echo "Listing coverage files:"
+          find . -name "lcov.info" -type f
+          ls -la coverage-* || true
+
+      - name: SonarCloud Scan On PR
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+
+      - name: SonarCloud Branch Analysis On base branch
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.branch.name=${{ github.event.pull_request.base.ref }}
