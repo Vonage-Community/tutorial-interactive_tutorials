@@ -1,16 +1,13 @@
 {
   "files": [],
-  "openFiles": [
-    "project/backend/.env"
-  ],
+  "openFiles": [],
   "panels": [
     "terminal",
     "browser"
   ],
   "repository": "https://github.com/Vonage/vonage-video-react-app",
   "starterFiles": [
-    "project/vcrBuild.env.sh",
-    "project/backend/.env"
+    "project/vcrBuild.env.sh"
   ],
   "capabilities": [],
   "version": "1.0.0",
