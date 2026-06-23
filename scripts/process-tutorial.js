@@ -76,6 +76,7 @@ async function main() {
             hasExternalApp = true;
         } catch (err) {
             console.error("❌ Failed to clone external repository:", err);
+            process.exit(1);
         } finally {
             fs.removeSync(tempCloneDir);
         }
@@ -171,6 +172,7 @@ async function main() {
         }
     } catch (e) {
         console.log("ℹ️  Skipping build step or build failed.");
+        process.exit(1);
     }
 
     // 8. Generate Dynamic devcontainer.json
