@@ -54,7 +54,9 @@
             }
         },
         "codespaces": {
-            "openFiles": []
+            "openFiles": [
+                "public/index.html"
+            ]
         }
     }
 }
