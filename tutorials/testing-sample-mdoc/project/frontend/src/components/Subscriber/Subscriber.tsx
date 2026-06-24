@@ -1,0 +1,162 @@
+import { MouseEvent, ReactElement, useEffect, useRef, useState } from 'react';
+import { Box } from 'opentok-layout-js';
+import { SubscriberWrapper } from '../../types/session';
+import AudioIndicator from '../MeetingRoom/AudioIndicator';
+import useSubscriberTalking from '../../hooks/useSubscriberTalking';
+import AvatarInitials from '../AvatarInitials';
+import ScreenShareNameDisplay from '../ScreenShareNameDisplay';
+import NameDisplay from '../MeetingRoom/NameDisplay';
+import VideoTile from '../MeetingRoom/VideoTile';
+import PinButton from '../MeetingRoom/PinButton';
+import useSessionContext from '../../hooks/useSessionContext';
+import isMouseEventInsideBox from '../../utils/isMouseEventInsideBox';
+import ScreenshareVideoTile from '../MeetingRoom/ScreenshareVideoTile';
+import { ABSOLUTE_DISTANCE_THRESHOLD_REM_VALUE } from '@utils/constants';
+import toRemValue from '@common/helpers/toRemValue';
+import attempt from '@common/execution/attempt';
+
+export type SubscriberProps = {
+  subscriberWrapper: SubscriberWrapper;
+  isHidden: boolean;
+  box: Box | undefined;
+  isActiveSpeaker: boolean;
+};
+
+/**
+ * Subscriber Component
+ *
+ * Displays the Subscriber with an accompanying name tag. An audio indicator is displayed for non-screenshare subscribers, notifying meeting participants when the subscriber is publishing audio.
+ * For each subscriber, the initials are displayed if `publishVideo` is off.
+ * @param {SubscriberProps} props - The props for the component.
+ *  @property {SubscriberWrapper} subscriberWrapper - The SubscriberWrapper for the Subscriber.
+ *  @property {boolean} isHidden - Whether the participant is hidden.
+ *  @property {Box | undefined} box - The Box of the parent element.
+ *  @property {boolean} isActiveSpeaker - Whether the participant is the active speaker.
+ * @returns {ReactElement} - The Subscriber component.
+ */
+const Subscriber = ({
+  subscriberWrapper,
+  isHidden,
+  box,
+  isActiveSpeaker,
+}: SubscriberProps): ReactElement => {
+  const { isMaxPinned, pinSubscriber } = useSessionContext();
+  const { isPinned, subscriber } = subscriberWrapper;
+  const isScreenShare = subscriber?.stream?.videoType === 'screen';
+  const subRef = useRef<HTMLDivElement>(null);
+  const isTalking = useSubscriberTalking({ subscriber, isActiveSpeaker });
+  const [isTileHovered, setIsTileHovered] = useState<boolean>(false);
+
+  useEffect(() => {
+    // If hidden - Unsubscribe from video to save bandwidth and cpu
+    // If not hidden - re-subscribe to video
+    void attempt(() => {
+      subscriberWrapper.subscriber.subscribeToVideo(!isHidden);
+    });
+  }, [isHidden, subscriberWrapper.subscriber]);
+
+  useEffect(() => {
+    if (subscriberWrapper && subRef.current) {
+      const { element } = subscriberWrapper;
+
+      // eslint-disable-next-line react-hooks/immutability
+      element.id = subscriberWrapper.id;
+      element.classList.add('video__element', 'rounded-vera-large');
+
+      element.style.width = '100%';
+      element.style.height = '100%';
+      element.style.position = 'absolute';
+      element.style.objectFit = 'contain';
+
+      subRef.current.appendChild(element);
+    }
+  }, [subscriberWrapper, isScreenShare]);
+
+  const handlePinClick = (clickEvent: MouseEvent<HTMLButtonElement>) => {
+    pinSubscriber(subscriberWrapper.id);
+    // We set hovering to false manually since onMouseLeave is not invoked when the DOM Element is moved.
+    setIsTileHovered(false);
+    // In case the DOM Element didn't move, which can happen if pinning while viewing screenshare -
+    // we use setTimeout to let the new layout render, then check if the element is still under the click event location.
+    // If so we re-enable the hover state.
+    setTimeout(() => {
+      if (subRef.current) {
+        const divRect = subRef.current.getBoundingClientRect();
+        if (isMouseEventInsideBox(clickEvent, divRect)) {
+          setIsTileHovered(true);
+        }
+      }
+    }, 0);
+  };
+
+  const hasVideo = subscriberWrapper.subscriber?.stream?.hasVideo;
+  const initials = subscriberWrapper.subscriber?.stream?.initials;
+  const username = subscriberWrapper.subscriber?.stream?.name ?? '';
+  const hasAudio = subscriberWrapper.subscriber.stream?.hasAudio;
+  const audioIndicatorStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: toRemValue(ABSOLUTE_DISTANCE_THRESHOLD_REM_VALUE),
+    right: toRemValue(ABSOLUTE_DISTANCE_THRESHOLD_REM_VALUE),
+    height: '1.5rem',
+    width: '1.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 'auto',
+  };
+
+  return isScreenShare ? (
+    <ScreenshareVideoTile
+      id={`${subscriberWrapper.id}`}
+      box={box}
+      className="screen-subscriber"
+      data-testid={`subscriber-container-${subscriberWrapper.id}`}
+      ref={subRef}
+      onMouseEnter={() => setIsTileHovered(true)}
+      onMouseLeave={() => setIsTileHovered(false)}
+    >
+      {box && <ScreenShareNameDisplay name={username} box={box} />}
+    </ScreenshareVideoTile>
+  ) : (
+    <VideoTile
+      id={`${subscriberWrapper.id}`}
+      className="subscriber"
+      data-testid={`subscriber-container-${subscriberWrapper.id}`}
+      isHidden={isHidden}
+      box={box}
+      hasVideo={!!hasVideo}
+      ref={subRef}
+      isTalking={isTalking}
+      onMouseEnter={() => setIsTileHovered(true)}
+      onMouseLeave={() => setIsTileHovered(false)}
+    >
+      <PinButton
+        isPinned={isPinned}
+        isTileHovered={isTileHovered}
+        isMaxPinned={isMaxPinned}
+        handleClick={handlePinClick}
+        participantName={username}
+      />
+      <AudioIndicator
+        hasAudio={hasAudio}
+        stream={subscriber.stream}
+        indicatorStyle={audioIndicatorStyle}
+        indicatorClassName="rounded-vera-large bg-vera-dark-background text-vera-accent"
+        indicatorColor="var(--vera-accent)"
+        participantName={username}
+      />
+
+      {!hasVideo && (
+        <AvatarInitials
+          initials={initials}
+          username={username}
+          height={box?.height}
+          width={box?.width}
+        />
+      )}
+      {box && <NameDisplay name={username} containerWidth={box.width} />}
+    </VideoTile>
+  );
+};
+
+export default Subscriber;

@@ -1,0 +1,20 @@
+{
+  "files": [
+    "public/index.html"
+  ],
+  "openFiles": [
+    "public/index.html"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "https://github.com/Vonage/vonage-video-react-app",
+  "starterFiles": [],
+  "capabilities": [],
+  "version": "0.0.2",
+  "filename": "testing-sample-mdoc",
+  "customInstallCmd": "yarn install",
+  "customSetupCmd": "bash setup.sh\ncp something",
+  "customStartCmd": "yarn start"
+}

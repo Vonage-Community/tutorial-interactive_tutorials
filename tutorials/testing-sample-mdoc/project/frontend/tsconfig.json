@@ -1,0 +1,84 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "composite": false,
+    "baseUrl": "./",
+    "paths": {
+      "@Context": ["./src/Context"],
+      "@Context/*": ["./src/Context/*"],
+      "@api": ["./src/api"],
+      "@api/*": ["./src/api/*"],
+      "@app-types": ["./src/types"],
+      "@app-types/*": ["./src/types/*"],
+      "@common": ["../libs/common/src"],
+      "@common/*": ["../libs/common/src/*"],
+      "@web": ["../libs/common/srcBrowser"],
+      "@web/*": ["../libs/common/srcBrowser/*"],
+
+      "@components": ["./src/components"],
+      "@components/*": ["./src/components/*"],
+      "@core": ["../libs/core/src"],
+
+      "@core/*": ["../libs/core/src/*"],
+      "@hooks": ["./src/hooks"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@locales": ["./src/locales"],
+      "@locales/*": ["./src/locales/*"],
+      "@pages": ["./src/pages"],
+      "@pages/*": ["./src/pages/*"],
+      "@stores": ["./src/stores"],
+      "@stores/*": ["./src/stores/*"],
+
+      "@ui": ["../libs/ui/src"],
+      "@ui/*": ["../libs/ui/src/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@services": ["./src/services"],
+      "@services/*": ["./src/services/*"],
+
+      // test
+      "@test/*": ["./src/test/*"],
+      "@tests/*": ["./src/tests/*"],
+      "@common-test": ["../libs/common/test"],
+      "@common-test/*": ["../libs/common/test/*"],
+      "@web-test": ["../libs/common/testBrowser"],
+      "@web-test/*": ["../libs/common/testBrowser/*"],
+      "@core-test": ["../libs/core/test"],
+      "@core-test/*": ["../libs/core/test/*"],
+      "@ui-test": ["../libs/ui/test"],
+      "@ui-test/*": ["../libs/ui/test/*"],
+
+      // video-router
+      "@api-lib/*": ["../libs/api/src/*"],
+      "@node/*": ["../libs/common/srcNode/*"]
+    },
+    "types": ["vite/client", "node", "vitest", "vitest/globals"]
+  },
+  "include": [
+    "src",
+    "src/types",
+    "src/pages",
+    "src/helpers",
+    "eslint.config.mjs",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "vite.config.ts",
+    ".storybook/main.ts",
+    ".storybook/preview.tsx",
+    "../libs/common/test/**/*.ts",
+    "../libs/common/testBrowser/**/*.ts",
+    "../libs/common/testBrowser/**/*.tsx",
+    "./src/index.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}
