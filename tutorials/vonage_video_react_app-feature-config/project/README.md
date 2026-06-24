@@ -18,6 +18,8 @@ If you're new to Vonage, you can [sign up for a Vonage API account](https://dash
 - [Requirements](#requirements)
 - [Running Locally](#running-locally)
 - [Storybook](#storybook)
+- [UI Customization](#ui-customization)
+- [Environment Configuration](#environment-configuration)
 - [Testing on Multiple Devices](#testing-on-multiple-devices)
 - [Deployment to Vonage Cloud Runtime](#deployment-to-vonage-cloud-runtime)
 - [Testing](#testing)
@@ -32,6 +34,7 @@ If you're new to Vonage, you can [sign up for a Vonage API account](https://dash
   - [File names](#file-names)
 - [Documentation Generation](#documentation-generation)
 - [Code of Conduct](#code-of-conduct)
+- [Maintainers](#maintainers)
 - [Getting Involved](#getting-involved)
 - [Known Issues](#known-issues)
 - [Report Issues](#report-issues)
@@ -81,11 +84,6 @@ This application provides features for common conferencing use cases, such as:
   
     <img src="docs/assets/BGEffects.png" alt="Screenshot of video effects">
   </details>
-- <details>
-    <summary>
-      Configurable features: adapt the app to your specific use cases and roles.
-      Configuration is handled through environment variables defined in <em>vcrBuild.env.sh</em>. Edit that file to enable or disable features such as camera control, microphone control, background effects, screen sharing, chat, emojis, archiving, captions, device selection, default resolution, layout mode, and more. Some settings (for example: "default layout" or "audio on join") require rejoining the room to take effect.
-    </summary>
 - <details>
     <summary>Composed archiving capabilities to record your meetings.</summary>
     <img src="docs/assets/Archiving.png" alt="Screenshot of archiving dialog box">
@@ -182,16 +180,18 @@ These reference apps share the same backend infrastructure and demonstrate consi
 
 - **Environment Variables**
 
-  In the root project directory, create the environment files by running:
+  In the root project directory, create the backend environment file by running:
 
   ``` bash
-  cp backend/.env.example backend/.env && cp frontend/.env.example frontend/.env
+  cp backend/.env.example backend/.env
   ```
 
   Then, open **backend/.env** and fill in the required configuration:
 
   - **VONAGE_APP_ID** – This is the ID of your Vonage application. You can find it on the [Applications page](https://dashboard.vonage.com/applications).
   - **VONAGE_PRIVATE_KEY** – If you've already generated a private key, use that. Otherwise, use the key you downloaded when creating the app.
+
+  Frontend feature flags and display settings are configured in [`vcrBuild.env.sh`](vcrBuild.env.sh). The defaults work out of the box — edit that file only when you need to customise behaviour. See [Environment Configuration](#environment-configuration) for the full list of available options.
 
 </br>
 
@@ -224,6 +224,166 @@ yarn storybook:ui
 ```
 
 This will start the Storybook dev server at [http://localhost:6007](http://localhost:6007).
+
+## UI Customization
+
+The app theme is configured through the root `designTokens.json` file.
+
+### Customize your theme
+
+1. Edit `designTokens.json` at the project root with your palette/theme values.
+2. Sync theme artifacts:
+
+```bash
+yarn sync:theme-tokens
+```
+
+This command always regenerates `designTokens.example.json`, syncs `libs/ui/src/theme/helpers/designTokens/designTokens.json` from root `designTokens.json` when present, creates root `designTokens.json` from defaults when missing, rebuilds the Tailwind plugin, and formats the generated plugin file.
+
+---
+
+## Environment Configuration
+
+The app has two parts — a **backend** server and a **frontend** UI. The backend is configured through `backend/.env`. Frontend settings are configured through [`vcrBuild.env.sh`](vcrBuild.env.sh), which is the single place for all frontend configuration.
+
+Create the backend configuration file by running:
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Then open it in a text editor and fill in the values described below.
+
+---
+
+### Backend (`backend/.env`)
+
+Open `backend/.env` and configure the following variables.
+
+#### Video service provider
+
+Exactly one provider block must be configured.
+
+**Vonage Video API (default)**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VIDEO_SERVICE_PROVIDER` | ✅ | Must be `vonage` |
+| `VONAGE_APP_ID` | ✅ | Your Vonage application ID from the [dashboard](https://dashboard.vonage.com/applications) |
+| `VONAGE_PRIVATE_KEY` | ✅ | Contents of the private key file downloaded when creating the application |
+
+```ini
+VIDEO_SERVICE_PROVIDER='vonage'
+VONAGE_APP_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----'
+```
+
+**OpenTok (TokBox) SDK**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VIDEO_SERVICE_PROVIDER` | ✅ | Must be `opentok` |
+| `OT_API_KEY` | ✅ | Your OpenTok API key |
+| `OT_API_SECRET` | ✅ | Your OpenTok API secret |
+
+```ini
+VIDEO_SERVICE_PROVIDER='opentok'
+OT_API_KEY='your-api-key'
+OT_API_SECRET='your-api-secret'
+```
+
+#### Vonage Cloud Runtime (VCR)
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VCR_PORT` | ⚠️ VCR only | Port exposed by VCR (typically `3345`). **Do not set this locally** — its presence switches the app to VCR storage. |
+
+#### Jira feedback integration (optional)
+
+Enables the in-call issue reporting tool to file tickets directly into Jira.
+
+| Variable | Description |
+|----------|-------------|
+| `JIRA_URL` | Base URL of your Jira instance |
+| `JIRA_API_URL` | Jira REST API base URL |
+| `JIRA_TOKEN` | API token for authentication |
+| `JIRA_PROJECT_KEY` | Target project key |
+| `JIRA_COMPONENT_ID` | Default component ID for filed issues |
+| `JIRA_iOS_COMPONENT_ID` | Component ID for iOS issues |
+| `JIRA_ANDROID_COMPONENT_ID` | Component ID for Android issues |
+| `JIRA_EPIC_LINK` | Epic link field value |
+| `JIRA_EPIC_URL` | URL to the target epic |
+
+---
+
+### Frontend
+
+Frontend settings control which features are visible, what language the app uses, and how the video room behaves by default. **All frontend configuration lives in a single file: [`vcrBuild.env.sh`](vcrBuild.env.sh).**
+
+This file is loaded automatically whenever the app is built or deployed. To change a setting, open [`vcrBuild.env.sh`](vcrBuild.env.sh), update the relevant `export` line, and restart or rebuild:
+
+```bash
+# vcrBuild.env.sh
+export ALLOW_CHAT=false
+export DEFAULT_LAYOUT_MODE='grid'
+export I18N_SUPPORTED_LANGUAGES='en|es'
+```
+
+> **Note:** After editing [`vcrBuild.env.sh`](vcrBuild.env.sh) you need to restart the app (`yarn dev`) or trigger a new build for the changes to take effect.
+
+#### Network
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `API_URL` | `http://localhost:3345` (local) / `window.location.origin` (production) | URL of the backend API server |
+| `TUNNEL_DOMAIN` | — | ngrok (or similar) domain used when testing across devices. See [Testing on Multiple Devices](#testing-on-multiple-devices) |
+
+#### Internationalisation
+
+| Variable | Default | Accepted values | Description |
+|----------|---------|-----------------|-------------|
+| `I18N_FALLBACK_LANGUAGE` | `en` | `en` \| `en-US` \| `es` \| `es-MX` \| `it` | Language used when the user's locale is not supported |
+| `I18N_SUPPORTED_LANGUAGES` | `en` | Pipe-separated list, e.g. `en\|es\|it` | Languages offered in the UI |
+
+#### Feature flags
+
+All feature flags are **boolean** (`true` / `false`).
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ALLOW_BACKGROUND_EFFECTS` | `true` | Enable virtual background and blur effects |
+| `ALLOW_CAMERA_CONTROL` | `true` | Show the camera on/off toggle |
+| `ALLOW_VIDEO_ON_JOIN` | `true` | Start with camera enabled when joining |
+| `ALLOW_ADVANCED_NOISE_SUPPRESSION` | `true` | Enable the advanced noise-suppression toggle |
+| `ALLOW_AUDIO_ON_JOIN` | `true` | Start with microphone enabled when joining |
+| `ALLOW_MICROPHONE_CONTROL` | `true` | Show the microphone on/off toggle |
+| `WAITING_ROOM_ALLOW_DEVICE_SELECTION` | `true` | Show device selectors in the waiting room |
+| `MEETING_ROOM_ALLOW_DEVICE_SELECTION` | `true` | Show device selectors inside the meeting room |
+| `ALLOW_ARCHIVING` | `true` | Enable meeting recording (archiving) |
+| `ALLOW_CAPTIONS` | `true` | Enable live captions |
+| `ALLOW_CHAT` | `true` | Enable the in-call group chat |
+| `ALLOW_EMOJIS` | `true` | Enable emoji reactions |
+| `ALLOW_SCREEN_SHARE` | `true` | Enable screen sharing |
+| `SHOW_PARTICIPANT_LIST` | `true` | Show the participant list panel |
+| `ENABLE_REPORT_ISSUE` | `false` | Show the in-call issue reporting tool |
+| `BYPASS_WAITING_ROOM` | `false` | Skip the waiting room and join directly |
+| `AVOID_FETCHING_APP_CONFIG` | `true` | Skip fetching remote app configuration on startup |
+
+#### Display defaults
+
+| Variable | Default | Accepted values | Description |
+|----------|---------|-----------------|-------------|
+| `DEFAULT_RESOLUTION` | `1280x720` | `1920x1080` \| `1280x960` \| `1280x720` \| `640x480` \| `640x360` \| `320x240` \| `320x180` | Default outgoing video resolution |
+| `DEFAULT_LAYOUT_MODE` | `active-speaker` | `active-speaker` \| `grid` | Default in-room layout when a participant joins |
+| `MIN_CUSTOM_VIDEO_BITRATE_BPS` | `5000` | Positive integer (bps) | Minimum selectable custom video bitrate in the Advanced Settings dialog |
+| `MAX_CUSTOM_VIDEO_BITRATE_BPS` | `10000000` | Positive integer (bps) | Maximum selectable custom video bitrate in the Advanced Settings dialog |
+| `SUPPORTED_FRAME_RATES` | `30\|15\|7\|1` | `\|`-separated positive integers (fps) | Frame rate options shown in the Advanced Settings video tab |
+
+> **Note:** `DEFAULT_LAYOUT_MODE` and `ALLOW_AUDIO_ON_JOIN` / `ALLOW_VIDEO_ON_JOIN` require the participant to **rejoin the room** to take effect after being changed.
+
+---
 
 ## Testing on Multiple Devices
 
@@ -277,16 +437,14 @@ To test the video API across multiple devices on your local network, you can use
 
     </br>
 
-5. Copy the domains from both outputs and update your **frontend/.env** file:
+5. Copy the domains from both outputs and update [`vcrBuild.env.sh`](vcrBuild.env.sh):
 
-    ``` ini
-    # Frontend tunnel domain
-    TUNNEL_DOMAIN=your-frontend-domain.ngrok.io
-    # Backend tunnel domain  
-    API_URL=https://your-backend-domain.ngrok.io
+    ``` bash
+    export TUNNEL_DOMAIN=your-frontend-domain.ngrok.io
+    export API_URL=https://your-backend-domain.ngrok.io
     ```
 
-    **Note:** ngrok assigns temporary domains. You'll need to update your environment variables each time the domains change.
+    **Note:** ngrok assigns temporary domains. You'll need to update these values each time the domains change.
 
   </br>
 
@@ -390,7 +548,7 @@ yarn test:backend
 ### Frontend Suite
 We have frontend tests using [vitest](https://vitest.dev/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro). We recommend using the [vitest VSCode integration]( https://marketplace.visualstudio.com/items?itemName=vitest.explorer) to run tests.
 
-For guidance on writing frontend unit tests, see the [Frontend Unit Testing Guide](./docs/TESTING.md).
+For guidance on writing unit tests, see the [Test Instructions](./.github/instructions/test-files.instructions.md).
 
 Alternatively you can run the tests in the terminal:
 - To run frontend tests once:
@@ -441,6 +599,12 @@ yarn nx run frontend:docs
 ## Code of Conduct
 
 Please read our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Maintainers
+
+This repository is actively maintained by the Vonage Video team.
+
+For maintainer responsibilities, review expectations, and project ownership guidelines, see [MAINTAINERS.md](./MAINTAINERS.md).
 
 ## Getting Involved
 

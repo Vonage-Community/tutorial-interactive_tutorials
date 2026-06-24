@@ -1,8 +1,5 @@
-import { ReactElement } from 'react';
-import Box from '@mui/material/Box';
+import type { ReactElement } from 'react';
 import FooterLinks from '@components/FooterLinks';
-import Stack from '@mui/material/Stack';
-import useTheme from '@ui/theme';
 
 /**
  * Footer Component
@@ -11,37 +8,17 @@ import useTheme from '@ui/theme';
  * @returns {ReactElement} - the footer component.
  */
 const Footer = (): ReactElement => {
-  const theme = useTheme();
-
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
+    <footer
       data-testid="footer-content"
-      sx={{
-        bgcolor: theme.colors.background,
-      }}
+      className="flex flex-row items-center bg-vera-surface vera-desktop:bg-vera-background"
     >
-      <Box
-        sx={{
-          flex: 1,
-          bgcolor: theme.colors.surface,
-          display: { xs: 'none', md: 'block' },
-          minHeight: '60px',
-        }}
-      />
+      <div className="hidden vera-desktop:block flex-1 bg-vera-surface min-h-15" />
 
-      <Box
-        sx={{
-          display: 'flex',
-          flex: 1,
-          justifyContent: 'center',
-          bgcolor: { xs: theme.colors.surface, md: theme.colors.background },
-        }}
-      >
+      <div className="flex flex-1 justify-center bg-vera-surface vera-desktop:bg-vera-background">
         <FooterLinks />
-      </Box>
-    </Stack>
+      </div>
+    </footer>
   );
 };
 

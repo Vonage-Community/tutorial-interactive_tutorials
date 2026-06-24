@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { render as renderBase, screen, cleanup } from '@testing-library/react';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import { ReactElement } from 'react';
 import { makeTestProvider, providers, type ProviderOptions } from '@test/providers';
 import UnreadMessagesBadge from './UnreadMessagesBadge';
@@ -213,10 +213,14 @@ type RenderOptions = {
 };
 
 function render(ui: ReactElement, { sessionContext, userContext }: RenderOptions = {}) {
-  const { wrapper, ...context } = makeTestProvider([providers.user, providers.session], {
-    userContext,
-    sessionContext,
-  });
+  const { wrapper, ...context } = makeTestProvider(
+    [providers.user, providers.session, providers.runtime],
+    {
+      sessionContext,
+      userContext,
+      runtimeContext: undefined,
+    }
+  );
 
   return {
     ...context,

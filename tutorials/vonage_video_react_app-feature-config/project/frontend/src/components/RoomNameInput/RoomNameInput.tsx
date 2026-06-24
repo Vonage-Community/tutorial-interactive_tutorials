@@ -1,7 +1,7 @@
 import { SetStateAction, Dispatch, ReactElement, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import TextField from '@mui/material/TextField';
-import isValidRoomName from '../../utils/isValidRoomName';
+import { isValidRoomName } from '@common/assertions';
 
 export type RoomNameInputProps = {
   setRoomName: Dispatch<SetStateAction<string>>;
@@ -56,8 +56,8 @@ const RoomNameInput = ({
       onChange={handleChange}
       error={hasError}
       helperText={hasError ? t('room.input.helper') : ''}
-      InputProps={{
-        inputProps: { maxLength: 60 },
+      slotProps={{
+        htmlInput: { maxLength: 60 },
       }}
     />
   );

@@ -1,9 +1,11 @@
-import { describe, expect, it, vi, beforeEach, afterAll } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach, afterAll } from 'vitest';
 import { renderHook as renderHookBase, waitFor } from '@testing-library/react';
 import OT from '@vonage/client-sdk-video';
 import localStorageMock from '@utils/mockData/localStorageMock';
 import mediaDevices$ from '@core/stores/devices';
 import { makeTestProvider, providers, ProviderOptions } from '@test/providers';
+import type { advancedSettings } from '@Context/AdvancedSettings';
+import advancedSettings$ from '@Context/AdvancedSettings';
 import makeMediaDeviceInfos from '@web-test/fixtures/makeMediaDeviceInfos';
 import { setupWindowNavigatorMock } from '@web-test/fixtures';
 import usePublisherOptions from './usePublisherOptions';
@@ -45,6 +47,7 @@ describe('usePublisherOptions', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    advancedSettings$.reset();
   });
 
   afterAll(() => {
@@ -58,18 +61,20 @@ describe('usePublisherOptions', () => {
     );
     await waitFor(() => {
       expect(result.current).toEqual({
-        resolution: '1280x720',
+        frameRate: 30,
+        resolution: env.PUBLISHER_MAX_RESOLUTION,
+        preferredVideoCodecs: 'automatic',
         publishAudio: false,
         publishVideo: false,
-        audioSource: undefined,
-        videoSource: undefined,
         insertDefaultUI: false,
         audioFallback: {
-          publisher: true,
+          publisher: false,
+          subscriber: false,
         },
         audioFilter: {
           type: 'advancedNoiseSuppression',
         },
+        enableDtx: true,
         videoFilter: undefined,
         name: '',
         initials: '',
@@ -117,8 +122,6 @@ describe('usePublisherOptions', () => {
                 blurStrength: 'high',
               },
               noiseSuppression: false,
-              audioSource: audioDevice.deviceId,
-              videoSource: videoDevice.deviceId,
               publishCaptions: true,
             },
           },
@@ -128,16 +131,20 @@ describe('usePublisherOptions', () => {
 
     await waitFor(() => {
       expect(result.current).toEqual({
-        resolution: '1280x720',
+        frameRate: 30,
+        resolution: env.PUBLISHER_MAX_RESOLUTION,
+        preferredVideoCodecs: 'automatic',
         publishAudio: true,
         publishVideo: true,
         audioSource: audioDevice.deviceId,
         videoSource: videoDevice.deviceId,
         insertDefaultUI: false,
         audioFallback: {
-          publisher: true,
+          publisher: false,
+          subscriber: false,
         },
         audioFilter: undefined,
+        enableDtx: true,
         videoFilter: {
           type: 'backgroundBlur',
           blurStrength: 'high',
@@ -178,17 +185,44 @@ describe('usePublisherOptions', () => {
       });
     });
 
-    it('should configure resolution from config', async () => {
-      env.partialUpdate({
-        DEFAULT_RESOLUTION: '640x480',
-      });
-
-      const { result } = renderHook(() =>
-        usePublisherOptions({ isAudioEnabled: true, isVideoEnabled: true })
+    it('should always use max resolution for publisher initialization', async () => {
+      const { result } = renderHook(
+        () => usePublisherOptions({ isAudioEnabled: true, isVideoEnabled: true }),
+        { dialogState: { resolution: '1280x720' } }
       );
 
       await waitFor(() => {
-        expect(result.current?.resolution).toBe('640x480');
+        expect(result.current?.resolution).toBe(env.PUBLISHER_MAX_RESOLUTION);
+      });
+    });
+
+    it('should configure opus dtx from advanced settings context', async () => {
+      const { result } = renderHook(
+        () => usePublisherOptions({ isAudioEnabled: true, isVideoEnabled: true }),
+        { dialogState: { enableDtx: false } }
+      );
+
+      await waitFor(() => {
+        expect(result.current?.enableDtx).toBe(false);
+      });
+    });
+
+    it('should apply publisher and subscriber audio fallback toggles from advanced settings', async () => {
+      const { result } = renderHook(
+        () => usePublisherOptions({ isAudioEnabled: true, isVideoEnabled: true }),
+        {
+          dialogState: {
+            publisherAudioFallbackEnabled: true,
+            subscriberAudioFallbackEnabled: true,
+          },
+        }
+      );
+
+      await waitFor(() => {
+        expect(result.current?.audioFallback).toEqual({
+          publisher: true,
+          subscriber: true,
+        });
       });
     });
   });
@@ -210,8 +244,6 @@ describe('usePublisherOptions', () => {
                 blurStrength: 'high',
               },
               noiseSuppression: false,
-              audioSource: audioDevice.deviceId,
-              videoSource: videoDevice.deviceId,
               publishCaptions: true,
             },
           },
@@ -228,12 +260,17 @@ describe('usePublisherOptions', () => {
 
 type RenderOptions = {
   userContext?: ProviderOptions['UserContext'];
+  dialogState?: Partial<advancedSettings>;
 };
 
 function renderHook<Result, Props>(
   render: (initialProps: Props) => Result,
-  { userContext }: RenderOptions = {}
+  { userContext, dialogState }: RenderOptions = {}
 ) {
+  if (dialogState) {
+    advancedSettings$.setState((state) => ({ ...state, ...dialogState }));
+  }
+
   const { wrapper, ...context } = makeTestProvider([providers.user], {
     userContext: {
       value: {
@@ -243,8 +280,6 @@ function renderHook<Result, Props>(
           publishVideo: false,
           name: '',
           noiseSuppression: true,
-          audioSource: undefined,
-          videoSource: undefined,
           publishCaptions: true,
           ...userContext?.value?.defaultSettings,
         },

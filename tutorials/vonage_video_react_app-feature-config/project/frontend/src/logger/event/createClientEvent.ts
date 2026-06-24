@@ -1,9 +1,10 @@
 import type { ClientLogEvent } from '@common/types';
 import getAppVersion from '@utils/getAppVersion';
 import OT from '@vonage/client-sdk-video';
+import uniqueId from 'react-global-state-hooks/uniqueId';
 
 /** Correlation id: same for all events from this page load. Enables grouping in Kibana. */
-const correlationIdForPageLoad = crypto.randomUUID();
+const correlationIdForPageLoad = uniqueId('page-load:');
 
 type ClientEventInput = {
   level: ClientLogEvent['level'];
@@ -12,6 +13,7 @@ type ClientEventInput = {
   sessionId?: string;
   connectionId?: string;
   partnerId?: string;
+  userId?: string;
   variation?: string;
   logVersion?: string;
   timestamp?: number;
@@ -48,5 +50,6 @@ export function createClientEvent(input: ClientEventInput): ClientLogEvent {
     ...(input.sessionId != null && { sessionId: input.sessionId }),
     ...(input.connectionId != null && { connectionId: input.connectionId }),
     ...(input.partnerId != null && { partnerId: input.partnerId }),
+    ...(input.userId != null && { userId: input.userId }),
   };
 }

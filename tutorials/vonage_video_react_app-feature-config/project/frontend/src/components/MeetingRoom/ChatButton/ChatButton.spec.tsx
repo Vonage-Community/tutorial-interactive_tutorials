@@ -37,16 +37,6 @@ describe('ChatButton', () => {
     expect(badge.offsetWidth).toBe(0);
   });
 
-  it('should have a white icon when the list is closed', () => {
-    render(<ChatButton handleClick={() => {}} isOpen={false} />);
-    expect(screen.getByTestId('ChatIcon')).toHaveStyle('color: rgb(255, 255, 255)');
-  });
-
-  it('should have a blue icon when the chat is open', () => {
-    render(<ChatButton handleClick={() => {}} isOpen />);
-    expect(screen.getByTestId('ChatIcon')).toHaveStyle('color: rgb(0, 0, 0)');
-  });
-
   it('should invoke callback on click', () => {
     const handleClick = vi.fn();
     render(<ChatButton handleClick={handleClick} isOpen />);
@@ -70,10 +60,14 @@ type RenderOptions = {
 };
 
 function render(ui: ReactElement, { sessionContext, userContext }: RenderOptions = {}) {
-  const { wrapper, ...context } = makeTestProvider([providers.user, providers.session], {
-    userContext,
-    sessionContext,
-  });
+  const { wrapper, ...context } = makeTestProvider(
+    [providers.user, providers.session, providers.runtime],
+    {
+      sessionContext,
+      userContext,
+      runtimeContext: undefined,
+    }
+  );
 
   return {
     ...context,

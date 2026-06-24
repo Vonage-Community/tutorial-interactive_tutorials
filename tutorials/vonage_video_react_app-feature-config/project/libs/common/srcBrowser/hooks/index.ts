@@ -7,3 +7,5 @@ export { default as useMountEffect } from './useMountEffect';
 export { default as useStableCallback } from './useStableCallback';
 export { default as useStableRef } from './useStableRef';
 export { default as useSuspenseMemo } from './useSuspenseMemo';
+export { default as useAnchorElement } from './useAnchorElement';
+export { default as useRenderCount } from './useRenderCount';

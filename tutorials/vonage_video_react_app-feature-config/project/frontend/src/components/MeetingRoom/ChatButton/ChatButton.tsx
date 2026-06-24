@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ToolbarButton from '../ToolbarButton';
 import UnreadMessagesBadge from '../UnreadMessagesBadge';
 import Tooltip from '@mui/material/Tooltip';
-import useTheme from '@ui/theme';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import { env } from '../../../env';
 
 export type ChatButtonProps = {
@@ -29,7 +28,6 @@ const ChatButton = ({
   isOpen,
   isOverflowButton = false,
 }: ChatButtonProps): ReactElement | false => {
-  const theme = useTheme();
   const { t } = useTranslation();
 
   return (
@@ -47,7 +45,9 @@ const ChatButton = ({
               <VividIcon
                 customSize={-5}
                 name="chat-solid"
-                sx={{ color: isOpen ? theme.colors.secondary : theme.colors.onSecondary }}
+                style={{
+                  color: isOpen ? 'var(--vera-secondary-light)' : 'var(--vera-on-secondary-light)',
+                }}
                 data-testid="ChatIcon"
               />
             }

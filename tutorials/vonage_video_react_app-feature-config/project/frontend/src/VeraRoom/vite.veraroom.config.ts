@@ -4,12 +4,14 @@ import * as path from 'node:path';
 
 export default defineConfig((env) => {
   const baseConfig = baseConfigFn(env);
-  const isDevelopment = env.mode === 'development';
 
   return mergeConfig(baseConfig, {
     base: './',
     define: {
-      'process.env.NODE_ENV': isDevelopment ? '"development"' : '"production"',
+      'process.env.NODE_ENV': '"production"',
+    },
+    esbuild: {
+      jsxDev: false,
     },
     build: {
       outDir: path.resolve(__dirname, '../../distRoom'),
@@ -19,7 +21,7 @@ export default defineConfig((env) => {
         entry: path.resolve(__dirname, './index.ts'),
         name: 'VeraRoom',
         formats: ['iife'],
-        fileName: () => 'vera-room.js',
+        fileName: () => 'room.js',
       },
 
       rollupOptions: {

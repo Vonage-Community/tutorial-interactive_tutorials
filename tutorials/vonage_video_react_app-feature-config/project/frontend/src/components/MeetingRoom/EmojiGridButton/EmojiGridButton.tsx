@@ -1,10 +1,9 @@
 import Tooltip from '@mui/material/Tooltip';
 import { Dispatch, ReactElement, SetStateAction, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import useTheme from '@ui/theme';
 import ToolbarButton from '../ToolbarButton';
 import EmojiGrid from '../EmojiGrid/EmojiGrid';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import { env } from '../../../env';
 
 export type EmojiGridProps = {
@@ -32,7 +31,6 @@ const EmojiGridButton = ({
   isOverflowButton = false,
 }: EmojiGridProps): ReactElement | false => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const anchorRef = useRef<HTMLButtonElement>(null);
   const handleToggle = () => {
     setIsEmojiGridOpen((prevOpen) => !prevOpen);
@@ -48,8 +46,8 @@ const EmojiGridButton = ({
               <VividIcon
                 name="emoji-solid"
                 customSize={-5}
-                sx={{
-                  color: isEmojiGridOpen ? theme.colors.secondary : theme.colors.onSecondary,
+                style={{
+                  color: `${isEmojiGridOpen ? 'var(--vera-secondary-light)' : 'var(--vera-on-secondary-light)'} !important`,
                 }}
               />
             }

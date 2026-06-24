@@ -34,7 +34,35 @@ function devBackend(): void {
 }
 
 /**
- * Runs Storybook focused on VeraRoom component.
+ * Runs only the backend in debug mode (node --inspect on port 9229).
+ */
+function devBackendDebug(): void {
+  runCommand('nx run backend:debug');
+}
+
+/**
+ * Runs only the backend in debug mode with --inspect-brk (waits for debugger).
+ */
+function devBackendDebugWait(): void {
+  runCommand('nx run backend:debug:wait');
+}
+
+/**
+ * Runs frontend in dev mode and backend in debug mode (node --inspect on port 9229).
+ */
+function devDebug(): void {
+  runCommand("concurrently 'nx run frontend:dev' 'nx run backend:debug'");
+}
+
+/**
+ * Runs frontend in dev mode and backend in debug mode with --inspect-brk (waits for debugger).
+ */
+function devDebugWait(): void {
+  runCommand("concurrently 'nx run frontend:dev' 'nx run backend:debug:wait'");
+}
+
+/**
+ * Runs VeraRoom Storybook and backend in dev mode.
  */
 function devRoom(): void {
   const storyPath = '/story/veraroom-veraroomelement--default';
@@ -42,7 +70,9 @@ function devRoom(): void {
   console.log('\n📚 Starting Storybook for VeraRoom...\n');
   console.log(`🌐 Opening: http://localhost:6006/?path=${storyPath}\n`);
 
-  runCommand(`nx run frontend:storybook -- --initial-path="${storyPath}"`);
+  runCommand(
+    `concurrently "nx run frontend:storybook -- --initial-path='${storyPath}'" "nx run backend:dev"`
+  );
 }
 
 /**
@@ -52,23 +82,48 @@ function devRoom(): void {
  * - No args: Run both frontend and backend in dev mode
  * - frontend: Run only frontend dev server
  * - backend: Run only backend dev server
- * - room: Run Storybook focused on VeraRoom component
+ * - room: Run Storybook focused on VeraRoom component and backend dev server
  *
  * Usage:
  * - yarn dev           (run frontend and backend)
  * - yarn dev frontend  (run only frontend)
- * - yarn dev backend   (run only backend)
- * - yarn dev room      (run Storybook for VeraRoom)
+ * - yarn dev backend             (run only backend)
+ * - yarn dev backend debug      (run only backend with --inspect on port 9229)
+ * - yarn dev backend debug wait (run only backend with --inspect-brk, waits for debugger)
+ * - yarn dev debug              (run frontend + backend with --inspect on port 9229)
+ * - yarn dev debug wait         (run frontend + backend with --inspect-brk, waits for debugger)
+ * - yarn dev room         (run VeraRoom Storybook and backend)
+ * - yarn dev studio       (run Vera Studio + backend + frontend Storybook)
  */
 function main(): void {
-  const [target] = args;
+  const [target, subTarget] = args;
 
   switch (target) {
     case 'frontend':
       devFrontend();
       return;
     case 'backend':
+      if (subTarget === 'debug') {
+        const backendSubTarget = args[2];
+
+        if (backendSubTarget === 'wait') {
+          devBackendDebugWait();
+          return;
+        }
+
+        devBackendDebug();
+        return;
+      }
+
       devBackend();
+      return;
+    case 'debug':
+      if (subTarget === 'wait') {
+        devDebugWait();
+        return;
+      }
+
+      devDebug();
       return;
     case 'room':
       devRoom();

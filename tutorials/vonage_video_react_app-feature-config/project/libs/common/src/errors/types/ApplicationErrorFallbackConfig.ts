@@ -1,5 +1,6 @@
-import StatusCodeEnum from 'status-code-enum';
+import { StatusCode } from 'status-code-enum';
 import type { ErrorSeverity } from './ErrorSeverity';
+import { Any } from '@common/types';
 
 export type ApplicationErrorFallbackConfig = {
   /**
@@ -11,17 +12,17 @@ export type ApplicationErrorFallbackConfig = {
    * Collection of validation error values
    * This is used to group validation errors together
    */
-  values?: string[];
+  issues?: Any[];
 
   severity?: ErrorSeverity;
 
   /**
    * The HTTP status code associated with the error.
    */
-  statusCode: StatusCodeEnum;
+  statusCode: StatusCode;
 
   /**
-   * Indicates if the error is recoverable.
+   * Type of the error, used for categorization and handling logic.
    */
-  recoverable?: boolean | null;
+  type?: string;
 };

@@ -7,6 +7,7 @@
   "include": [
     "vite.config.ts",
     "test/**/*.ts",
+    "test/**/*.tsx",
     "src/**/*.ts",
     "src/**/*.tsx",
     "../common/src/**/*.ts",
@@ -16,7 +17,8 @@
     "../common/test/**/*.ts",
     "../common/test/**/*.tsx",
     "../common/testBrowser/**/*.ts",
-    "../common/testBrowser/**/*.tsx"
+    "../common/testBrowser/**/*.tsx",
+    "../common/src/types/FacingMode.ts"
   ],
   "tsBuildInfoFile": "dist/tsconfig.spec.tsbuildinfo"
 }

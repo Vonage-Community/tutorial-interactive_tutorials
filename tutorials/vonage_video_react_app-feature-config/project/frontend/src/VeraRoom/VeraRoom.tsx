@@ -6,8 +6,7 @@ import bridge$ from './stores/bridge';
 import WaitingRoomStage from './stages/WaitingRoomStage';
 import MeetingRoomStage from './stages/MeetingRoomStage';
 import GoodByeStage from './stages/GoodByeStage';
-import useLanguageSync from './hooks/useLanguageSync';
-import { ThemeProviderPropsBase } from '@ui/theme/themeContext';
+import useStateSynchronizer from './hooks/useStateSynchronizer';
 import { useMountEffect } from '@web/hooks';
 
 type BridgeProps = {
@@ -39,11 +38,10 @@ type VeraRoomProps = ComponentProps<'div'> & BridgeProps;
  * reconciliation ensures that only what changed actually re-renders.
  */
 const VeraRoom: FC<VeraRoomProps> = ({ className, ...props }) => {
-  useLanguageSync();
+  useStateSynchronizer();
 
-  const theme = useMemo((): ThemeProviderPropsBase['theme'] => {
-    const container = globalThis.document.createElement('div');
-    return { lightMode: {}, darkMode: {}, base: { container: container } };
+  const container = useMemo(() => {
+    return globalThis.document.createElement('div');
   }, []);
 
   const mainContainer = useRef<HTMLDivElement>(null);
@@ -52,11 +50,11 @@ const VeraRoom: FC<VeraRoomProps> = ({ className, ...props }) => {
   const initialEntry = sessionIdentifier ? `/waiting-room/${sessionIdentifier}` : '/waiting-room';
 
   useMountEffect(() => {
-    mainContainer.current?.appendChild(theme?.base?.container || document.createElement('div'));
+    mainContainer.current?.appendChild(container);
   });
 
   return (
-    <AppContextProvider theme={theme}>
+    <AppContextProvider container={container}>
       <div
         ref={mainContainer}
         className={['VeraRoom', 'h-full', className].filter(Boolean).join(' ')}
@@ -65,11 +63,11 @@ const VeraRoom: FC<VeraRoomProps> = ({ className, ...props }) => {
         <MemoryRouter initialEntries={[initialEntry]}>
           <RoomProvider>
             <Routes>
-              <Route path="/waiting-room/:roomName" element={<WaitingRoomStage />} />
+              <Route path="/waiting-room/:roomIdentifier" element={<WaitingRoomStage />} />
               {/* Fallback route when no session-identifier attribute is set */}
               <Route path="/waiting-room" element={<WaitingRoomStage />} />
-              <Route path="/room/:roomName" element={<MeetingRoomStage />} />
-              <Route path="/goodbye" element={<GoodByeStage />} />
+              <Route path="/room/:roomIdentifier" element={<MeetingRoomStage />} />
+              <Route path="/goodbye/:roomIdentifier?" element={<GoodByeStage />} />
             </Routes>
           </RoomProvider>
         </MemoryRouter>

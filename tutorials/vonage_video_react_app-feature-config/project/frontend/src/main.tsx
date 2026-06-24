@@ -1,14 +1,14 @@
-// Workaround: ensure MUI createTheme module is evaluated before any component
-// (e.g. Box) reads the default theme. This avoids a Vite optimizeDeps init-order
-// issue that can surface as `createTheme_default is not a function`.
-import '@mui/material/styles/createTheme';
+// runs interceptors before vonage sdk initialize resources (XHR, navigator.mediaDevices clones, etc)
+import '@core/interceptors';
+
+// executes application setup before anything else (e.g. overrides, mocks, etc)
+import './setup';
 
 import ReactDOM from 'react-dom/client';
 import { registerIcon } from '@vonage/vivid';
-import App from './App.jsx';
+import App, { loggerProvider } from './App.jsx';
 import './i18n.js';
 import Logger from './logger';
-import { BackendLoggingProvider } from './logger/providers';
 
 // Register Vivid icons for use throughout the application
 registerIcon();
@@ -21,7 +21,7 @@ const rootElement = document.getElementById('root')!;
 
 const { onUncaughtError, onRecoverableError, onCaughtError } = Logger;
 
-Logger.setup(() => new BackendLoggingProvider());
+Logger.setup(() => loggerProvider);
 
 ReactDOM.createRoot(rootElement, {
   onUncaughtError,

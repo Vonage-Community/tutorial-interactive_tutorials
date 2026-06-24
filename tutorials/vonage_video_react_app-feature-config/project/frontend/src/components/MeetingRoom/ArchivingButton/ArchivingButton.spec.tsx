@@ -1,25 +1,23 @@
 import { describe, expect, it, vi, beforeEach, Mock } from 'vitest';
 import { render as renderBase, screen, act } from '@testing-library/react';
 import { ReactElement } from 'react';
-import { startArchiving, stopArchiving } from '@api/archiving';
-import useRoomName from '@hooks/useRoomName';
 import useSessionContext from '@hooks/useSessionContext';
 import { SessionContextType } from '@Context/SessionProvider/session';
-import { makeTestProvider } from '@test/providers';
+import { makeTestProvider, providers } from '@test/providers';
 import ArchivingButton from './ArchivingButton';
 import { env } from '../../../env';
+import type { VideoClient } from '@core/services';
 
 vi.mock('@hooks/useSessionContext');
-vi.mock('@hooks/useRoomName');
 
-vi.mock('@api/archiving', () => ({
-  startArchiving: vi.fn(),
-  stopArchiving: vi.fn(),
-}));
+const mockVideoClient: VideoClient = {
+  startArchive: vi.fn(),
+  stopArchive: vi.fn(),
+} as unknown as VideoClient;
 
 describe('ArchivingButton', () => {
   const mockHandleCloseMenu = vi.fn();
-  const mockedRoomName = 'test-room-name';
+  const mockedSessionKey = 'test-session-key';
   let sessionContext: SessionContextType;
 
   const mockUseSessionContext = useSessionContext as Mock<[], SessionContextType>;
@@ -27,12 +25,13 @@ describe('ArchivingButton', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useRoomName as Mock).mockReturnValue(mockedRoomName);
     sessionContext = {
       subscriberWrappers: [],
       archiveId: null,
       markArchiveStartRequestedBySelf: vi.fn(),
       resetArchiveStartRequestedBySelf: vi.fn(),
+      sessionKey: mockedSessionKey,
+      connected: true,
     } as unknown as SessionContextType;
 
     mockUseSessionContext.mockReturnValue(sessionContext as unknown as SessionContextType);
@@ -51,7 +50,7 @@ describe('ArchivingButton', () => {
 
   it('triggers the start archiving when button is pressed', async () => {
     vi.useFakeTimers();
-    (startArchiving as Mock).mockResolvedValue({ data: { success: true } });
+    (mockVideoClient.startArchive as Mock).mockResolvedValue({ data: { success: true } });
     render(<ArchivingButton handleClick={mockHandleCloseMenu} />);
 
     act(() => screen.getByTestId('archiving-button').click());
@@ -64,7 +63,7 @@ describe('ArchivingButton', () => {
       await vi.runAllTimersAsync();
     });
 
-    expect(startArchiving).toHaveBeenCalledWith(mockedRoomName);
+    expect(mockVideoClient.startArchive).toHaveBeenCalledWith({ sessionKey: mockedSessionKey });
 
     vi.useRealTimers();
   });
@@ -89,6 +88,8 @@ describe('ArchivingButton', () => {
       archiveId: testArchiveId,
       markArchiveStartRequestedBySelf: vi.fn(),
       resetArchiveStartRequestedBySelf: vi.fn(),
+      sessionKey: mockedSessionKey,
+      connected: true,
     } as unknown as SessionContextType);
 
     render(<ArchivingButton handleClick={mockHandleCloseMenu} />);
@@ -103,7 +104,10 @@ describe('ArchivingButton', () => {
       await vi.runAllTimersAsync();
     });
 
-    expect(stopArchiving).toHaveBeenCalledWith(mockedRoomName, testArchiveId);
+    expect(mockVideoClient.stopArchive).toHaveBeenCalledWith({
+      sessionKey: mockedSessionKey,
+      archiveId: testArchiveId,
+    });
 
     vi.useRealTimers();
   });
@@ -119,7 +123,9 @@ describe('ArchivingButton', () => {
 });
 
 function render(ui: ReactElement) {
-  const { wrapper, ...context } = makeTestProvider([]);
+  const { wrapper, ...context } = makeTestProvider([providers.runtime], {
+    runtimeContext: { videoClient: mockVideoClient },
+  });
 
   return {
     ...context,
