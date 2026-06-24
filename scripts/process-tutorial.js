@@ -97,6 +97,11 @@ async function main() {
         }
     }
 
+    // Check if there is a custom install command which means there is an external app
+    if (tutorialConfig.customInstallCmd) {
+        hasExternalApp = true;
+    }
+
 
     // 5. THE OVERLAY (Apply Starter Files & Config on top of the cloned repo)
     console.log("📂 Applying starter files and configuration overlay...");
@@ -127,6 +132,11 @@ async function main() {
         }
     }
 
+    // Check for custom setup command
+    if (tutorialConfig.customSetupCmd) {
+        hasSetupScript = true;
+    }
+
     // 6. GENERATE BLANK FILES (Fallback for explicit blank files)
     if (tutorialConfig.files && Array.isArray(tutorialConfig.files)) {
         tutorialConfig.files.forEach(fileName => {
@@ -153,7 +163,11 @@ async function main() {
         pkg.scripts["start:tutorial"] = "http-server steps -p 1234 --cors -c-1";
         
         if (hasExternalApp) {
-            pkg.scripts["postinstall"] = "cd project && npm install";
+            if (tutorialConfig.customInstallCmd) {
+                pkg.scripts["postinstall"] = "cd project && npm install";
+            } else {
+                pkg.scripts["postinstall"] = `cd project && ${tutorialConfig.customInstallCmd}`;
+            }
         }
 
         fs.writeJsonSync(rootPackageJson, pkg, { spaces: 2 });
@@ -262,7 +276,19 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
 
     // 2. Prepare the directory
     if (hasSetupScript) {
-        commandChain += "echo '' && cd project && node setup-project.js && ";
+        commandChain += "echo '' && cd project && ";
+        if (config.customSetupCmd){
+            const customSetupCmd = config.customSetupCmd
+              .split(/\r?\n/)
+              .map(cmd => cmd.trim())
+              .filter(cmd => cmd !== "")
+              .join(' && ');
+            if (customSetupCmd){
+                commandChain += `${customSetupCmd} && `;
+            }
+        } else {
+            commandChain += "node setup-project.js && ";
+        }
     } else if (hasExternalApp) {
         commandChain += "cd project && ";
     }
