@@ -306,7 +306,8 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
         commandChain += `(nohup sh -c "sleep 5 && ${visibilityCmd}" > /dev/null 2>&1 &) && `;
 
         // Run the project's start script
-        commandChain += "npm start";
+        const startCmd = config.customStartCmd || "npm start";
+        commandChain += startCmd;
     } else if (config.panels && config.panels.includes('browser')) {
         // Fallback: If no external app but browser requested, run live-server (from root)
         if (!hasSetupScript) {
