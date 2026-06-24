@@ -2,7 +2,17 @@
   "extends": "../../tsconfig.base.json",
   "files": [],
   "include": ["eslint.config.mjs"],
-  "references": [{ "path": "./tsconfig.lib.json" }, { "path": "./tsconfig.spec.json" }],
+  "references": [
+    {
+      "path": "../common"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ],
   "compilerOptions": {
     "rootDir": "..",
     "composite": true,

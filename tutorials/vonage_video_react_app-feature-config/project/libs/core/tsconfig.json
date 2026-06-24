@@ -4,6 +4,9 @@
   "include": ["eslint.config.mjs", "./test/setup.ts", "./test/**/*.ts", "./test/**/*.tsx"],
   "references": [
     {
+      "path": "../api"
+    },
+    {
       "path": "./tsconfig.lib.json"
     },
     {

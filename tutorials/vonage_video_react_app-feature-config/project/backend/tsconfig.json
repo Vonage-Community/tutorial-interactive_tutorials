@@ -5,10 +5,10 @@
     "target": "ESNext",
     "lib": ["ESNext"],
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "outDir": "./dist",
-    "types": ["node", "jest"],
     "baseUrl": ".",
+    "types": ["node", "jest"],
     "paths": {
       "@api-lib": ["../libs/api/src"],
       "@api-lib/*": ["../libs/api/src/*"],

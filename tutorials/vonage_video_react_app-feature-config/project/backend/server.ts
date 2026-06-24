@@ -2,13 +2,13 @@
 import './helpers/config';
 
 import express, { Express, Request, Response } from 'express';
-import path from 'path';
+import path from 'node:path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { Server } from 'http';
+import { Server } from 'node:http';
 import router from './routes';
-import { fileURLToPath } from 'url';
-import { errorHandler, helmetMiddleware, rateLimitMiddleware } from './middleware';
+import { fileURLToPath } from 'node:url';
+import { errorHandler } from './middleware';
 
 /**
  * The runtimeDirectory works different on CJS and ESM
@@ -25,8 +25,6 @@ const defaultPort = Number(process.env.VCR_PORT ?? 3345);
 
 const app: Express = express();
 
-app.use(helmetMiddleware);
-app.use(rateLimitMiddleware);
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: true }));
 app.use(cors({ origin: true, credentials: true }));

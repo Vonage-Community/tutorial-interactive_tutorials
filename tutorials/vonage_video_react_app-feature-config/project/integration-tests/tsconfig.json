@@ -15,5 +15,10 @@
     "noImplicitAny": false
   },
   "include": ["**/*.ts"],
-  "exclude": ["test-api"]
+  "exclude": ["test-api"],
+  "references": [
+    {
+      "path": "../libs/core"
+    }
+  ]
 }
