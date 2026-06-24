@@ -11,6 +11,7 @@ let tutorial: {
   filename: string;
   customInstallCmd: string;
   customSetupCmd: string;
+  customStartCmd: string;
 } = {
   files: [],
   openFiles: [],
@@ -21,7 +22,8 @@ let tutorial: {
   version: '',
   filename: '',
   customInstallCmd: '',
-  customSetupCmd: ''
+  customSetupCmd: '',
+  customStartCmd: ''
 };
 
 export default defineToolbarApp({
@@ -52,6 +54,8 @@ export default defineToolbarApp({
 
       <br><br>Default setup command is <code>node setup-project.js</code> that will run the code in the setup-project.js file. If you have a custom setup command, please enter it here and make sure to create any files you need:
       <textarea id='custom-setup-command' style="width: 100%;" placeholder='bash setup.sh' rows="5" cols="33"></textarea>
+
+      <br><br>Default start command is <code>npm start</code>, if you have custom start command, please enter it here: <input id='custom-start-command' style="width: 100%;" placeholder='yarn start'/>
     </details>
     <details name='steps'>
       <summary>Step 3: Set Starter Files to be used</summary>
@@ -166,7 +170,17 @@ export default defineToolbarApp({
       tutorial.customSetupCmd = customSetupCmdInput?.value;
       saveConfig();
     });
-    
+
+    const customStartCmdInput = astroToolbarWindow?.querySelector(
+      '#custom-start-command'
+    ) as HTMLInputElement;
+    customStartCmdInput.value =
+      tutorial.customStartCmd !== '' ? tutorial.customStartCmd : '';
+    customStartCmdInput?.addEventListener('change', (event) => {
+      tutorial.customStartCmd = customStartCmdInput?.value;
+      saveConfig();
+    });
+
     // Always read tutorial-config.json from disk on toolbar open
     server.send('vonage-app:config-check', {});
 
