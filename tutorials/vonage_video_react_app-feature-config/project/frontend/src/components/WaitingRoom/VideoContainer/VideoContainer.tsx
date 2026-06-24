@@ -11,10 +11,14 @@ import VoiceIndicatorIcon from '../../MeetingRoom/VoiceIndicator/VoiceIndicator'
 import VignetteEffect from '../VignetteEffect';
 import BackgroundEffectsDialog from '../BackgroundEffects/BackgroundEffectsDialog';
 import BackgroundEffectsButton from '../BackgroundEffects/BackgroundEffectsButton';
+import AdvancedSettingsDialog from '@components/AdvancedSettings/Dialog';
+import advancedSettings$ from '@Context/AdvancedSettings';
 import backgroundEffectsDialog$ from '@Context/BackgroundEffectsDialog';
 import PrecallNetworkTestDialog from '../PrecallNetworkTestDialog';
 import precallNetworkTestDialog$ from '@Context/PrecallNetworkTestDialog';
 import classNames from 'classnames';
+import { env } from '../../../env';
+import VideoStatsOverlay from '../VideoStatsOverlay';
 
 export type VideoContainerProps = {
   username: string;
@@ -31,6 +35,7 @@ export type VideoContainerProps = {
  */
 const VideoContainer = ({ username }: VideoContainerProps): ReactElement => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isAdvancedSettingsOpen = advancedSettings$.use.select((state) => state.isOpen);
   const [{ isOpen: isBackgroundEffectsOpen }, { open, close }] = backgroundEffectsDialog$.use();
   const [{ isOpen: isPrecallNetworkTestOpen }, { close: closePrecallTest }] =
     precallNetworkTestDialog$.use();
@@ -80,6 +85,12 @@ const VideoContainer = ({ username }: VideoContainerProps): ReactElement => {
 
       <VignetteEffect />
 
+      {env.SHOW_VIDEO_STATS && isVideoEnabled && !isVideoLoading && (
+        <div className="absolute left-4 top-3 z-10">
+          <VideoStatsOverlay />
+        </div>
+      )}
+
       {isVideoLoading && <VideoLoading className="animate-fade-in" />}
 
       <PreviewAvatar
@@ -108,6 +119,7 @@ const VideoContainer = ({ username }: VideoContainerProps): ReactElement => {
                 setIsBackgroundEffectsOpen={close}
               />
             )}
+            {isAdvancedSettingsOpen && <AdvancedSettingsDialog />}
             {isPrecallNetworkTestOpen && (
               <PrecallNetworkTestDialog
                 isPrecallNetworkTestOpen={isPrecallNetworkTestOpen}

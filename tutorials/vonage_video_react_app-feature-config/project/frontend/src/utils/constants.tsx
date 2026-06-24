@@ -23,11 +23,6 @@ export const DEVICE_ACCESS_STATUS = {
 };
 
 /**
- * @constant {string} TEXT_SHADOW - The text shadow style used for display purposes.
- */
-export const TEXT_SHADOW = '[text-shadow:0_1px_2px_rgb(0_0_0/60%)]';
-
-/**
  * @constant {number} EMOJI_DISPLAY_DURATION - The duration in milliseconds for which emojis are displayed.
  */
 export const EMOJI_DISPLAY_DURATION = 5_000;
@@ -103,11 +98,6 @@ export const RIGHT_PANEL_BUTTON_COUNT = 3 - (isReportIssueEnabled() ? 0 : 1);
  * @constant {number} CAPTION_DISPLAY_DURATION_MS - The duration in milliseconds for which captions are displayed.
  */
 export const CAPTION_DISPLAY_DURATION_MS = 4000;
-
-/**
- * @constant {number} CAPTION_ERROR_DISPLAY_DURATION_MS - The duration in milliseconds for which the caption error popup is displayed.
- */
-export const CAPTION_ERROR_DISPLAY_DURATION_MS = 4000;
 
 /*
  * @constant {number} SMALL_VIEWPORT - The pixel width threshold used to determine if the viewport is considered small.

@@ -6,9 +6,9 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { Server } from 'http';
-import router from './routes/index';
-import { errorHandler } from './middleware/errorHandler';
+import router from './routes';
 import { fileURLToPath } from 'url';
+import { errorHandler, helmetMiddleware, rateLimitMiddleware } from './middleware';
 
 /**
  * The runtimeDirectory works different on CJS and ESM
@@ -24,11 +24,17 @@ if (process.env.__IS_CJS__) {
 const defaultPort = Number(process.env.VCR_PORT ?? 3345);
 
 const app: Express = express();
+
+app.use(helmetMiddleware);
+app.use(rateLimitMiddleware);
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: true }));
 app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json());
-app.set('trust proxy', true);
+
+// Trust only the immediate reverse proxy.
+// Avoid `true` because clients can spoof X-Forwarded-For and bypass IP rate limits.
+app.set('trust proxy', 1);
 app.use(router);
 
 app.use((_req, res, next) => {
@@ -38,7 +44,6 @@ app.use((_req, res, next) => {
 });
 
 const veraPath = path.join(runtimeDir, './dist');
-
 app.use(express.static(veraPath));
 
 app.get('/*', (_req: Request, res: Response) => {
@@ -50,8 +55,13 @@ app.use(errorHandler);
 const startServer: (port?: number) => Promise<Server> = (port = defaultPort) => {
   return new Promise((res) => {
     const server: Server = app.listen(port, () => {
-      console.log('Server listening on port', port);
       res(server);
+
+      console.log('Server listening on port', port);
+
+      if (process.env.FRONTEND_TARGET) {
+        console.log('App listening at', process.env.FRONTEND_TARGET);
+      }
     });
   });
 };

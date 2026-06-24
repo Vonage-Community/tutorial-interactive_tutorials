@@ -1,5 +1,7 @@
 import type { ReactElement } from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
+import advancedSettings$ from '@Context/AdvancedSettings';
+import AdvancedSettingsDialog from '@components/AdvancedSettings/Dialog';
 import PopupAlert from '@components/MeetingRoom/PopupAlert';
 import Toolbar from '../../components/MeetingRoom/Toolbar';
 import VideoTileCanvas from '../../components/MeetingRoom/VideoTileCanvas';
@@ -14,6 +16,7 @@ import { twMerge } from 'tailwind-merge';
 import RecordingIndicator from '../../components/MeetingRoom/RecordingIndicator';
 import RecordingPopUpIndicator from '@components/MeetingRoom/RecordingPopupIndicator';
 import { RECORDING_POPUP_TIMEOUT_MS } from '@utils/constants';
+import { isMobile } from '@web/platform';
 
 /**
  * MeetingRoom Component
@@ -28,15 +31,13 @@ type MeetingRoomProps = BoxProps & {
   fullSize?: boolean;
 };
 
-const MeetingRoom = ({
-  fullSize = false,
-  className,
-  // ...props
-}: MeetingRoomProps): ReactElement => {
+const isMobileDevice = isMobile();
+
+function MeetingRoom({ fullSize = false, className, ...boxProps }: MeetingRoomProps): ReactElement {
   const {
     t,
-    isSmallViewport,
     isSharingScreen,
+    isEntireScreen,
     screensharingPublisher,
     screenshareVideoElement,
     toggleShareScreen,
@@ -62,10 +63,12 @@ const MeetingRoom = ({
     latestNotifiedArchiveId,
     handleRecordingNotified,
   } = useMeetingRoom();
+  const isAdvancedSettingsOpen = advancedSettings$.use.select((state) => state.isOpen);
 
   return (
     <Box
       data-testid="meetingRoom"
+      {...boxProps}
       className={classNames(
         twMerge('h-[calc(100dvh-80px)] w-screen bg-vera-dark-background', className),
         {
@@ -73,7 +76,7 @@ const MeetingRoom = ({
         }
       )}
     >
-      {isRecording && !isSmallViewport && (
+      {isRecording && !isMobileDevice && (
         <Box
           data-testid="meetingRoomRecordingIndicatorContainer"
           className="pointer-events-none absolute left-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-vera-dark-grey-opacity backdrop-blur-sm"
@@ -82,10 +85,11 @@ const MeetingRoom = ({
         </Box>
       )}
 
-      {isSmallViewport && <SmallViewportHeader />}
+      {isMobileDevice && <SmallViewportHeader />}
 
       <VideoTileCanvas
         isSharingScreen={isSharingScreen}
+        isEntireScreen={isEntireScreen}
         screensharingPublisher={screensharingPublisher}
         screenshareVideoElement={screenshareVideoElement}
         isRightPanelOpen={rightPanelActiveTab !== 'closed'}
@@ -120,6 +124,7 @@ const MeetingRoom = ({
         }
         captionsState={captionsState}
       />
+      {isAdvancedSettingsOpen && <AdvancedSettingsDialog />}
       {recordingAlreadyNotified &&
         !archiveIdStartedBySelf &&
         isRecording &&
@@ -148,6 +153,6 @@ const MeetingRoom = ({
       )}
     </Box>
   );
-};
+}
 
 export default MeetingRoom;

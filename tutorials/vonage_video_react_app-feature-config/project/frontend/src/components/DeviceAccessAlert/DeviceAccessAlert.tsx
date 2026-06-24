@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DEVICE_ACCESS_STATUS } from '../../utils/constants';
-import { isWebKit } from '../../utils/util';
+import { isWebKit } from '@web/platform';
 import Alert from '@mui/material/Alert';
 import Dialog from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
@@ -48,7 +48,7 @@ const DeviceAccessAlert = ({ accessStatus }: DeviceAccessAlertProps): ReactEleme
         spacing={3}
       >
         {accessStatus && (
-          <Dialog open>
+          <Dialog open className="bg-vera-surface!">
             <Alert severity={severity} variant="outlined" sx={{ width: '100%' }}>
               <AlertTitle>{messageToDisplay}</AlertTitle>
               <Box

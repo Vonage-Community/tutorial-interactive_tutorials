@@ -4,8 +4,7 @@ import useSessionContext from '../../../hooks/useSessionContext';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import useTheme from '@ui/theme';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 
 /**
  * ChatInput component
@@ -16,7 +15,6 @@ import VividIcon from '@components/VividIcon';
  */
 const ChatInput = (): ReactElement => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const [text, setText] = useState('');
   const [isComposing, setIsComposing] = useState(false);
   const { sendChatMessage } = useSessionContext();
@@ -62,30 +60,32 @@ const ChatInput = (): ReactElement => {
       value={text}
       maxRows={5}
       fullWidth
+      className="bg-vera-background"
       sx={{
         margin: '16px',
         minHeight: '48px',
-        borderRadius: theme.shapes.borderRadiusExtraLarge,
-        backgroundColor: theme.colors.background,
+        borderRadius: '20px',
         flexDirection: 'row',
         '&.MuiTextField-root': {
           paddingLeft: '24px',
         },
       }}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton sx={{ height: '40px' }} onClick={handleSendMessage}>
-              <VividIcon
-                name="message-sent-solid"
-                customSize={-5}
-                sx={{ color: text === '' ? theme.colors.disabled : theme.colors.primary }}
-                data-testid="SendIcon"
-              />
-            </IconButton>
-          </InputAdornment>
-        ),
-        disableUnderline: true,
+      slotProps={{
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton sx={{ height: '40px' }} onClick={handleSendMessage}>
+                <VividIcon
+                  name="message-sent-solid"
+                  customSize={-5}
+                  style={{ color: text === '' ? 'var(--vera-disabled)' : 'var(--vera-primary)' }}
+                  data-testid="SendIcon"
+                />
+              </IconButton>
+            </InputAdornment>
+          ),
+          disableUnderline: true,
+        },
       }}
     />
   );

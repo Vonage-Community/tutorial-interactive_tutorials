@@ -14,6 +14,13 @@ import wait from '@common/execution/wait';
 import frontendLogger from '../../logger';
 
 vi.mock('@vonage/client-sdk-video');
+vi.mock('@common/helpers', () => ({
+  decodeSessionKey: () => ({
+    sessionId: 'session-id',
+    applicationId: 'api-key',
+    sessionKey: 'fake.session.key',
+  }),
+}));
 const mockProvider = { log: vi.fn(), reportError: vi.fn() };
 
 frontendLogger.setup(() => mockProvider);
@@ -31,10 +38,12 @@ const mockPublish = vi.fn();
 type TestSession = Session & EventEmitter;
 
 const fakeCredentials: Credential = {
-  apiKey: 'api-key',
-  sessionId: 'session-id',
+  sessionKey: 'fake.session.key',
   token: 'toe-ken',
 };
+
+const fakeSessionId = 'session-id';
+const fakeApplicationId = 'api-key';
 
 describe('VonageVideoClient', () => {
   let vonageVideoClient: VonageVideoClient | null;
@@ -50,7 +59,7 @@ describe('VonageVideoClient', () => {
       forceMuteStream: vi.fn(),
       publish: mockPublish,
       unpublish: vi.fn(),
-      sessionId: fakeCredentials.sessionId,
+      sessionId: fakeSessionId,
       connection: {
         connectionId: 'connection-id',
       },
@@ -86,9 +95,9 @@ describe('VonageVideoClient', () => {
         'EnterMeeting',
         expect.objectContaining({
           eventSource: 'vonageVideoClient.connect.success',
-          sessionId: fakeCredentials.sessionId,
+          sessionId: fakeSessionId,
           connectionId: 'connection-id',
-          partnerId: fakeCredentials.apiKey,
+          partnerId: fakeApplicationId,
         })
       );
       expect(console.error).not.toHaveBeenCalled();
@@ -137,7 +146,7 @@ describe('VonageVideoClient', () => {
 
       await vonageVideoClient?.connect();
 
-      vi.spyOn(vonageVideoClient!.clientSession!, 'subscribe').mockImplementation(
+      vi.spyOn(vonageVideoClient!.clientSession, 'subscribe').mockImplementation(
         (_a, _b, _c, callback) => {
           queueMicrotask(() => {
             callback!();
@@ -191,6 +200,32 @@ describe('VonageVideoClient', () => {
       });
 
       await audioLevelUpdatedPromise;
+    });
+
+    it('emits subscriptionError when subscribe returns null and does not attach subscriber listeners', async () => {
+      const streamId = 'null-subscriber-stream';
+
+      await vonageVideoClient?.connect();
+
+      const nullSubscriber = new EventEmitter() as unknown as TestSubscriber;
+      mockSubscribe.mockReturnValue(undefined);
+
+      const subscriptionErrorPromise = new Promise<unknown>((resolve) => {
+        vonageVideoClient?.on('subscriptionError', resolve);
+      });
+
+      mockSession.emit('streamCreated', {
+        stream: { streamId, videoType: 'camera' } as unknown as Stream,
+      });
+
+      const error = await subscriptionErrorPromise;
+
+      expect(error).toBeInstanceOf(Error);
+      expect((error as Error).message).toBe('Vonage subscriber was not created.');
+      // setupSubscriberListeners should never have been called — no subscriber to attach to
+      expect(nullSubscriber.listenerCount('videoElementCreated')).toBe(0);
+      expect(nullSubscriber.listenerCount('destroyed')).toBe(0);
+      expect(nullSubscriber.listenerCount('audioLevelUpdated')).toBe(0);
     });
   });
 
@@ -313,14 +348,14 @@ describe('VonageVideoClient', () => {
         'EnterMeeting',
         expect.objectContaining({
           eventSource: 'vonageVideoClient.connect.success',
-          sessionId: fakeCredentials.sessionId,
+          sessionId: fakeSessionId,
           connectionId: 'connection-id',
-          partnerId: fakeCredentials.apiKey,
+          partnerId: fakeApplicationId,
         })
       );
     });
 
-    it('should call frontendLogger.log(CallEnded, ...) with reason, sessionId, connectionId when session disconnects', async () => {
+    it('should call frontendLogger.log with reason and partnerId when session disconnects', async () => {
       await vonageVideoClient?.connect();
       await wait(0);
 
@@ -335,8 +370,7 @@ describe('VonageVideoClient', () => {
         'vonageVideoClient: handle session disconnected',
         expect.objectContaining({
           reason: 'forceDisconnected',
-          sessionId: 'session-id',
-          connectionId: 'connection-id',
+          partnerId: 'api-key',
         })
       );
 

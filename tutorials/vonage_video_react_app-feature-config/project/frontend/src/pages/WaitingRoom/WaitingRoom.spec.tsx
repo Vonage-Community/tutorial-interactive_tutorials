@@ -20,7 +20,7 @@ import { setupWindowNavigatorMock } from '@web-test/fixtures';
 import { env } from '../../env';
 
 const mockedNavigate = vi.fn();
-const mockedParams = { roomName: 'test-room-name' };
+const mockedParams = { roomIdentifier: 'test-room-name' };
 const mockedLocation = vi.fn();
 
 vi.mock('react-router-dom', async () => {
@@ -323,6 +323,7 @@ async function render(
       providers.publisher,
       providers.backgroundPublisher,
       providers.previewPublisher,
+      providers.runtime,
     ],
     {
       userContext,
@@ -330,6 +331,7 @@ async function render(
       publisherContext,
       backgroundPublisherContext,
       previewPublisherContext,
+      runtimeContext: undefined,
     }
   );
 

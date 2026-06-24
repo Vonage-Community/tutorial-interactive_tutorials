@@ -1,12 +1,11 @@
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SubscriberWrapper } from '../../../types/session';
+import type { SubscriberWrapper } from '../../../types/session';
 import useSessionContext from '../../../hooks/useSessionContext';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import VividIcon from '@components/VividIcon';
-import useTheme from '@ui/theme';
+import VividIcon from '@ui/VividIcon';
 
 export type ParticipantPinMenuItemProps = {
   handleClick: () => void;
@@ -29,7 +28,6 @@ const ParticipantPinMenuItem = ({
   subscriberWrapper,
 }: ParticipantPinMenuItemProps): ReactElement => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const { isPinned, id } = subscriberWrapper;
   const { isMaxPinned, pinSubscriber } = useSessionContext();
   const isDisabled = !isPinned && isMaxPinned;
@@ -61,20 +59,17 @@ const ParticipantPinMenuItem = ({
           <VividIcon
             customSize={-6}
             name="pin-2-off-solid"
-            sx={{
-              color: theme.colors.secondary,
-            }}
+            style={{ color: 'var(--vera-secondary)' }}
           />
         ) : (
           <VividIcon
             customSize={-6}
             name="pin-2-solid"
-            sx={{
-              color: theme.colors.secondary,
-            }}
+            style={{ color: 'var(--vera-secondary)' }}
           />
         )}
       </ListItemIcon>
+
       <ListItemText
         sx={{
           '.MuiTypography-root': {

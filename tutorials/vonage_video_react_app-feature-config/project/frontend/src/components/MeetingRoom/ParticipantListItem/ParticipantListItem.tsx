@@ -7,8 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
-import useTheme from '@ui/theme';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import Box from '@mui/material/Box';
 
 export type ParticipantListItemProps = {
@@ -45,20 +44,21 @@ const ParticipantListItem = ({
   stream,
   subscriberWrapper,
 }: ParticipantListItemProps): ReactElement => {
-  const theme = useTheme();
-
   return (
     <ListItem
       sx={{ height: '56px', paddingRight: '68px' }}
       data-testid={dataTestId}
       secondaryAction={
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Box
+          className="text-vera-secondary"
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
           <AudioIndicator
             audioLevel={audioLevel}
             hasAudio={hasAudio}
             stream={stream}
             participantName={name}
-            indicatorColor={theme.colors.secondary}
+            indicatorColor="var(--vera-secondary)"
             indicatorStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           />
           {subscriberWrapper && (
@@ -68,19 +68,15 @@ const ParticipantListItem = ({
       }
     >
       <Badge
+        className="[&_.MuiBadge-badge]:bg-vera-background"
         overlap="circular"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        sx={{
-          '.MuiBadge-badge': {
-            backgroundColor: theme.colors.background,
-          },
-        }}
         invisible={!subscriberWrapper?.isPinned}
         badgeContent={
           <VividIcon
             customSize={-6}
             name="pin-2-solid"
-            sx={{
+            style={{
               position: 'fixed',
             }}
           />

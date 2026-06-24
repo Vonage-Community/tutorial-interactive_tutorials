@@ -10,7 +10,7 @@ import {
 import { VideoFilter } from '@vonage/client-sdk-video';
 import { getStorageItem, STORAGE_KEYS } from '../utils/storage';
 import { parseVideoFilter } from '../utils/util';
-import { DeepPartial } from '@app-types';
+import type { DeepPartial } from '@common/types';
 
 // Define the shape of the User context
 export type UserContextType = {
@@ -27,8 +27,6 @@ export type UserType = {
     noiseSuppression: boolean; // Whether noise suppression is enabled
     publishCaptions: boolean; // Whether captions are published
     backgroundFilter?: VideoFilter; // The background replacement filter applied to the video
-    audioSource?: string; // The selected audio input source (optional)
-    videoSource?: string; // The selected video input source (optional)
   };
   issues: {
     reconnections: number; // The number of reconnections the user has experienced
@@ -63,8 +61,6 @@ const UserProvider = ({ children, value: initialUserState }: UserProviderProps):
       name,
       backgroundFilter,
       noiseSuppression,
-      audioSource: undefined,
-      videoSource: undefined,
       publishCaptions: true,
       ...initialUserState?.defaultSettings,
     },

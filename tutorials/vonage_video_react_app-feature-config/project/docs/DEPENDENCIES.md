@@ -9,7 +9,6 @@
 - [@testing-library/jest-dom](https://www.npmjs.com/package/@testing-library/jest-dom) Custom jest matchers to test the state of the DOM
 - [@testing-library/react](https://www.npmjs.com/package/@testing-library/react) Simple and complete React DOM testing utilities that encourage good testing practices.
 - [@testing-library/user-event](https://www.npmjs.com/package/@testing-library/user-event) Fire events the same way the user does
-- [@types/lodash](https://www.npmjs.com/package/@types/lodash) TypeScript definitions for lodash
 - [@types/react-dom](https://www.npmjs.com/package/@types/react-dom) TypeScript definitions for react-dom
 - [@types/react-router-dom](https://www.npmjs.com/package/@types/react-router-dom) TypeScript definitions for react-router-dom
 - [@types/react](https://www.npmjs.com/package/@types/react) TypeScript definitions for react
@@ -25,7 +24,6 @@
 - [axios](https://www.npmjs.com/package/axios) Promise based HTTP client for the browser and node.js
 - [events](https://www.npmjs.com/package/events) Node's event emitter for all engines.
 - [jsdom](https://www.npmjs.com/package/jsdom) A JavaScript implementation of many web standards
-- [lodash](https://www.npmjs.com/package/lodash) Lodash modular utilities.
 - [opentok-layout-js](https://www.npmjs.com/package/opentok-layout-js) Automatic layout of video elements (publisher and subscriber) minimising white-space for the OpenTok on WebRTC API. This is intended for use with the OpenTok on WebRTC JS API.
 - [opentok-solutions-logging](https://www.npmjs.com/package/opentok-solutions-logging) OpenTok Solutions analytics logging for JavaScript
 - [postcss](https://www.npmjs.com/package/postcss) Tool for transforming styles with JS plugins
@@ -39,6 +37,7 @@
 - [uuid](https://www.npmjs.com/package/uuid) RFC9562 UUIDs
 - [vite](https://www.npmjs.com/package/vite) Native-ESM powered web dev build tool
 - [vitest](https://www.npmjs.com/package/vitest) Next generation testing framework powered by Vite
+- [@tanstack/react-query](https://www.npmjs.com/package/@tanstack/react-query) Hooks for fetching, caching and updating asynchronous data in React
 
 # Backend Dependencies
 - [@jest/globals](https://www.npmjs.com/package/@jest/globals) 
@@ -64,3 +63,5 @@
 - [supertest](https://www.npmjs.com/package/supertest) SuperAgent driven library for testing HTTP servers
 - [ts-jest](https://www.npmjs.com/package/ts-jest) A Jest transformer with source map support that lets you use Jest to test projects written in TypeScript
 - [tsx](https://www.npmjs.com/package/tsx) TypeScript Execute (tsx): Node.js enhanced with esbuild to run TypeScript & ESM files
+- [express-rate-limit](https://www.npmjs.com/package/express-rate-limit) Basic IP rate-limiting middleware for Express. Use to limit repeated requests to public APIs and/or endpoints such as password reset.
+- [helmet](https://www.npmjs.com/package/helmet) Helmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!

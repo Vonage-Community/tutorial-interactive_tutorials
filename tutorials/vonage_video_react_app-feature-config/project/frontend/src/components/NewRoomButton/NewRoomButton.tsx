@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 
 export type NewRoomButtonProps = {
   handleNewRoom: () => void;
@@ -22,7 +22,9 @@ const NewRoomButton = ({ handleNewRoom }: NewRoomButtonProps): ReactElement => {
     <Button
       data-testid="new-room-button"
       variant="contained"
-      startIcon={<VividIcon name="plus-line" customSize={-5} />}
+      startIcon={
+        <VividIcon name="plus-line" customSize={-5} style={{ color: 'var(--vera-on-primary)' }} />
+      }
       onClick={handleNewRoom}
       fullWidth
     >

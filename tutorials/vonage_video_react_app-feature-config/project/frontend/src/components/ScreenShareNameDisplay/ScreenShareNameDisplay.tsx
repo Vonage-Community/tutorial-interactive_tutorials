@@ -1,7 +1,5 @@
-import useTheme from '@ui/theme';
-import Chip from '@mui/material/Chip';
-import { Box } from 'opentok-layout-js';
-import { ReactElement } from 'react';
+import type { Box } from 'opentok-layout-js';
+import type { ReactElement } from 'react';
 
 export type ScreenShareNameDisplayProps = {
   name: string;
@@ -16,25 +14,18 @@ export type ScreenShareNameDisplayProps = {
  * @returns {ReactElement} The ScreenShareNameDisplay component.
  */
 const ScreenShareNameDisplay = ({ name, box }: ScreenShareNameDisplayProps): ReactElement => {
-  const theme = useTheme();
   const safeMaxWidth = typeof box.width === 'number' && Number.isFinite(box.width) ? box.width : 0;
 
   return (
-    <Chip
-      label={name}
-      size="small"
-      sx={{
-        position: 'absolute',
-        bottom: '10px',
-        left: '10px',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        color: theme.colors.onDarkGrey,
-        backgroundColor: theme.colors.darkGreyOpacity,
+    <div
+      className="absolute bottom-1 left-1.5 overflow-hidden whitespace-nowrap rounded-vera-medium bg-vera-dark-grey-opacity px-2 py-1 text-ellipsis text-vera-accent"
+      style={{
         maxWidth: Math.max(0, safeMaxWidth - 32),
+        marginBottom: '4px',
       }}
-    />
+    >
+      <span className="font-vera-plain text-vera-body-base">{name}</span>
+    </div>
   );
 };
 

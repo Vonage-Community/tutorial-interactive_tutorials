@@ -5,7 +5,7 @@ import isReportIssueEnabled from '@utils/isReportIssueEnabled';
 import useToolbarButtons from '@hooks/useToolbarButtons';
 import useBackgroundPublisherContext from '@hooks/useBackgroundPublisherContext';
 import Box from '@mui/material/Box';
-import useTheme from '@ui/theme';
+import { env } from '../../../env';
 import ScreenSharingButton from '../../ScreenSharingButton';
 import TimeRoomNameMeetingRoom from '../TimeRoomName';
 import ExitButton from '../ExitButton';
@@ -15,6 +15,7 @@ import ArchivingButton from '../ArchivingButton';
 import CaptionsButton from '../CaptionsButton';
 import ChatButton from '../ChatButton';
 import ReportIssueButton from '../ReportIssueButton';
+import AdvancedSettingsButton from '../AdvancedSettingsButton';
 import ToolbarOverflowButton from '../ToolbarOverflowButton';
 import EmojiGridButton from '../EmojiGridButton';
 import DeviceControlButton from '../DeviceControlButton';
@@ -71,7 +72,6 @@ const Toolbar = ({
   participantCount,
   captionsState,
 }: ToolbarProps): ReactElement => {
-  const theme = useTheme();
   const { disconnect, subscriberWrappers } = useSessionContext();
   const { destroyBackgroundPublisher } = useBackgroundPublisherContext();
   const isViewingScreenShare = subscriberWrappers.some((subWrapper) => subWrapper.isScreenshare);
@@ -108,6 +108,9 @@ const Toolbar = ({
     />,
     <CaptionsButton key="CaptionsButton" captionsState={captionsState} />,
     <ArchivingButton key="ArchivingButton" />,
+    env.MEETING_ROOM_ALLOW_ADVANCED_SETTINGS && (
+      <AdvancedSettingsButton key="AdvancedSettingsButton" />
+    ),
     isReportIssueEnabled() && (
       <ReportIssueButton
         isOpen={rightPanelActiveTab === 'issues'}
@@ -159,6 +162,7 @@ const Toolbar = ({
   return (
     <Box
       ref={toolbarRef}
+      className="bg-vera-dark-background"
       sx={{
         position: 'absolute',
         bottom: 0,
@@ -169,7 +173,6 @@ const Toolbar = ({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: theme.colors.darkBackground,
         padding: 2,
       }}
     >
@@ -209,7 +212,6 @@ const Toolbar = ({
           <ExitButton handleLeave={handleLeave} />
         </Box>
       </Box>
-
       <Box
         ref={rightPanelControlsRef}
         sx={{

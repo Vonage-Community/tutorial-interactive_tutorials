@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import useSessionContext from '../../../hooks/useSessionContext';
 import ToolbarButton from '../ToolbarButton';
 import Tooltip from '@mui/material/Tooltip';
-import VividIcon from '@components/VividIcon';
-import useTheme from '@ui/theme';
+import VividIcon from '@ui/VividIcon';
 
 export type LayoutButtonProps = {
   isScreenSharePresent: boolean;
@@ -33,7 +32,6 @@ const LayoutButton = ({
   const { layoutMode, setLayoutMode } = useSessionContext();
   const isGrid = layoutMode === 'grid';
   const isDisabled = isScreenSharePresent || isPinningPresent;
-  const theme = useTheme();
   const handleClick = () => {
     if (isDisabled) {
       return;
@@ -64,14 +62,22 @@ const LayoutButton = ({
               name="layout-2-solid"
               customSize={-5}
               data-testid="ViewSidebarIcon"
-              sx={{ color: isDisabled ? theme.colors.disabled : theme.colors.onSecondary }}
+              style={{
+                color: isDisabled
+                  ? 'var(--vera-secondary-light)'
+                  : 'var(--vera-on-secondary-light)',
+              }}
             />
           ) : (
             <VividIcon
               name="apps-solid"
               customSize={-5}
               data-testid="ViewSidebarIcon"
-              sx={{ color: isDisabled ? theme.colors.disabled : theme.colors.onSecondary }}
+              style={{
+                color: isDisabled
+                  ? 'var(--vera-secondary-light)'
+                  : 'var(--vera-on-secondary-light)',
+              }}
             />
           )
         }

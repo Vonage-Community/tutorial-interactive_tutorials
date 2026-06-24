@@ -4,11 +4,10 @@ import ListItem from '@mui/material/ListItem';
 import Link from '@mui/material/Link';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import { Typography } from '@mui/material';
 import Separator from '@components/Separator';
 import Box from '@mui/material/Box';
-import useTheme from '@ui/theme';
 
 export type SupportedBrowserListItemProps = {
   url: string;
@@ -25,7 +24,6 @@ const SupportedBrowserListItem = ({
   browser,
 }: SupportedBrowserListItemProps): ReactElement => {
   const { t } = useTranslation();
-  const theme = useTheme();
 
   return (
     <Box sx={{ mb: 2 }}>
@@ -35,12 +33,17 @@ const SupportedBrowserListItem = ({
         secondaryAction={
           <Link href={url} target="_blank" sx={{ textDecoration: 'none' }}>
             <IconButton>
-              <VividIcon name="open-line" customSize={-6} sx={{ color: theme.colors.primary }} />
+              <VividIcon
+                name="open-line"
+                customSize={-6}
+                style={{ color: 'var(--vera-primary)' }}
+              />
             </IconButton>
             <Typography
               variant="body2"
               component="span"
-              sx={{ ml: 0.75, color: theme.colors.textPrimary }}
+              sx={{ ml: 0.75 }}
+              className="text-vera-text-primary"
             >
               {t('unsupportedBrowser.supported.visitPage')}
             </Typography>

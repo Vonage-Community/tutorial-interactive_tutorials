@@ -12,6 +12,7 @@ env:
   OT_API_SECRET: ${{secrets.API_SECRET}}
   VONAGE_APP_ID: ${{secrets.VONAGE_APP_ID}}
   VONAGE_PRIVATE_KEY: ${{secrets.VONAGE_PRIVATE_KEY}}
+  SESSION_KEY_SECRET: ${{secrets.SESSION_KEY_SECRET}}
 
 jobs:
   # ----------------------------------------------------
@@ -40,7 +41,7 @@ jobs:
           cache: yarn
 
       - name: Install Dependencies
-        run: yarn --ignore-scripts
+        run: yarn install --ignore-scripts --frozen-lockfile
 
       - name: Run ${{ matrix.project }} unit tests
         run: NX_DAEMON=false yarn nx test ${{ matrix.project }} --configuration=coverage
@@ -99,7 +100,7 @@ jobs:
       - name: Install Dependencies
         run: |
           node -v
-          yarn --ignore-scripts
+          yarn install --ignore-scripts --frozen-lockfile
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -150,7 +151,7 @@ jobs:
       - name: Install Dependencies
         run: |
           node -v
-          yarn --ignore-scripts
+          yarn install --ignore-scripts --frozen-lockfile
 
       - name: Download all coverage artifacts
         uses: actions/download-artifact@v4

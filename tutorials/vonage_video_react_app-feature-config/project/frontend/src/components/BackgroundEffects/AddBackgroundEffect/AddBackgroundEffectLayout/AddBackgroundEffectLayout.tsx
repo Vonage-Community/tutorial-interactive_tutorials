@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
+import { env } from '../../../../env';
 import { ALLOWED_TYPES, MAX_SIZE_MB } from '../../../../utils/constants';
 import useImageStorage from '@utils/useImageStorage/useImageStorage';
 import SelectableOption from '@components/BackgroundEffects/SelectableOption';
@@ -99,7 +100,7 @@ const AddBackgroundEffectLayout = ({
 
       <Snackbar
         open={showError && !!errorMessage}
-        autoHideDuration={6000}
+        autoHideDuration={env.NOTIFICATION_DURATION_MS}
         onClose={handleCloseError}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >

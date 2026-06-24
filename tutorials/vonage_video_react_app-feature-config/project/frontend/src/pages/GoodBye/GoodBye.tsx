@@ -8,7 +8,6 @@ import GoodByeMessage from '../../components/GoodBye/GoodbyeMessage';
 import ReenterRoomButton from '@components/GoodBye/ReenterRoomButton';
 import GoToLandingPageButton from '@components/GoodBye/GoToLandingPageButton';
 import Card from '@ui/Card';
-import Stack from '@mui/material/Stack';
 import useGoodByePage from '../../hooks/useGoodByePage';
 
 /**
@@ -23,7 +22,7 @@ import useGoodByePage from '../../hooks/useGoodByePage';
  */
 const GoodBye = (): ReactElement => {
   const { t } = useTranslation();
-  const { roomName, archives, header, caption, isSelfDeclinedRecording } = useGoodByePage();
+  const { archives, header, caption, isSelfDeclinedRecording } = useGoodByePage();
 
   return (
     <PageLayout>
@@ -34,25 +33,25 @@ const GoodBye = (): ReactElement => {
         <GoodByeMessage header={header} message={caption} />
       </PageLayout.Left>
       <PageLayout.Right>
-        <Stack direction="column" gap={4} className="w-full items-center">
+        <div className="flex w-full flex-col items-center gap-8">
           <Card className="w-full max-w-125">
-            <p className="text-xl font-medium font-vera-plain text-vera-secondary mb-3 w-full text-left">
+            <p className="font-vera-plain text-vera-heading-4 text-vera-secondary mb-3 w-full text-left">
               {t('goodBye.title')}
             </p>
             <div className="mb-6 w-full">
-              <ReenterRoomButton roomName={roomName} />
+              <ReenterRoomButton />
             </div>
             <GoToLandingPageButton />
           </Card>
           {!isSelfDeclinedRecording && (
             <Card className="w-full max-w-125">
-              <p className="text-xl font-medium font-vera-plain text-vera-secondary mb-6">
+              <p className="font-vera-plain text-vera-heading-4 text-vera-secondary mb-6">
                 {t('archiveList.label')}
               </p>
               <ArchiveList archives={archives} />
             </Card>
           )}
-        </Stack>
+        </div>
       </PageLayout.Right>
       <PageLayout.Footer>
         <Footer />

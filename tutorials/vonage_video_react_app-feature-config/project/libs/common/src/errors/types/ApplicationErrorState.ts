@@ -13,4 +13,8 @@ export type ApplicationErrorState = {
    * This includes the fallbackMessage and default error properties.
    */
   fallbackConfig: ApplicationErrorFallbackConfig;
-} & Pick<ApplicationErrorFallbackConfig, 'severity' | 'values' | 'statusCode'>;
+
+  type?: string;
+
+  name?: string;
+} & Pick<ApplicationErrorFallbackConfig, 'severity' | 'issues' | 'statusCode'>;

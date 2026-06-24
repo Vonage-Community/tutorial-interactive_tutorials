@@ -1,13 +1,12 @@
-import { Dispatch, ReactElement, useState, SetStateAction } from 'react';
+import { Dispatch, ReactElement, SetStateAction } from 'react';
 import { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
-import { disableCaptions, enableCaptions } from '@api/captions';
-import useRoomName from '@hooks/useRoomName';
+import useSessionContext from '@hooks/useSessionContext';
 import ToolbarButton from '../ToolbarButton';
 import Tooltip from '@mui/material/Tooltip';
-import VividIcon from '@components/VividIcon';
-import useTheme from '@ui/theme';
+import VividIcon from '@ui/VividIcon';
 import { env } from '../../../env';
+import { runtime$ } from '@core/stores';
 
 export type CaptionsState = {
   isUserCaptionsEnabled: boolean;
@@ -36,13 +35,12 @@ const CaptionsButton = ({
   handleClick,
   captionsState,
 }: CaptionsButtonProps): ReactElement | false => {
+  const videoClient = runtime$.useVideoClient();
   const { t } = useTranslation();
-  const roomName = useRoomName();
-  const [captionsId, setCaptionsId] = useState<string>('');
+  const { sessionKey } = useSessionContext();
   const { isUserCaptionsEnabled, setIsUserCaptionsEnabled, setCaptionsErrorResponse } =
     captionsState;
   const title = isUserCaptionsEnabled ? t('captions.disable') : t('captions.enable');
-  const theme = useTheme();
 
   const handleClose = () => {
     if (isOverflowButton && handleClick) {
@@ -50,18 +48,16 @@ const CaptionsButton = ({
     }
   };
 
-  const sessionCaptionsEnabled = !!roomName && !!captionsId;
-
   const handleCaptionsErrorResponse = (message: string | null) => {
     setCaptionsErrorResponse(message || t('errors.unknown'));
-    setCaptionsId('');
+
     setIsUserCaptionsEnabled(false);
   };
 
   const handleCaptionsEnable = async () => {
     try {
-      const response = await enableCaptions(roomName);
-      setCaptionsId(response.data.captionsId);
+      await videoClient.ensureCaptionsEnabled({ sessionKey: sessionKey! });
+
       setIsUserCaptionsEnabled(true);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -71,10 +67,8 @@ const CaptionsButton = ({
     }
   };
 
-  const handleCaptionsDisable = async () => {
+  const handleCaptionsDisable = () => {
     try {
-      setCaptionsId('');
-      await disableCaptions(roomName, captionsId);
       setIsUserCaptionsEnabled(false);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -87,8 +81,8 @@ const CaptionsButton = ({
   const handleCaptions = async (action: 'enable' | 'disable') => {
     if (action === 'enable') {
       await handleCaptionsEnable();
-    } else if (action === 'disable' && sessionCaptionsEnabled) {
-      await handleCaptionsDisable();
+    } else if (action === 'disable') {
+      handleCaptionsDisable();
     }
   };
 
@@ -108,13 +102,13 @@ const CaptionsButton = ({
               <VividIcon
                 name="closed-captioning-solid"
                 customSize={-5}
-                sx={{ color: theme.colors.onSecondary }}
+                style={{ color: 'var(--vera-on-secondary-light)' }}
               />
             ) : (
               <VividIcon
                 name="closed-captioning-off-solid"
                 customSize={-5}
-                sx={{ color: theme.colors.error }}
+                style={{ color: 'var(--vera-error)' }}
               />
             )
           }

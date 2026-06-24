@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import ToolbarButton from '../ToolbarButton';
-import useRoomName from '../../../hooks/useRoomName';
-import useTheme from '@ui/theme';
-import VividIcon from '@components/VividIcon';
+import useSessionContext from '@hooks/useSessionContext';
+import VividIcon from '@ui/VividIcon';
 
 export type ExitButtonProps = {
   handleLeave: () => void;
@@ -22,30 +21,27 @@ export type ExitButtonProps = {
 const ExitButton = ({ handleLeave }: ExitButtonProps): ReactElement => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const roomName = useRoomName();
-  const theme = useTheme();
+  const { sessionKey } = useSessionContext();
+
+  const isSessionReady = !!sessionKey;
 
   const handleExit = () => {
     handleLeave();
-    navigate('/goodbye', { state: { roomName } });
+    navigate(`/goodbye/${sessionKey ?? ''}`);
   };
 
   return (
     <Tooltip title={t('room.exit.tooltip')} aria-label={t('room.exit.ariaLabel')}>
       <ToolbarButton
+        disabled={!isSessionReady}
         onClick={handleExit}
-        sx={{
-          backgroundColor: theme.colors.error,
-          '&:hover': {
-            backgroundColor: theme.colors.errorHover,
-          },
-        }}
+        className="bg-vera-error! hover:bg-vera-error-hover!"
         icon={
           <VividIcon
             name="end-call-solid"
             customSize={-4}
             data-testid="CallEndIcon"
-            sx={{ color: theme.colors.onSecondary }}
+            style={{ color: 'var(--vera-on-secondary-light)' }}
           />
         }
       />

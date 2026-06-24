@@ -15,6 +15,8 @@ import useSyncPublisherDevices from '@Context/PublisherProvider/usePublisher/hoo
 import waitUntilPlaying from '@utils/waitUntilPlaying';
 import { attempt } from '@common/execution';
 import { useMountEffect } from '@web/hooks';
+import advancedSettings$ from '@Context/AdvancedSettings';
+import useApplyAdvancedSettings from '@Context/PublisherProvider/useApplyAdvancedSettings';
 import { env } from '../../../env';
 
 type PublisherVideoElementCreatedEvent = Event<'videoElementCreated', Publisher> & {
@@ -33,8 +35,6 @@ export type PreviewPublisherContextType = {
   changeBackground: (backgroundSelected: string) => Promise<void>;
   backgroundFilter: VideoFilter | undefined;
   accessStatus: string | null;
-  changeAudioSource: (deviceId: string) => void;
-  changeVideoSource: (deviceId: string) => void;
   initLocalPublisher: () => void;
   speechLevel: number;
   isVideoLoading: boolean;
@@ -70,8 +70,6 @@ export type PreviewPublisherInitialValue = Partial<
  * @property {string | undefined} localVideoSource - Current video source device ID
  * @property {string | undefined} localAudioSource - Current audio source device ID
  * @property {string | null} accessStatus - Current device access status
- * @property {Function} changeAudioSource - Method to change audio source device ID
- * @property {Function} changeVideoSource - Method to change video source device ID
  * @property {Function} initLocalPublisher - Method to initialize the preview publisher
  * @property {number} speechLevel - Current speech level for audio visualization
  * @returns {PreviewPublisherContextType} preview context
@@ -89,6 +87,7 @@ const usePreviewPublisher = (
   const [speechLevel, setSpeechLevel] = useState(initialValue?.speechLevel ?? 0);
   const { setAccessStatus, accessStatus } = usePermissions();
   const publisherRef = useRef<Publisher | null>(null);
+
   const [isPublishing, setIsPublishing] = useState<boolean>(initialValue?.isPublishing ?? false);
   const initialBackgroundRef = useRef<VideoFilter | undefined>(
     user.defaultSettings.backgroundFilter
@@ -132,52 +131,6 @@ const usePreviewPublisher = (
       });
     },
     [setBackgroundFilter, setUser]
-  );
-
-  /**
-   * Change microphone
-   * @returns {void}
-   */
-  const changeAudioSource = useCallback(
-    (deviceId: string) => {
-      if (!deviceId || !publisherRef.current) {
-        return;
-      }
-
-      void publisherRef.current.setAudioSource(deviceId);
-      void mediaDevices$.actions.selectDevice('audioinput', deviceId);
-
-      if (setUser) {
-        setUser((prevUser: UserType) => ({
-          ...prevUser,
-          defaultSettings: { ...prevUser.defaultSettings, audioSource: deviceId },
-        }));
-      }
-    },
-    [setUser]
-  );
-
-  /**
-   * Change video camera in use
-   * @returns {void}
-   */
-  const changeVideoSource = useCallback(
-    (deviceId: string) => {
-      if (!deviceId || !publisherRef.current) {
-        return;
-      }
-
-      void publisherRef.current.setVideoSource(deviceId);
-      void mediaDevices$.actions.selectDevice('videoinput', deviceId);
-
-      if (setUser) {
-        setUser((prevUser: UserType) => ({
-          ...prevUser,
-          defaultSettings: { ...prevUser.defaultSettings, videoSource: deviceId },
-        }));
-      }
-    },
-    [setUser]
   );
 
   const handleAccessDenied = useCallback(
@@ -227,16 +180,19 @@ const usePreviewPublisher = (
       return;
     }
 
-    // Set videoFilter based on user's selected background
     let videoFilter: VideoFilter | undefined;
-    if (initialBackgroundRef.current && hasMediaProcessorSupport()) {
+    if (initialBackgroundRef.current && hasMediaProcessorSupport('both')) {
       videoFilter = initialBackgroundRef.current;
     }
+
+    const { frameRate, codecMode, codecPriority } = advancedSettings$.getState();
 
     const publisherOptions: PublisherProperties = {
       insertDefaultUI: false,
       videoFilter,
-      resolution: env.DEFAULT_RESOLUTION,
+      resolution: env.PUBLISHER_MAX_RESOLUTION,
+      frameRate,
+      preferredVideoCodecs: codecMode === 'automatic' ? 'automatic' : codecPriority,
       publishAudio: isAudioEnabled,
       publishVideo: isVideoEnabled,
       audioSource: audioSourceId,
@@ -251,6 +207,7 @@ const usePreviewPublisher = (
         }
       }
     });
+
     addPublisherListeners(publisherRef.current);
   });
 
@@ -259,16 +216,12 @@ const usePreviewPublisher = (
    * @returns {void}
    */
   const destroyPublisher = useCallback(() => {
-    if (publisherRef.current) {
-      attempt(() => {
-        // There is a known race condition in Firefox during navigation where the DOM elements are destroyed before the publisher is destroyed, causing OT to throw an error.
-        publisherRef.current?.destroy();
-      });
-    } else {
-      console.error('pub not destroyed');
-    }
+    if (!publisherRef.current) return;
 
-    publisherRef.current = null;
+    attempt(() => {
+      // There is a known race condition in Firefox during navigation where the DOM elements are destroyed before the publisher is destroyed, causing OT to throw an error.
+      publisherRef.current?.destroy();
+    });
   }, []);
 
   /**
@@ -320,6 +273,8 @@ const usePreviewPublisher = (
     };
   });
 
+  useApplyAdvancedSettings(isPublishing ? publisherRef.current : null);
+
   return {
     isAudioEnabled,
     initLocalPublisher,
@@ -333,8 +288,6 @@ const usePreviewPublisher = (
     toggleVideo,
     changeBackground,
     backgroundFilter,
-    changeAudioSource,
-    changeVideoSource,
     accessStatus,
     speechLevel,
     isVideoLoading,
