@@ -164,9 +164,9 @@ async function main() {
         
         if (hasExternalApp) {
             if (tutorialConfig.customInstallCmd) {
-                pkg.scripts["postinstall"] = "cd project && npm install";
+                pkg.scripts["postinstall"] = `cd project && ${tutorialConfig.customInstallCmd}`;                
             } else {
-                pkg.scripts["postinstall"] = `cd project && ${tutorialConfig.customInstallCmd}`;
+                pkg.scripts["postinstall"] = "cd project && npm install";
             }
         }
 
@@ -285,6 +285,8 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
               .join(' && ');
             if (customSetupCmd){
                 commandChain += `${customSetupCmd} && `;
+            } else {
+                console.warn("⚠️ Custom Setup Command was provided but resolved to empty. Skipping.");
             }
         } else {
             commandChain += "node setup-project.js && ";
