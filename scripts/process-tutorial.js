@@ -97,6 +97,16 @@ async function main() {
         }
     }
 
+    // Check if there is a custom install command which means there is an external app
+    if (tutorialConfig.customInstallCmd) {
+        hasExternalApp = true;
+    }
+
+    // Check if there is a custom start command which means there is an external app
+    if (tutorialConfig.customStartCmd) {
+        hasExternalApp = true;
+    }
+
 
     // 5. THE OVERLAY (Apply Starter Files & Config on top of the cloned repo)
     console.log("📂 Applying starter files and configuration overlay...");
@@ -127,6 +137,11 @@ async function main() {
         }
     }
 
+    // Check for custom setup command
+    if (tutorialConfig.customSetupCmd) {
+        hasSetupScript = true;
+    }
+
     // 6. GENERATE BLANK FILES (Fallback for explicit blank files)
     if (tutorialConfig.files && Array.isArray(tutorialConfig.files)) {
         tutorialConfig.files.forEach(fileName => {
@@ -153,7 +168,11 @@ async function main() {
         pkg.scripts["start:tutorial"] = "http-server steps -p 1234 --cors -c-1";
         
         if (hasExternalApp) {
-            pkg.scripts["postinstall"] = "cd project && npm install";
+            if (tutorialConfig.customInstallCmd) {
+                pkg.scripts["postinstall"] = `cd project && ${tutorialConfig.customInstallCmd}`;                
+            } else {
+                pkg.scripts["postinstall"] = "cd project && npm install";
+            }
         }
 
         fs.writeJsonSync(rootPackageJson, pkg, { spaces: 2 });
@@ -208,7 +227,7 @@ Want to make changes to the lesson, add steps, or update starter files?
     `;
     fs.writeFileSync(path.join(targetDir, 'README.md'), readmeContent);
 
-    // 10. Cleanup
+    // 11. Cleanup
     fs.removeSync(path.join(UPLOADS_DIR, zipFilename));
     console.log("🧹 Cleanup complete. Zip removed from uploads.");
 }
@@ -262,7 +281,21 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
 
     // 2. Prepare the directory
     if (hasSetupScript) {
-        commandChain += "echo '' && cd project && node setup-project.js && ";
+        commandChain += "echo '' && cd project && ";
+        if (config.customSetupCmd){
+            const customSetupCmd = config.customSetupCmd
+              .split(/\r?\n/)
+              .map(cmd => cmd.trim())
+              .filter(cmd => cmd !== "")
+              .join(' && ');
+            if (customSetupCmd){
+                commandChain += `${customSetupCmd} && `;
+            } else {
+                console.warn("⚠️ Custom Setup Command was provided but resolved to empty. Skipping.");
+            }
+        } else {
+            commandChain += "node setup-project.js && ";
+        }
     } else if (hasExternalApp) {
         commandChain += "cd project && ";
     }
@@ -278,7 +311,8 @@ async function generateDevContainer(name, config, hasExternalApp, hasSetupScript
         commandChain += `(nohup sh -c "sleep 5 && ${visibilityCmd}" > /dev/null 2>&1 &) && `;
 
         // Run the project's start script
-        commandChain += "npm start";
+        const startCmd = config.customStartCmd || "npm start";
+        commandChain += startCmd;
     } else if (config.panels && config.panels.includes('browser')) {
         // Fallback: If no external app but browser requested, run live-server (from root)
         if (!hasSetupScript) {
