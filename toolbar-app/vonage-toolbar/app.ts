@@ -9,6 +9,8 @@ let tutorial: {
   capabilities: string[];
   version: string;
   filename: string;
+  customInstallCmd: string;
+  customSetupCmd: string;
 } = {
   files: [],
   openFiles: [],
@@ -17,7 +19,9 @@ let tutorial: {
   starterFiles: [],
   capabilities: [],
   version: '',
-  filename: ''
+  filename: '',
+  customInstallCmd: '',
+  customSetupCmd: ''
 };
 
 export default defineToolbarApp({
@@ -42,8 +46,12 @@ export default defineToolbarApp({
     </details>
     <details name='steps'>
       <summary>Step 2: Load an external repo (optional)</summary>
-      The repo will be loaded in the project folder. If there are any setup scripts needed to run the repo, please put them in the setup-project.js file.
+      The repo will be loaded in the project folder.
       <input id='repository' style="width: 100%;" placeholder='https://github.com/Vonage-Community/repo-name.git'/>
+      <br><br>Default install command is <code>npm install</code>, if you have custom install command, please enter it here: <input id='custom-install-command' style="width: 100%;" placeholder='yarn install'/>
+
+      <br><br>Default setup command is <code>node setup-project.js</code> that will run the code in the setup-project.js file. If you have a custom setup command, please enter it here and make sure to create any files you need:
+      <textarea id='custom-setup-command' style="width: 100%;" placeholder='bash setup.sh' rows="5" cols="33"></textarea>
     </details>
     <details name='steps'>
       <summary>Step 3: Set Starter Files to be used</summary>
@@ -138,6 +146,27 @@ export default defineToolbarApp({
       saveConfig();
     });
 
+
+    const customInstallCmdInput = astroToolbarWindow?.querySelector(
+      '#custom-install-command'
+    ) as HTMLInputElement;
+    customInstallCmdInput.value =
+      tutorial.customInstallCmd !== '' ? tutorial.customInstallCmd : '';
+    customInstallCmdInput?.addEventListener('change', (event) => {
+      tutorial.customInstallCmd = customInstallCmdInput?.value;
+      saveConfig();
+    });
+
+    const customSetupCmdInput = astroToolbarWindow?.querySelector(
+      '#custom-setup-command'
+    ) as HTMLInputElement;
+    customSetupCmdInput.value =
+      tutorial.customSetupCmd !== '' ? tutorial.customSetupCmd : '';
+      customSetupCmdInput?.addEventListener('change', (event) => {
+      tutorial.customSetupCmd = customSetupCmdInput?.value;
+      saveConfig();
+    });
+    
     // Always read tutorial-config.json from disk on toolbar open
     server.send('vonage-app:config-check', {});
 
@@ -173,6 +202,8 @@ export default defineToolbarApp({
       versionInput.value = tutorial.version;
       repositoryInput.value = tutorial.repository;
       filenameInput.value = tutorial.filename;
+      customInstallCmdInput.value = tutorial.customInstallCmd;
+      customSetupCmdInput.value = tutorial.customSetupCmd;
     }
 
 
