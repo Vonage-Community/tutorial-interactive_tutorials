@@ -102,6 +102,11 @@ async function main() {
         hasExternalApp = true;
     }
 
+    // Check if there is a custom start command which means there is an external app
+    if (tutorialConfig.customStartCmd) {
+        hasExternalApp = true;
+    }
+
 
     // 5. THE OVERLAY (Apply Starter Files & Config on top of the cloned repo)
     console.log("📂 Applying starter files and configuration overlay...");
@@ -222,7 +227,7 @@ Want to make changes to the lesson, add steps, or update starter files?
     `;
     fs.writeFileSync(path.join(targetDir, 'README.md'), readmeContent);
 
-    // 10. Cleanup
+    // 11. Cleanup
     fs.removeSync(path.join(UPLOADS_DIR, zipFilename));
     console.log("🧹 Cleanup complete. Zip removed from uploads.");
 }
