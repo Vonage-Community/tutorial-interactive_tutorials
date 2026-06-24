@@ -7,20 +7,21 @@ import WaitingRoom from './pages/WaitingRoom';
 import { PreviewPublisherProvider } from './Context/PreviewPublisherProvider';
 import LandingPage from './pages/LandingPage';
 import { PublisherProvider } from './Context/PublisherProvider';
-import RedirectToWaitingRoom from './components/RedirectToWaitingRoom';
+import { RedirectToWaitingRoom, ErrorBoundary, EnvGuard } from './components';
 import UnsupportedBrowserPage from './pages/UnsupportedBrowserPage';
 import RoomProvider from './Context/RoomProvider';
-import Box from '@mui/material/Box';
-import useTheme from '@ui/theme';
 import AppContextProvider from './AppContextProvider';
 import RedirectToUnsupportedBrowserPage from '@components/RedirectToUnsupportedBrowserPage';
 import SuspenseBoundary from '@web/components/SuspenseBoundary/SuspenseBoundary';
 import WaitingRoomSkeleton from '@pages/WaitingRoom/WaitingRoom.skeleton';
 import MeetingRoomSkeleton from '@pages/MeetingRoom/MeetingRoom.skeleton';
 import SessionProvider from '@Context/SessionProvider/session';
-import ErrorBoundary from './components/ErrorBoundary';
-import EnvGuard from './components/EnvGuard';
+import LoggerSynchronizer from '@Context/LoggerSynchronizer';
 import { ErrorPage } from './pages/ErrorBoundary';
+import { runtime$ } from '@core/stores';
+import { videoClient } from './services';
+import { NotificationsContainer } from '@ui/components';
+import { BackendLoggingProvider } from './logger/providers';
 
 const futureConfig: Partial<FutureConfig> = {
   /**
@@ -31,26 +32,13 @@ const futureConfig: Partial<FutureConfig> = {
 };
 
 const InnerApp = () => {
-  const theme = useTheme();
-
   return (
-    <Box
-      sx={{
-        backgroundColor: {
-          xs: theme.colors.surface,
-          md: theme.colors.background,
-        },
-        position: 'relative',
-        overflowX: 'hidden',
-        overflowY: 'auto',
-        height: '100dvh',
-      }}
-    >
+    <div className="bg-vera-surface vera-desktop:bg-vera-background relative overflow-x-hidden overflow-y-auto h-dvh">
       <Router future={futureConfig}>
         <Routes>
           <Route element={<RedirectToUnsupportedBrowserPage />}>
             <Route
-              path="/waiting-room/:roomName"
+              path="/waiting-room/:roomIdentifier"
               element={
                 <SuspenseBoundary fallback={<WaitingRoomSkeleton />}>
                   <RoomProvider>
@@ -63,12 +51,13 @@ const InnerApp = () => {
             />
 
             <Route
-              path="/room/:roomName"
+              path="/room/:roomIdentifier"
               element={
                 <RedirectToWaitingRoom>
                   <SuspenseBoundary fallback={<MeetingRoomSkeleton />}>
                     <RoomProvider>
                       <SessionProvider>
+                        <LoggerSynchronizer />
                         <PublisherProvider>
                           <MeetingRoom />
                         </PublisherProvider>
@@ -80,14 +69,16 @@ const InnerApp = () => {
             />
           </Route>
 
-          <Route path="/goodbye" element={<GoodBye />} />
+          <Route path="/goodbye/:roomIdentifier?" element={<GoodBye />} />
           <Route path="*" element={<LandingPage />} />
           <Route path="/unsupported-browser" element={<UnsupportedBrowserPage />} />
         </Routes>
       </Router>
-    </Box>
+    </div>
   );
 };
+
+export const loggerProvider = new BackendLoggingProvider();
 
 /**
  * The wrapper is necessary temporarily since app also need to have access to theme context.
@@ -97,7 +88,10 @@ const App = () => {
     <AppContextProvider>
       <ErrorBoundary fallback={(error) => <ErrorPage error={error} />}>
         <EnvGuard />
-        <InnerApp />
+        <runtime$.Provider videoClient={videoClient} loggerProvider={loggerProvider}>
+          <NotificationsContainer />
+          <InnerApp />
+        </runtime$.Provider>
       </ErrorBoundary>
     </AppContextProvider>
   );

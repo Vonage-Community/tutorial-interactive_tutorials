@@ -1,18 +1,15 @@
-import { useState, useEffect, ReactElement } from 'react';
+import { useState, useEffect, type ReactElement } from 'react';
 import { hasMediaProcessorSupport } from '@vonage/client-sdk-video';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import { useTranslation } from 'react-i18next';
-import useTheme from '@ui/theme';
 import usePublisherContext from '@hooks/usePublisherContext';
 import { setStorageItem, STORAGE_KEYS } from '@utils/storage';
+import { mediaDevices$ } from '@core/stores';
+import SwitchField from '@ui/SwitchField';
 import DropdownSeparator from '../DropdownSeparator';
 import SoundTest from '../../SoundTest';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-import Grow from '@mui/material/Grow';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import Box from '@mui/material/Box';
 import { env } from '../../../env';
 
@@ -25,21 +22,25 @@ import { env } from '../../../env';
  */
 const ReduceNoiseTestSpeakers = (): ReactElement | false => {
   const { t } = useTranslation();
-  const theme = useTheme();
   const { publisher, isPublishing } = usePublisherContext();
 
   const [isToggled, setIsToggled] = useState(false);
-  const shouldDisplayANS = hasMediaProcessorSupport() && env.ALLOW_ADVANCED_NOISE_SUPPRESSION;
+  const shouldDisplayANS = hasMediaProcessorSupport('both') && env.ALLOW_ADVANCED_NOISE_SUPPRESSION;
+  const hasSpeakerDevices = mediaDevices$.useMediaDevices(
+    'audiooutput',
+    (devices) => Object.values(devices).length > 0
+  );
 
-  const handleToggle = async () => {
-    const newState = !isToggled;
-    setIsToggled(newState);
-    setStorageItem(STORAGE_KEYS.NOISE_SUPPRESSION, JSON.stringify(newState));
-    if (newState) {
+  const handleNoiseSuppressionChange = async (checked: boolean) => {
+    setIsToggled(checked);
+    setStorageItem(STORAGE_KEYS.NOISE_SUPPRESSION, JSON.stringify(checked));
+
+    if (checked) {
       await publisher?.applyAudioFilter({ type: 'advancedNoiseSuppression' });
-    } else {
-      await publisher?.clearAudioFilter();
+      return;
     }
+
+    await publisher?.clearAudioFilter();
   };
 
   useEffect(() => {
@@ -62,54 +63,39 @@ const ReduceNoiseTestSpeakers = (): ReactElement | false => {
         }}
       >
         {shouldDisplayANS && (
-          <MenuItem
-            onClick={handleToggle}
-            sx={{
-              '&:hover': {
-                backgroundColor: theme.colors.background,
-              },
-            }}
-          >
-            <Box sx={{ mr: 2 }}>
-              <VividIcon
-                customSize={-6}
-                name="headset-solid"
-                sx={{ color: theme.colors.secondary }}
-              />
-            </Box>
-            <p className="text-vera-body-extended mr-4 truncate">
-              {t('devices.audio.noiseSuppression')}
-            </p>
-            <IconButton disableRipple>
-              <Grow in={!isToggled} timeout={300}>
-                <ToggleOffIcon
-                  data-testid="toggle-off-icon"
-                  fontSize="large"
-                  sx={{ position: 'absolute', color: theme.colors.secondary }}
+          <MenuItem className="hover:bg-vera-background">
+            <div className="flex w-full items-center gap-2">
+              <Box sx={{ mr: 1 }}>
+                <VividIcon
+                  customSize={-6}
+                  name="headset-solid"
+                  style={{ color: 'var(--vera-secondary)' }}
                 />
-              </Grow>
-              <Grow in={isToggled} timeout={300}>
-                <ToggleOnIcon
-                  data-testid="toggle-on-icon"
-                  fontSize="large"
-                  sx={{
-                    position: 'absolute',
-                    color: theme.colors.secondary,
-                  }}
+              </Box>
+              <div className="min-w-0 flex-1">
+                <SwitchField
+                  id="meeting-room-noise-suppression"
+                  label={t('devices.audio.noiseSuppression')}
+                  checked={isToggled}
+                  onChange={handleNoiseSuppressionChange}
+                  size="small"
+                  labelStyle={{ fontWeight: 400 }}
                 />
-              </Grow>
-            </IconButton>
+              </div>
+            </div>
           </MenuItem>
         )}
-        <SoundTest labelClassName="text-vera-body-extended">
-          <Box sx={{ mr: 1.5 }}>
-            <VividIcon
-              customSize={-5}
-              name="audio-mid-solid"
-              sx={{ color: theme.colors.secondary }}
-            />
-          </Box>
-        </SoundTest>
+        {hasSpeakerDevices && (
+          <SoundTest labelClassName="text-vera-body-extended">
+            <Box sx={{ mr: 1.5 }}>
+              <VividIcon
+                customSize={-5}
+                name="audio-mid-solid"
+                style={{ color: 'var(--vera-secondary)' }}
+              />
+            </Box>
+          </SoundTest>
+        )}
       </MenuList>
     </>
   );

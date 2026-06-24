@@ -1,11 +1,14 @@
 import { Box, MenuItem, MenuList, Tooltip } from '@mui/material';
+import classNames from 'classnames';
 import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import useTheme from '@ui/theme';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import { useDistinctLabelMediaDevices } from '@ui/hooks';
 import mediaDevices$ from '@core/stores/devices';
 import { env } from '../../../env';
+import useSelectDeviceHandler from '@hooks/useSelectDeviceHandler';
+import { handleClientApplicationError } from '@ui/helpers';
+import { makeApplicationErrorMapper } from '@core/errors';
 
 export type InputAudioDevicesProps = {
   handleToggle: () => void;
@@ -21,7 +24,6 @@ export type InputAudioDevicesProps = {
  */
 const InputAudioDevices = ({ handleToggle }: InputAudioDevicesProps): ReactElement | false => {
   const { t } = useTranslation();
-  const theme = useTheme();
 
   // Use store's selection as source of truth, not publisher.getAudioSource() which can be stale
   const selectedDeviceId = mediaDevices$.useDeviceId('audioinput');
@@ -33,25 +35,39 @@ const InputAudioDevices = ({ handleToggle }: InputAudioDevicesProps): ReactEleme
     }))
   );
 
-  const handleChangeAudioSource = (deviceId: string) => {
-    handleToggle();
-    void mediaDevices$.actions.selectDevice('audioinput', deviceId);
+  const { handleSelectDevice } = useSelectDeviceHandler();
+
+  const handleChangeAudioSource = async (deviceId: string) => {
+    try {
+      handleToggle();
+
+      await handleSelectDevice({
+        deviceId,
+        mediaDeviceKind: 'audioinput',
+      });
+    } catch (error) {
+      handleClientApplicationError(makeApplicationErrorMapper()(error));
+    }
   };
 
   return (
     env.MEETING_ROOM_ALLOW_DEVICE_SELECTION && (
       <>
         <Box
+          className="text-vera-tertiary"
           sx={{
             display: 'flex',
             alignItems: 'center',
             ml: 2,
             mt: 1,
             mb: 0.5,
-            color: theme.colors.tertiary,
           }}
         >
-          <VividIcon name="microphone-2-line" customSize={-6} />
+          <VividIcon
+            name="microphone-2-line"
+            customSize={-6}
+            style={{ color: 'var(--vera-text-secondary) !important' }}
+          />
           <p className="text-vera-body-extended ml-4">{t('devices.audio.microphone.full')}</p>
         </Box>
         <MenuList>
@@ -62,24 +78,30 @@ const InputAudioDevices = ({ handleToggle }: InputAudioDevicesProps): ReactEleme
                 key={device.deviceId}
                 selected={isSelected}
                 onClick={() => handleChangeAudioSource(device.deviceId)}
+                className="[&.Mui-selected]:text-vera-on-background"
                 sx={{
-                  backgroundColor: 'transparent',
-                  '&.Mui-selected': {
-                    backgroundColor: 'transparent',
-                    color: theme.colors.onBackground,
+                  transition: 'background-color 160ms ease',
+                  '&&.Mui-selected': {
+                    backgroundColor: 'var(--vera-background)',
                   },
-                  '&:hover': {
-                    backgroundColor: theme.colors.background,
+                  '&&.Mui-selected:hover': {
+                    backgroundColor: 'var(--vera-background)',
+                  },
+                  '&&:hover': {
+                    backgroundColor: 'var(--vera-background)',
                   },
                 }}
               >
                 <Box
                   key={`${device.deviceId}-input-device`}
+                  className={classNames('w-full items-center', {
+                    'text-vera-text-primary': isSelected,
+                    'text-vera-text-secondary': !isSelected,
+                  })}
                   sx={{
                     display: 'flex',
                     mb: 0.5,
                     overflow: 'hidden',
-                    color: isSelected ? theme.colors.textPrimary : theme.colors.textSecondary,
                   }}
                 >
                   {isSelected ? (
@@ -87,8 +109,10 @@ const InputAudioDevices = ({ handleToggle }: InputAudioDevicesProps): ReactEleme
                       <VividIcon
                         name="check-line"
                         customSize={-6}
-                        sx={{
-                          color: isSelected ? theme.colors.textPrimary : theme.colors.textSecondary,
+                        style={{
+                          color: `${
+                            isSelected ? 'var(--vera-text-primary)' : 'var(--vera-text-secondary)'
+                          } !important`,
                         }}
                       />
                     </Box>

@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ToolbarButton from '../ToolbarButton';
 import Badge from '@mui/material/Badge';
 import Tooltip from '@mui/material/Tooltip';
-import useTheme from '@ui/theme';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import { env } from '../../../env';
 
 export type ParticipantListButtonProps = {
@@ -31,7 +30,6 @@ const ParticipantListButton = ({
   participantCount,
   isOverflowButton = false,
 }: ParticipantListButtonProps): ReactElement | false => {
-  const theme = useTheme();
   const { t } = useTranslation();
 
   return (
@@ -41,12 +39,9 @@ const ParticipantListButton = ({
         aria-label={t('participants.list.ariaLabel')}
       >
         <Badge
+          className="[&_.MuiBadge-badge]:text-vera-on-tertiary [&_.MuiBadge-badge]:bg-vera-tertiary"
           badgeContent={participantCount}
           sx={{
-            '& .MuiBadge-badge': {
-              color: theme.colors.onTertiary,
-              backgroundColor: theme.colors.tertiary,
-            },
             marginRight: '12px',
             zIndex: 1,
           }}
@@ -64,7 +59,9 @@ const ParticipantListButton = ({
                 name="group-solid"
                 customSize={-4}
                 data-testid="PeopleIcon"
-                sx={{ color: isOpen ? theme.colors.secondary : theme.colors.onSecondary }}
+                style={{
+                  color: isOpen ? 'var(--vera-secondary)' : 'var(--vera-on-secondary-light)',
+                }}
               />
             }
             isOverflowButton={isOverflowButton}

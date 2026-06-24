@@ -1,13 +1,11 @@
 import { ReactElement, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useRoomName from '@hooks/useRoomName';
-import { startArchiving, stopArchiving } from '@api/archiving';
+import { runtime$ } from '@core/stores';
 import useSessionContext from '@hooks/useSessionContext';
 import ToolbarButton from '../ToolbarButton';
 import PopupDialog, { DialogTexts } from '../PopupDialog';
 import Tooltip from '@mui/material/Tooltip';
-import useTheme from '@ui/theme';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import classNames from 'classnames';
 import { env } from '../../../env';
 import { RECORDING_START_DELAY } from '@utils/constants';
@@ -32,11 +30,16 @@ const ArchivingButton = ({
   isOverflowButton = false,
   handleClick,
 }: ArchivingButtonProps): ReactElement | false => {
+  const videoClient = runtime$.useVideoClient();
   const { t } = useTranslation();
-  const roomName = useRoomName();
-  const theme = useTheme();
-  const { archiveId, markArchiveStartRequestedBySelf, resetArchiveStartRequestedBySelf } =
-    useSessionContext();
+  const {
+    archiveId,
+    markArchiveStartRequestedBySelf,
+    resetArchiveStartRequestedBySelf,
+    sessionKey,
+    connected,
+  } = useSessionContext();
+
   const isRecording = !!archiveId;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const title = isRecording ? t('recording.stop.title') : t('recording.start.title');
@@ -71,19 +74,19 @@ const ArchivingButton = ({
 
   const handleDialogClick = (action: 'start' | 'stop') => {
     if (action === 'start') {
-      if (!archiveId && roomName) {
+      if (!archiveId && connected) {
         markArchiveStartRequestedBySelf();
         setTimeout(async () => {
           try {
-            await startArchiving(roomName);
+            await videoClient.startArchive({ sessionKey: sessionKey! });
           } catch (err) {
             resetArchiveStartRequestedBySelf();
             console.log(err);
           }
         }, RECORDING_START_DELAY);
       }
-    } else if (archiveId && roomName) {
-      void stopArchiving(roomName, archiveId);
+    } else if (archiveId) {
+      void videoClient.stopArchive({ sessionKey: sessionKey!, archiveId });
     }
   };
 
@@ -105,15 +108,15 @@ const ArchivingButton = ({
                 name={isRecording ? 'radio-checked-2-line' : 'radio-checked-2-solid'}
                 customSize={-5}
                 style={{
-                  color: theme.colors.onSecondary,
+                  color: 'var(--vera-on-secondary-light)',
                 }}
               />
             }
-            sx={{
+            style={{
               marginTop: isOverflowButton ? '0px' : '4px',
               backgroundColor: isRecording
-                ? `${theme.colors.onSecondary}55`
-                : theme.colors.darkGrey,
+                ? 'color-mix(in srgb, var(--vera-on-secondary-light) 33%, transparent) !important'
+                : undefined,
             }}
             isOverflowButton={isOverflowButton}
           />

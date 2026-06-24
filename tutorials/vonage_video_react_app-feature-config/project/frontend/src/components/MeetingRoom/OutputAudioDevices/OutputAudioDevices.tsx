@@ -1,17 +1,20 @@
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { MediaDeviceInfoJSON } from '@web/types';
+import classNames from 'classnames';
 import DropdownSeparator from '../DropdownSeparator';
 import Box from '@mui/material/Box';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import { useDistinctLabelMediaDevices } from '@ui/hooks';
 import { isSinkIdSupported } from '@web/platform';
 import mediaDevices$ from '@core/stores/devices';
-import useTheme from '@ui/theme';
 import { Tooltip } from '@mui/material';
 import { env } from '../../../env';
+import useSelectDeviceHandler from '@hooks/useSelectDeviceHandler';
+import { makeApplicationErrorMapper } from '@core/errors';
+import { handleClientApplicationError } from '@ui/helpers';
 
 export type OutputAudioDevicesProps = {
   handleToggle: () => void;
@@ -27,8 +30,6 @@ export type OutputAudioDevicesProps = {
  */
 const OutputAudioDevices = ({ handleToggle }: OutputAudioDevicesProps): ReactElement | false => {
   const { t } = useTranslation();
-  const theme = useTheme();
-
   const currentAudioOutputId = mediaDevices$.useDeviceId('audiooutput');
 
   const availableDevices = useDistinctLabelMediaDevices('audiooutput', (devices) =>
@@ -42,12 +43,21 @@ const OutputAudioDevices = ({ handleToggle }: OutputAudioDevicesProps): ReactEle
       : [{ deviceId: 'default', label: t('devices.audio.defaultLabel') } as MediaDeviceInfoJSON]
   );
 
+  const { handleSelectDevice } = useSelectDeviceHandler();
+
   const handleChangeAudioOutput = async (deviceId: string) => {
-    handleToggle();
+    try {
+      handleToggle();
 
-    if (!isSinkIdSupported()) return;
+      if (!isSinkIdSupported()) return;
 
-    await mediaDevices$.actions.selectDevice('audiooutput', deviceId);
+      await handleSelectDevice({
+        deviceId,
+        mediaDeviceKind: 'audiooutput',
+      });
+    } catch (error) {
+      handleClientApplicationError(makeApplicationErrorMapper()(error));
+    }
   };
 
   return (
@@ -55,16 +65,20 @@ const OutputAudioDevices = ({ handleToggle }: OutputAudioDevicesProps): ReactEle
       <>
         <DropdownSeparator />
         <Box
+          className="text-vera-tertiary"
           sx={{
             display: 'flex',
             alignItems: 'center',
             ml: 2,
             mt: 2,
             mb: 0.5,
-            color: theme.colors.tertiary,
           }}
         >
-          <VividIcon name="audio-mid-line" customSize={-5} />
+          <VividIcon
+            name="audio-mid-line"
+            customSize={-5}
+            style={{ color: 'var(--vera-text-secondary) !important' }}
+          />
           <p className="text-vera-body-extended ml-4" data-testid="output-device-title">
             {t('devices.audio.speakers.full')}
           </p>
@@ -81,24 +95,30 @@ const OutputAudioDevices = ({ handleToggle }: OutputAudioDevicesProps): ReactEle
                 key={device.deviceId}
                 selected={isSelected}
                 onClick={() => handleChangeAudioOutput(device.deviceId)}
+                className="[&.Mui-selected]:text-vera-on-background"
                 sx={{
-                  backgroundColor: 'transparent',
-                  '&.Mui-selected': {
-                    backgroundColor: 'transparent',
-                    color: theme.colors.onBackground,
+                  transition: 'background-color 160ms ease',
+                  '&&.Mui-selected': {
+                    backgroundColor: 'var(--vera-background)',
                   },
-                  '&:hover': {
-                    backgroundColor: theme.colors.background,
+                  '&&.Mui-selected:hover': {
+                    backgroundColor: 'var(--vera-background)',
+                  },
+                  '&&:hover': {
+                    backgroundColor: 'var(--vera-background)',
                   },
                 }}
               >
                 <Box
                   key={`${device.deviceId}-input-device`}
+                  className={classNames('w-full items-center', {
+                    'text-vera-text-primary': isSelected,
+                    'text-vera-text-secondary': !isSelected,
+                  })}
                   sx={{
                     display: 'flex',
                     mb: 0.5,
                     overflow: 'hidden',
-                    color: isSelected ? theme.colors.textPrimary : theme.colors.textSecondary,
                   }}
                 >
                   {isSelected ? (
@@ -106,8 +126,10 @@ const OutputAudioDevices = ({ handleToggle }: OutputAudioDevicesProps): ReactEle
                       <VividIcon
                         name="check-line"
                         customSize={-6}
-                        sx={{
-                          color: isSelected ? theme.colors.textPrimary : theme.colors.textSecondary,
+                        style={{
+                          color: isSelected
+                            ? 'var(--vera-text-primary)'
+                            : 'var(--vera-text-secondary)',
                         }}
                       />
                     </Box>

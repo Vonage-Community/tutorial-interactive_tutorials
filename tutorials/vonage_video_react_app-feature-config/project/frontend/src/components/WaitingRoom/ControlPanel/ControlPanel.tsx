@@ -1,15 +1,12 @@
 import { ReactElement, MouseEvent, TouchEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import usePreviewPublisherContext from '@hooks/usePreviewPublisherContext';
 import useIsSmallViewport from '@hooks/useIsSmallViewport';
 import Box from '@mui/material/Box';
 import type { SxProps } from '@mui/material';
-import useTheme from '@ui/theme';
-import VividIcon from '@components/VividIcon';
+import VividIcon from '@ui/VividIcon';
 import ButtonBase from '@mui/material/ButtonBase';
-import MenuDevicesWaitingRoom from '../MenuDevices';
+import MenuDevices from '../MenuDevices';
 import MenuMoreOptions from '../MenuMoreOptions/MenuMoreOptions';
-import { mediaDevices$ } from '@core/stores';
 
 const textSx: SxProps = {
   flex: '1 1 0',
@@ -75,18 +72,10 @@ const ControlPanel = ({
   const { t } = useTranslation();
   const isSmallViewport = useIsSmallViewport();
 
-  const { changeAudioSource, changeVideoSource } = usePreviewPublisherContext();
-
-  const theme = useTheme();
-
   const buttonSx: SxProps = {
     display: 'flex',
     alignItems: 'center',
     gap: 1.5,
-    '&:hover': {
-      backgroundColor: theme.colors.background,
-    },
-    color: theme.colors.textSecondary,
   };
 
   return (
@@ -108,6 +97,7 @@ const ControlPanel = ({
         }}
       >
         <ButtonBase
+          className="text-vera-text-secondary! hover:bg-vera-background!"
           sx={buttonSx}
           aria-controls={openAudioInput ? 'basic-menu' : undefined}
           aria-haspopup="true"
@@ -124,16 +114,16 @@ const ControlPanel = ({
           <VividIcon name="chevron-down-line" customSize={-6} />
         </ButtonBase>
 
-        <MenuDevicesWaitingRoom
+        <MenuDevices
           mediaDeviceKind="audioinput"
           open={openAudioInput}
           onClose={handleClose}
           anchorEl={anchorEl}
-          deviceChangeHandler={changeAudioSource}
         />
 
         <ButtonBase
           onClick={handleVideoInputOpen}
+          className="text-vera-text-secondary! hover:bg-vera-background!"
           sx={buttonSx}
           aria-controls={openVideoInput ? 'basic-menu' : undefined}
           aria-haspopup="true"
@@ -147,16 +137,16 @@ const ControlPanel = ({
           <VividIcon name="chevron-down-line" customSize={-6} />
         </ButtonBase>
 
-        <MenuDevicesWaitingRoom
+        <MenuDevices
           mediaDeviceKind="videoinput"
           open={openVideoInput}
           onClose={handleClose}
           anchorEl={anchorEl}
-          deviceChangeHandler={changeVideoSource}
         />
 
         <ButtonBase
           onClick={handleAudioOutputOpen}
+          className="text-vera-text-secondary! hover:bg-vera-background!"
           sx={buttonSx}
           aria-controls={openAudioOutput ? 'basic-menu' : undefined}
           aria-haspopup="true"
@@ -170,17 +160,18 @@ const ControlPanel = ({
           <VividIcon name="chevron-down-line" customSize={-6} />
         </ButtonBase>
 
-        <MenuDevicesWaitingRoom
+        <MenuDevices
           mediaDeviceKind="audiooutput"
           open={openAudioOutput}
           onClose={handleClose}
           anchorEl={anchorEl}
-          deviceChangeHandler={(deviceId) => {
-            void mediaDevices$.actions.selectDevice('audiooutput', deviceId);
-          }}
         />
 
-        <ButtonBase onClick={handleOpenMoreOptions} sx={buttonSx}>
+        <ButtonBase
+          onClick={handleOpenMoreOptions}
+          className="text-vera-text-secondary! hover:bg-vera-background!"
+          sx={buttonSx}
+        >
           <VividIcon name="more-vertical-solid" customSize={-5} />
         </ButtonBase>
         <MenuMoreOptions

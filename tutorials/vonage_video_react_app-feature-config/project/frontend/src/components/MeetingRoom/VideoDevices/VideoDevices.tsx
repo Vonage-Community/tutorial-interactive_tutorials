@@ -1,11 +1,14 @@
 import { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import useTheme from '@ui/theme';
 import { Box, MenuList, MenuItem, Tooltip, BoxProps } from '@mui/material';
-import VividIcon from '@components/VividIcon';
+import classNames from 'classnames';
+import VividIcon from '@ui/VividIcon';
 import { useDistinctLabelMediaDevices } from '@ui/hooks';
 import mediaDevices$ from '@core/stores/devices';
 import { env } from '../../../env';
+import useSelectDeviceHandler from '@hooks/useSelectDeviceHandler';
+import { makeApplicationErrorMapper } from '@core/errors';
+import { handleClientApplicationError } from '@ui/helpers';
 
 export type VideoDevicesProps = BoxProps & {
   handleToggle: () => void;
@@ -25,7 +28,6 @@ const VideoDevices = ({
   ...boxProps
 }: VideoDevicesProps): ReactElement | false => {
   const { t } = useTranslation();
-  const theme = useTheme();
 
   // Use store's selection as source of truth, not publisher.getVideoSource() which can be stale
   const selectedDeviceId = mediaDevices$.useDeviceId('videoinput');
@@ -37,26 +39,39 @@ const VideoDevices = ({
     }))
   );
 
-  const handleChangeVideoSource = (deviceId: string) => {
-    handleToggle();
-    void mediaDevices$.actions.selectDevice('videoinput', deviceId);
+  const { handleSelectDevice } = useSelectDeviceHandler();
+
+  const handleChangeVideoSource = async (deviceId: string) => {
+    try {
+      handleToggle();
+
+      await handleSelectDevice({
+        deviceId,
+        mediaDeviceKind: 'videoinput',
+      });
+    } catch (error) {
+      handleClientApplicationError(makeApplicationErrorMapper()(error));
+    }
   };
 
   return (
     env.MEETING_ROOM_ALLOW_DEVICE_SELECTION && (
       <>
         <Box
+          className={classNames('text-vera-tertiary', className)}
           sx={{
             display: 'flex',
             ml: 2,
             mt: 1,
             mb: 0.5,
-            color: theme.colors.tertiary,
           }}
-          className={className}
           {...boxProps}
         >
-          <VividIcon name="video-line" customSize={-5} />
+          <VividIcon
+            name="video-line"
+            customSize={-5}
+            style={{ color: 'var(--vera-text-secondary)' }}
+          />
           <p className="text-vera-body-extended ml-4">{t('devices.video.camera.full')}</p>
         </Box>
         <MenuList id="split-button-menu">
@@ -67,21 +82,27 @@ const VideoDevices = ({
                 key={option.deviceId}
                 selected={isSelected}
                 onClick={() => handleChangeVideoSource(option.deviceId)}
+                className="[&.Mui-selected]:text-vera-on-background"
                 sx={{
-                  backgroundColor: 'transparent',
-                  '&.Mui-selected': {
-                    backgroundColor: 'transparent',
-                    color: theme.colors.onBackground,
+                  transition: 'background-color 160ms ease',
+                  '&&.Mui-selected': {
+                    backgroundColor: 'var(--vera-background)',
                   },
-                  '&:hover': {
-                    backgroundColor: theme.colors.background,
+                  '&&.Mui-selected:hover': {
+                    backgroundColor: 'var(--vera-background)',
+                  },
+                  '&&:hover': {
+                    backgroundColor: 'var(--vera-background)',
                   },
                 }}
               >
                 <Box
                   key={`${option.deviceId}-video-device`}
+                  className={classNames('w-full items-center', {
+                    'text-vera-text-primary': isSelected,
+                    'text-vera-text-secondary': !isSelected,
+                  })}
                   sx={{
-                    color: isSelected ? theme.colors.textPrimary : theme.colors.textSecondary,
                     display: 'flex',
                     mb: 0.5,
                     overflow: 'hidden',
@@ -92,8 +113,10 @@ const VideoDevices = ({
                       <VividIcon
                         name="check-line"
                         customSize={-6}
-                        sx={{
-                          color: isSelected ? theme.colors.textPrimary : theme.colors.textSecondary,
+                        style={{
+                          color: `${
+                            isSelected ? 'var(--vera-text-primary)' : 'var(--vera-text-secondary)'
+                          } !important`,
                         }}
                       />
                     </Box>

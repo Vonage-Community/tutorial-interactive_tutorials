@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterAll } from 'vitest';
-import type { MediaDeviceInfoJSON } from '@web/types';
 import * as util from './util';
+import { isMobile, isWebKit } from '@web/platform';
 
 const chromeUserAgent =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
@@ -67,7 +67,7 @@ describe('isWebKit', () => {
       writable: true,
     });
 
-    expect(util.isWebKit()).toBe(true);
+    expect(isWebKit()).toBe(true);
   });
 
   it('returns false if it is Chrome', () => {
@@ -76,31 +76,7 @@ describe('isWebKit', () => {
       writable: true,
     });
 
-    expect(util.isWebKit()).toBe(false);
-  });
-});
-
-describe('getAudioSourceDeviceId', () => {
-  it('returns the correct deviceId when a matching device is found', () => {
-    const devices = [
-      { kind: 'audioinput', deviceId: 'device1', label: 'Microphone 1' },
-      { kind: 'audioinput', deviceId: 'device2', label: 'Microphone 2' },
-    ] as MediaDeviceInfoJSON[];
-    const currentAudioSource = { label: 'Microphone 2' } as MediaStreamTrack;
-
-    const result = util.getAudioSourceDeviceId(devices, currentAudioSource);
-    expect(result).toBe('device2');
-  });
-
-  it('returns an empty string when no matching device is found', () => {
-    const devices = [
-      { kind: 'audioinput', deviceId: 'device1', label: 'Microphone 1' },
-      { kind: 'audioinput', deviceId: 'device2', label: 'Microphone 2' },
-    ] as MediaDeviceInfoJSON[];
-    const currentAudioSource = { label: 'Not Matching Microphone' } as MediaStreamTrack;
-
-    const result = util.getAudioSourceDeviceId(devices, currentAudioSource);
-    expect(result).toBe('');
+    expect(isWebKit()).toBe(false);
   });
 });
 
@@ -119,7 +95,7 @@ describe('isMobile', () => {
         value: tabletUAString,
         writable: true,
       });
-      const result = util.isMobile();
+      const result = isMobile();
 
       expect(result).toEqual(false);
     });
@@ -139,7 +115,7 @@ describe('isMobile', () => {
         value: mobileUAString,
         writable: true,
       });
-      const result = util.isMobile();
+      const result = isMobile();
 
       expect(result).toEqual(true);
     });

@@ -4,21 +4,22 @@ import { useTranslation } from 'react-i18next';
 import usePublisherContext from './usePublisherContext';
 import useSessionContext from './useSessionContext';
 import useScreenShare from './useScreenShare';
-import useRoomName from './useRoomName';
-import isValidRoomName from '../utils/isValidRoomName';
-import useIsSmallViewport from './useIsSmallViewport';
 import useBackgroundPublisherContext from './useBackgroundPublisherContext';
 import { DEVICE_ACCESS_STATUS } from '../utils/constants';
 import type { PublishingErrorType } from '../Context/PublisherProvider/usePublisher/usePublisher';
 import useUserContext from './useUserContext';
 import { env } from '../env';
 import useMountEffect from '@web/hooks/useMountEffect';
+import { runtime$ } from '@core/stores';
+import useSessionKeyParam from './useSessionKeyParam';
 
 const useMeetingRoom = () => {
+  const videoClient = runtime$.useVideoClient();
+
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const roomName = useRoomName();
+
   const {
     user: {
       defaultSettings: { name },
@@ -40,6 +41,8 @@ const useMeetingRoom = () => {
     accessStatus,
   } = useBackgroundPublisherContext();
 
+  const { sessionKey, sessionKeyStatus } = useSessionKeyParam();
+
   const {
     joinRoom,
     subscriptionError,
@@ -58,10 +61,13 @@ const useMeetingRoom = () => {
     archiveIdStartedBySelf,
   } = useSessionContext();
 
-  const { isSharingScreen, screensharingPublisher, screenshareVideoElement, toggleShareScreen } =
-    useScreenShare();
-
-  const isSmallViewport = useIsSmallViewport();
+  const {
+    isSharingScreen,
+    isEntireScreen,
+    screensharingPublisher,
+    screenshareVideoElement,
+    toggleShareScreen,
+  } = useScreenShare();
 
   const [isUserCaptionsEnabled, setIsUserCaptionsEnabled] = useState<boolean>(false);
   const [captionsErrorResponse, setCaptionsErrorResponse] = useState<string | null>('');
@@ -79,23 +85,41 @@ const useMeetingRoom = () => {
 
   useMountEffect(() => {
     if (!hasValidUsername && !bypass) {
-      navigate(`/waiting-room/${roomName}`);
+      navigate(`/waiting-room/${sessionKey}`);
     }
   });
 
   useEffect(() => {
-    if (!hasValidUsername && !bypass) {
-      return;
-    }
+    if (!hasValidUsername && !bypass) return;
+    if (!joinRoom || !sessionKey) return;
 
-    if (joinRoom && isValidRoomName(roomName)) {
-      void joinRoom(roomName);
-    }
+    /**
+     * [TODO]: Reconcile sessionKey if necessary. This is needed for legacy support where the url contains only a room name.
+     */
+    const resolveAndJoin = async () => {
+      const resolvedSessionKey = await (async () => {
+        if (sessionKeyStatus === 'valid') return sessionKey;
+        if (sessionKeyStatus === 'invalid') throw new Error('Invalid session key');
+
+        /**
+         * [TODO]: This is a temporary solution to support legacy vera functionality without depending on the old routers
+         * If the roomName already exists, the backend will return the existing sessionKey, otherwise it will create a new session and return its sessionKey.
+         */
+        const session = await videoClient.createSession({ roomName: sessionKey });
+
+        return session.sessionKey;
+      })();
+
+      await joinRoom({ sessionKey: resolvedSessionKey });
+    };
+
+    void resolveAndJoin();
+
     return () => {
       disconnect?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomName, hasValidUsername, bypass]);
+  }, [sessionKey, hasValidUsername, bypass]);
 
   useEffect(() => {
     if (!publisherOptions) {
@@ -125,8 +149,16 @@ const useMeetingRoom = () => {
     }
   }, [accessStatus]);
 
-  useRedirectOnPublisherError({ publishingError, reconnecting });
-  useRedirectOnSubscriberError({ subscriberError: subscriptionError, reconnecting });
+  useRedirectOnPublisherError({
+    publishingError,
+    reconnecting,
+    sessionKey,
+  });
+  useRedirectOnSubscriberError({
+    subscriberError: subscriptionError,
+    reconnecting,
+    sessionKey,
+  });
 
   const isRecording = !!archiveId;
   const captionsState = {
@@ -137,8 +169,8 @@ const useMeetingRoom = () => {
 
   return {
     t,
-    isSmallViewport,
     isSharingScreen,
+    isEntireScreen,
     screensharingPublisher,
     screenshareVideoElement,
     toggleShareScreen,
@@ -174,12 +206,13 @@ const useMeetingRoom = () => {
 function useRedirectOnPublisherError({
   publishingError,
   reconnecting,
+  sessionKey,
 }: {
   publishingError: PublishingErrorType | null;
   reconnecting: boolean | null;
+  sessionKey: string | null;
 }) {
   const navigate = useNavigate();
-  const roomName = useRoomName();
 
   const maybeRedirect = useEffectEvent(() => {
     if (!publishingError) {
@@ -197,11 +230,10 @@ function useRedirectOnPublisherError({
 
     const { header, caption } = publishingError;
 
-    navigate('/goodbye', {
+    navigate(`/goodbye/${sessionKey ?? ''}`, {
       state: {
         header,
         caption,
-        roomName,
       },
     });
   });
@@ -219,12 +251,13 @@ function useRedirectOnPublisherError({
 function useRedirectOnSubscriberError({
   subscriberError,
   reconnecting,
+  sessionKey,
 }: {
   subscriberError: Error | null;
   reconnecting: boolean | null;
+  sessionKey: string | null;
 }) {
   const navigate = useNavigate();
-  const roomName = useRoomName();
   const { t } = useTranslation();
 
   const maybeRedirect = useEffectEvent(() => {
@@ -241,11 +274,10 @@ function useRedirectOnSubscriberError({
       return;
     }
 
-    navigate('/goodbye', {
+    navigate(`/goodbye/${sessionKey || ''}`, {
       state: {
         header: t('subscribingErrors.blocked.title'),
         caption: t('subscribingErrors.blocked.message'),
-        roomName,
       },
     });
   });

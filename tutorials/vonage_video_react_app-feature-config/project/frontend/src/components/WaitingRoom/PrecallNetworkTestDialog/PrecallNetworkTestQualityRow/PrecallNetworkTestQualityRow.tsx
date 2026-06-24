@@ -1,8 +1,7 @@
 import { ReactElement, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import VividIcon from '@components/VividIcon';
-import useTheme from '@ui/theme';
+import VividIcon from '@ui/VividIcon';
 import { useTranslation } from 'react-i18next';
 
 export type PrecallNetworkTestQualityRowProps = {
@@ -16,7 +15,6 @@ const PrecallNetworkTestQualityRow = ({
   score,
   supportTitle,
 }: PrecallNetworkTestQualityRowProps): ReactElement => {
-  const theme = useTheme();
   const { t } = useTranslation();
 
   const isSupported = useMemo(() => score !== null && score >= 3, [score]);
@@ -41,9 +39,9 @@ const PrecallNetworkTestQualityRow = ({
     >
       <Typography
         variant="h6"
+        className="text-vera-text-secondary"
         sx={{
-          color: theme.colors.textSecondary,
-          fontWeight: theme.typography.weight['body-base'].value,
+          fontWeight: 500,
         }}
       >
         {label}
@@ -53,28 +51,24 @@ const PrecallNetworkTestQualityRow = ({
           <VividIcon
             name="check-circle-line"
             customSize={-3}
-            sx={{
-              color: theme.colors.success,
-            }}
+            style={{ color: 'var(--vera-success)' }}
           />
         ) : (
           <VividIcon
             name="close-circle-line"
             customSize={-3}
-            sx={{
-              color: theme.colors.error,
-            }}
+            style={{ color: 'var(--vera-error)' }}
           />
         )}
       </Typography>
-      <Typography variant="body1" sx={{ color: theme.colors.textSecondary, ml: 2 }}>
+      <Typography variant="body1" className="text-vera-text-secondary" sx={{ ml: 2 }}>
         {t('waitingRoom.precallNetworkTest.qualityLabel')}
       </Typography>
       <Typography
         variant="h6"
+        className="text-vera-text-secondary"
         sx={{
-          color: theme.colors.textSecondary,
-          fontWeight: theme.typography.weight['body-base'].value,
+          fontWeight: 500,
         }}
       >
         {formattedScore}

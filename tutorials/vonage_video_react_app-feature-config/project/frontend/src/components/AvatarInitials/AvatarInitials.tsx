@@ -9,6 +9,7 @@ export type InitialsProps = {
   sx?: SxProps;
   height?: number;
   width?: number;
+  'data-testid'?: string;
 };
 
 /**
@@ -29,11 +30,14 @@ const AvatarInitials = ({
   sx = {},
   height = 80,
   width = 80,
+  'data-testid': dataTestId,
 }: InitialsProps): ReactElement => {
   const diameter = Math.min(height, width) * 0.5;
 
   return (
     <Avatar
+      data-testid={dataTestId}
+      className="border-none!"
       sx={{
         bgcolor: getParticipantColor(username),
         width: `${diameter}px`,
