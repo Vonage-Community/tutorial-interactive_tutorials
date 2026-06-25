@@ -5,9 +5,11 @@
     "terminal",
     "browser"
   ],
-  "repository": "https://github.com/VZaphod/vonage-video-react-app",
+  "repository": "https://github.com/Vonage/vonage-video-react-app",
   "starterFiles": [],
   "capabilities": [],
   "version": "1.0.0",
-  "filename": "vonage_video_react_app-feature-config"
+  "filename": "vonage_video_react_app-feature-config",
+  "customInstallCmd": "yarn install --ignore-scripts --frozen-lockfile",
+  "customSetupCmd": "npm install -g corepack\n\n"
 }

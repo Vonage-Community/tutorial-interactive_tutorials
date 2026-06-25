@@ -10,7 +10,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "start:tutorial": "http-server steps -p 1234 --cors -c-1",
-    "postinstall": "cd project && npm install"
+    "postinstall": "cd project && yarn install --ignore-scripts --frozen-lockfile"
   },
   "dependencies": {
     "@astrojs/markdoc": "^0.15.10",
