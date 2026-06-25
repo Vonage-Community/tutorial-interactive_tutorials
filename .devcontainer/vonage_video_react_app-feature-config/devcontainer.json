@@ -5,10 +5,9 @@
     "waitFor": "onCreateCommand",
     "updateContentCommand": "npm install",
     "postCreateCommand": "",
-    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & echo '' && cd project && npm install -g corepack && (sleep 4 && echo -e \"\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n\" &) && (nohup sh -c \"sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME\" > /dev/null 2>&1 &) && npm start",
+    "postAttachCommand": "nohup ./node_modules/.bin/http-server steps -p 1234 --cors -c-1 > /dev/null 2>&1 & echo '' && cd project && yarn && (sleep 4 && echo -e \"\\n\\n🚀 APPLICATION READY:\\nhttps://${CODESPACE_NAME}-3000.app.github.dev\\n\\n\" &) && (nohup sh -c \"sleep 5 && gh codespace ports visibility 3000:public -c $CODESPACE_NAME\" > /dev/null 2>&1 &) && yarn",
     "forwardPorts": [
         "1234",
-        "8080",
         "3000"
     ],
     "portsAttributes": {
@@ -18,11 +17,6 @@
         },
         "3000": {
             "label": "My Backend Service",
-            "onAutoForward": "notify",
-            "visibility": "public"
-        },
-        "8080": {
-            "label": "My Project Preview",
             "onAutoForward": "notify",
             "visibility": "public"
         }
