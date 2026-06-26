@@ -17,7 +17,10 @@ Then open `backend/.env` and replace the placeholder values with your own:
 ```sh
 # backend/.env
 VONAGE_APP_ID=your-vonage-application-id
-VONAGE_PRIVATE_KEY=./private.key
+VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+'
 ```
 
 {% aside type="caution" %}
@@ -26,9 +29,9 @@ Never commit `backend/.env` to source control. The repo's `.gitignore` already e
 
 ## Where to Get the Values
 
-| Variable | Where to find it |
-|----------|-----------------|
-| `VONAGE_APP_ID` | [Vonage Dashboard](https://dashboard.vonage.com) → Your Applications → the app you created for this project |
+| Variable             | Where to find it                                                                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `VONAGE_APP_ID`      | [Vonage Dashboard](https://dashboard.vonage.com) → Your Applications → the app you created for this project                                      |
 | `VONAGE_PRIVATE_KEY` | The `private.key` file downloaded when you created the Vonage Application. Place it in the `backend/` folder and set the path to `./private.key` |
 
 ## Verify
@@ -37,6 +40,29 @@ Once the file is saved, confirm its contents look correct:
 
 ```sh
 cat backend/.env
+code backend/.env
 ```
 
 You should see your App ID and the key path. With credentials in place, let's look at the frontend configuration file.
+
+Now open a terminal window on the Codespace by clicking in the hamburger menu on the top leading part of the screen / Terminal / New Terminal and execute `yarn`. This will download all the required dependencies that the reference app uses.
+
+```sh
+yarn
+```
+
+When the package manager finishes the execution run `yarn dev`. This command will start the reference app backend server.
+
+```sh
+yarn dev
+```
+
+After the backend and frontend servers start you can check in another tab of your current browser by opening the [http://localhost:5173](http://localhost:5173) URL.
+
+{% aside type="caution" %}
+The integrated simple browser of the Codespace may not render properly the reference app, because VERA requires mic and camera access.
+{% /aside %}
+
+{% aside type="caution" %}
+Opening directly the frontend or backend endpoints may cause CORS issues or missing API_URL errors.
+{% /aside %}
