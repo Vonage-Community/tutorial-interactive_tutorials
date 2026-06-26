@@ -1,18 +1,23 @@
 ---
-title: Backend Credentials
+title: Set Up & Run the App
 ---
 
-Before configuring any features, the backend needs to know your Vonage application credentials. These are stored in a `.env` file inside the `backend/` folder that **you must create manually** — they cannot be generated for you.
+In this step you will configure the credentials the app needs, start the development server, and make the Codespace ports publicly accessible.
 
-## Create the File
+## Open a Terminal
 
-The repo includes a `backend/.env.example` with all the required variables already listed. Copy it to create your own `.env`:
+Open a terminal inside the Codespace by clicking the **hamburger menu (☰)** in the top-left corner, then selecting **Terminal → New Terminal**. All commands below are run in this terminal.
+
+## Configure Backend Credentials
+
+The repo includes a `backend/.env.example` with all the required variables. Copy it and fill in your own values:
 
 ```sh
 cp backend/.env.example backend/.env
+code backend/.env
 ```
 
-Then open `backend/.env` and replace the placeholder values with your own:
+Replace the placeholder values in `backend/.env`:
 
 ```sh
 # backend/.env
@@ -23,46 +28,69 @@ VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
 '
 ```
 
+| Variable             | Where to find it                                                                                            |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `VONAGE_APP_ID`      | [Vonage Dashboard](https://dashboard.vonage.com) → Your Applications → the app you created for this project |
+| `VONAGE_PRIVATE_KEY` | The `private.key` file downloaded when you created the Vonage Application — paste its full contents here    |
+
 {% aside type="caution" %}
 Never commit `backend/.env` to source control. The repo's `.gitignore` already excludes it, but double-check before pushing.
 {% /aside %}
 
-## Where to Get the Values
+## Install Dependencies and Start the App
 
-| Variable             | Where to find it                                                                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `VONAGE_APP_ID`      | [Vonage Dashboard](https://dashboard.vonage.com) → Your Applications → the app you created for this project                                      |
-| `VONAGE_PRIVATE_KEY` | The `private.key` file downloaded when you created the Vonage Application. Place it in the `backend/` folder and set the path to `./private.key` |
-
-## Verify
-
-Once the file is saved, confirm its contents look correct:
-
-```sh
-cat backend/.env
-code backend/.env
-```
-
-You should see your App ID and the key path. With credentials in place, let's look at the frontend configuration file.
-
-Now open a terminal window on the Codespace by clicking in the hamburger menu on the top leading part of the screen / Terminal / New Terminal and execute `yarn`. This will download all the required dependencies that the reference app uses.
+Install all dependencies, then start the development server:
 
 ```sh
 yarn
-```
-
-When the package manager finishes the execution run `yarn dev`. This command will start the reference app backend server.
-
-```sh
 yarn dev
 ```
 
-After the backend and frontend servers start you can check in another tab of your current browser by opening the [http://localhost:5173](http://localhost:5173) URL.
+`yarn dev` starts both the backend server (port **3345**) and the frontend Vite dev server (port **5173**).
+
+## Make the Ports Public
+
+When the servers start, two notification dialogs will appear in the **bottom-right corner** of the Codespace asking whether to make the ports publicly accessible. **Click "Make Public" on both.**
+
+If you miss the dialogs, you can do this manually:
+
+{% steps %}
+
+1. Click the **Ports** tab at the bottom of the Codespace.
+
+2. Right-click on port **3345** → **Port Visibility → Public**.
+
+3. Right-click on port **5173** → **Port Visibility → Public**.
+
+{% /steps %}
 
 {% aside type="caution" %}
-The integrated simple browser of the Codespace may not render properly the reference app, because VERA requires mic and camera access.
+Both ports must be public for the app to work correctly. If only one is public, you will see CORS errors or a blank frontend.
 {% /aside %}
 
+## Configure the Frontend Environment
+
+The frontend needs to know the public URL of the backend. In the **Ports** tab, copy the forwarded address for port **3345** — it will look like:
+
+```
+https://stunning-rotary-phone-wrx67xjvj6w93v4j5-3345.app.github.dev
+```
+
+Create `frontend/.env` with that URL:
+
+```sh
+# frontend/.env
+API_URL=https://<your-codespace-subdomain>-3345.app.github.dev
+```
+
+Only the subdomain portion (e.g. `stunning-rotary-phone-wrx67xjvj6w93v4j5`) differs between Codespaces — the rest of the URL stays the same.
+
 {% aside type="caution" %}
-Opening directly the frontend or backend endpoints may cause CORS issues or missing API_URL errors.
+Never commit `frontend/.env` to source control. The repo's `.gitignore` already excludes it.
 {% /aside %}
+
+## Verify in the Browser
+
+Open the forwarded URL for port **5173** from the Ports tab in a **new browser tab** (not the Codespace's built-in Simple Browser — VERA requires microphone and camera access which the embedded browser does not support).
+
+You should see the Vonage Video React App running. With the app up and both ports public, you are ready to start configuring it.
