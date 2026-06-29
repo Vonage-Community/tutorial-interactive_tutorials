@@ -1,0 +1,69 @@
+---
+title: Customize Colors
+---
+
+Colors are defined separately for **light** and **dark** modes inside `designTokens.json`. Both modes share the same set of token keys — you set a different hex value for each mode.
+
+## Changing the Primary Brand Color
+
+The `primary` token controls the main accent color — used for buttons, active states, links, and highlights. Update it in both modes:
+
+```json
+{
+  "light": {
+    "primary": "#0066CC",
+    "primaryHover": "#0052A3",
+    "textPrimary": "#0066CC"
+  },
+  "dark": {
+    "primary": "#4D9EFF",
+    "primaryHover": "#6DB3FF",
+    "textPrimary": "#4D9EFF"
+  }
+}
+```
+
+{% aside type="tip" %}
+Keep `primaryHover` slightly darker (light mode) or slightly lighter (dark mode) than `primary` for accessible hover states.
+{% /aside %}
+
+## Changing the Background Colors
+
+| Token | Role |
+|-------|------|
+| `background` | Overall page background |
+| `surface` | Cards, panels, dialogs |
+| `darkBackground` | In-room video area background |
+
+```json
+"light": {
+  "background": "#F0F4FF",
+  "surface": "#FFFFFF",
+  "darkBackground": "#1A1A2E"
+}
+```
+
+## Full Color Token Reference
+
+| Token | Light default | Dark default | Role |
+|-------|--------------|--------------|------|
+| `primary` | `#9941FF` | `#B27BF2` | Main brand accent |
+| `primaryHover` | `#871EFF` | `#CBA1FA` | Primary hover state |
+| `secondary` | `#000000` | `#FFFFFF` | Secondary actions |
+| `surface` | `#FFFFFF` | `#000000` | Cards and panels |
+| `background` | `#F5F0FD` | `#26044D` | Page background |
+| `darkBackground` | `#202124` | `#202124` | Video room background |
+| `textPrimary` | `#9941FF` | `#B27BF2` | Primary text |
+| `textSecondary` | `#000000` | `#FFFFFF` | Body text |
+| `textTertiary` | `#757575` | `#B3B3B3` | Subdued / hint text |
+| `error` | `#E61D1D` | `#F75959` | Errors and destructive actions |
+| `success` | `#1C8731` | `#30A849` | Confirmations |
+| `warning` | `#BE5702` | `#FA9F00` | Warnings |
+| `border` | `#E6E6E6` | `#333333` | Dividers and borders |
+| `disabled` | `#E6E6E6` | `#333333` | Disabled controls |
+
+{% aside type="caution" %}
+The `on*` tokens (e.g. `onPrimary`, `onSurface`) define the text or icon color rendered *on top of* the matching background token. Always update them together — for example, if you set `primary` to a dark color, set `onPrimary` to `#FFFFFF`.
+{% /aside %}
+
+With your colors set, move on to customize the typography.

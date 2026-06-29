@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node", "vite/client"],
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
+  },
+  "include": [
+    "testBrowser/**/*.tsx",
+    "testBrowser/**/*.ts",
+    "testNode/**/*.ts",
+    "test/**/*.tsx",
+    "test/**/*.ts",
+    "srcNode/**/*.ts",
+    "srcBrowser/**/*.tsx",
+    "srcBrowser/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.ts",
+    "src/types/FacingMode.ts"
+  ],
+  "exclude": ["**/*.spec.*", "**/*.test.*"]
+}

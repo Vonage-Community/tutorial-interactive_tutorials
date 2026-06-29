@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node"]
+  },
+  "include": [
+    "vite.config.ts",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "../common/src/**/*.ts",
+    "../common/src/**/*.tsx",
+    "../common/srcBrowser/**/*.ts",
+    "../common/srcBrowser/**/*.tsx",
+    "../common/test/**/*.ts",
+    "../common/test/**/*.tsx",
+    "../common/testBrowser/**/*.ts",
+    "../common/testBrowser/**/*.tsx",
+    "../common/src/types/FacingMode.ts"
+  ],
+  "tsBuildInfoFile": "dist/tsconfig.spec.tsbuildinfo"
+}

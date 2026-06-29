@@ -1,0 +1,69 @@
+---
+title: Design Tokens Overview
+---
+
+All visual styles for the Vonage Video React App are driven by a single file at the project root: **`designTokens.json`**. This is the one place you need to go to control colors, typography, and shape.
+
+## Where It Lives
+
+{% filetree %}
+
+- designTokens.json          ← All theme configuration goes here
+- designTokens.example.json  ← Auto-generated reference (do not edit)
+- backend/
+- frontend/
+- libs/
+  - ui/
+    - src/
+      - theme/
+        - helpers/
+          - designTokens/
+            - designTokens.json  ← Synced automatically from root
+
+{% /filetree %}
+
+{% aside type="caution" %}
+Never edit `libs/ui/src/theme/helpers/designTokens/designTokens.json` directly. It is overwritten every time you run `yarn sync:theme-tokens`. Always edit the root `designTokens.json`.
+{% /aside %}
+
+## File Structure
+
+`designTokens.json` has three top-level sections:
+
+```json
+{
+  "light": { },
+  "dark":  { },
+  "fontFamilyPlain": "...",
+  "headline": { },
+  "bodyBase": { },
+  "borderRadiusMedium": "..."
+}
+```
+
+- **`light` / `dark`** — Separate color palettes for each mode. Both modes use the same set of semantic token keys.
+- **Typography tokens** — Sit at the top level (outside `light`/`dark`) and apply to both modes. Includes `fontFamilyPlain` and named scales like `headline`, `bodyBase`, `caption`.
+- **Shape tokens** — Also at the top level. Six `borderRadius*` values control the roundness of buttons, cards, and dialogs.
+
+### Key color tokens
+
+| Token | Role |
+|-------|------|
+| `primary` | Brand accent — buttons, active states |
+| `primaryHover` | Hover state of the primary color |
+| `surface` | Card and panel backgrounds |
+| `background` | Page background |
+| `textPrimary` | Primary text color |
+| `textSecondary` | Secondary / subdued text |
+| `error` | Destructive actions and error states |
+| `success` | Confirmation and success states |
+
+## Opening the File
+
+The file is already open in your editor. You can also open it from the terminal:
+
+```sh
+code designTokens.json
+```
+
+Now let's start by customizing the color palette.

@@ -1,0 +1,68 @@
+---
+title: Apply Your Changes
+---
+
+With your colors, typography, and shape tokens updated, this step shows you how to sync them into the app and verify everything looks correct in the browser.
+
+## Sync the Theme Tokens
+
+Run the sync command from the project root:
+
+```sh
+yarn sync:theme-tokens
+```
+
+This command does the following automatically:
+
+- Regenerates `designTokens.example.json` from the current defaults
+- Copies your root `designTokens.json` into `libs/ui/src/theme/helpers/designTokens/designTokens.json`
+- Rebuilds the Tailwind plugin that consumes the tokens
+- Formats the generated plugin file
+
+{% aside type="caution" %}
+You must run `yarn sync:theme-tokens` every time you edit `designTokens.json`. The app does not pick up token changes automatically on hot reload.
+{% /aside %}
+
+## Restart the Dev Server
+
+After syncing, restart the development server so the rebuilt Tailwind plugin is picked up:
+
+```sh
+yarn dev
+```
+
+## Verify in the Browser
+
+Open the forwarded URL for port **5173** in your browser and check that your changes are reflected:
+
+{% steps %}
+
+1. **Landing page** — confirm the background and primary button color match your `background` and `primary` tokens.
+
+2. **Waiting room** — check button hover states against your `primaryHover` token.
+
+3. **Meeting room** — verify the video area background matches `darkBackground`.
+
+4. **Light / dark toggle** — switch modes (if enabled) and confirm both palettes look correct.
+
+5. **Text and labels** — scan the UI for `textPrimary`, `textSecondary`, and `textTertiary` usage.
+
+{% /steps %}
+
+## Iterating Quickly
+
+A typical customize-test cycle:
+
+{% steps %}
+
+1. Edit `designTokens.json`.
+
+2. Run `yarn sync:theme-tokens`.
+
+3. Stop the server with **Ctrl+C** and run `yarn dev`.
+
+4. Refresh the browser and verify.
+
+{% /steps %}
+
+Your theme is live. Head to the final step for further resources.

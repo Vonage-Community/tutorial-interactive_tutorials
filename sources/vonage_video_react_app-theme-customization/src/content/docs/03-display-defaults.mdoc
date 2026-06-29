@@ -1,0 +1,86 @@
+---
+title: Customize Typography & Shape
+---
+
+Typography and shape tokens sit at the top level of `designTokens.json` — they apply across both light and dark modes.
+
+## Font Family
+
+`fontFamilyPlain` sets the font stack for the entire app. Replace it with any web-safe font or a font you load via CSS:
+
+```json
+"fontFamilyPlain": "Inter, sans-serif, system-ui, ui-sans-serif"
+```
+
+To use a Google Font, add it to the app's HTML `<head>` and reference it here:
+
+```json
+"fontFamilyPlain": "Roboto, sans-serif"
+```
+
+{% aside type="tip" %}
+The app does not automatically load external fonts. If you use a custom font, make sure to add the `<link>` tag for it in `frontend/index.html`.
+{% /aside %}
+
+## Typography Scale
+
+Each named scale entry has six properties:
+
+| Property | Description |
+|----------|-------------|
+| `fontSize` | Desktop font size (rem) |
+| `lineHeight` | Desktop line height (rem) |
+| `fontWeight` | Desktop weight (`400`, `500`, `600`) |
+| `mobileFontSize` | Mobile font size (rem) |
+| `mobileLineHeight` | Mobile line height (rem) |
+| `mobileFontWeight` | Mobile font weight |
+
+### Available scales
+
+| Token | Default desktop size | Usage |
+|-------|---------------------|-------|
+| `headline` | `4.125rem` | Hero / page headlines |
+| `subtitle` | `3.25rem` | Section subtitles |
+| `heading1` | `2.5rem` | H1 |
+| `heading2` | `2rem` | H2 |
+| `heading3` | `1.625rem` | H3 |
+| `heading4` | `1.25rem` | H4 |
+| `bodyExtended` | `1rem` | Long-form body text |
+| `bodyExtendedSemibold` | `1rem / 600` | Emphasized body text |
+| `bodyBase` | `0.875rem` | Standard UI text |
+| `bodyBaseSemibold` | `0.875rem / 600` | Labels, buttons |
+| `caption` | `0.75rem` | Captions, helper text |
+| `captionSemibold` | `0.75rem / 600` | Emphasized captions |
+
+### Example: compact body text
+
+```json
+"bodyBase": {
+  "fontSize": "0.8125rem",
+  "lineHeight": "1.125rem",
+  "fontWeight": "400",
+  "mobileFontSize": "0.8125rem",
+  "mobileLineHeight": "1.125rem",
+  "mobileFontWeight": "400"
+}
+```
+
+## Border Radius
+
+Six radius tokens control the roundness of buttons, cards, dialogs, and other UI elements:
+
+| Token | Default | Typical usage |
+|-------|---------|---------------|
+| `borderRadiusNone` | `0px` | Sharp corners |
+| `borderRadiusExtraSmall` | `2px` | Badges, chips |
+| `borderRadiusSmall` | `4px` | Inputs, small buttons |
+| `borderRadiusMedium` | `8px` | Buttons, cards |
+| `borderRadiusLarge` | `12px` | Panels, modals |
+| `borderRadiusExtraLarge` | `24px` | Pills, large dialogs |
+
+```json
+"borderRadiusMedium": "12px",
+"borderRadiusLarge": "16px"
+```
+
+You have updated the typography and shape. In the next step, you will sync the tokens and verify your changes in the browser.
