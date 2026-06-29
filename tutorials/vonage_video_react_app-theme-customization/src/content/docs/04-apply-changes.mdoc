@@ -1,33 +1,17 @@
 ---
-title: Apply Your Changes
+title: Verify Your Changes
 ---
 
-With your colors, typography, and shape tokens updated, this step shows you how to sync them into the app and verify everything looks correct in the browser.
+With your colors, typography, and shape tokens updated, this step shows you how to apply them and verify everything looks correct in the browser.
 
-## Sync the Theme Tokens
+## Apply the Changes
 
-Run the sync command from the project root:
+If `yarn dev` is already running, your changes to `designTokens.json` are **picked up automatically** — no extra command needed. Just save the file and refresh the browser.
+
+If the dev server is not running, sync the tokens manually before starting it:
 
 ```sh
 yarn sync:theme-tokens
-```
-
-This command does the following automatically:
-
-- Regenerates `designTokens.example.json` from the current defaults
-- Copies your root `designTokens.json` into `libs/ui/src/theme/helpers/designTokens/designTokens.json`
-- Rebuilds the Tailwind plugin that consumes the tokens
-- Formats the generated plugin file
-
-{% aside type="caution" %}
-You must run `yarn sync:theme-tokens` every time you edit `designTokens.json`. The app does not pick up token changes automatically on hot reload.
-{% /aside %}
-
-## Restart the Dev Server
-
-After syncing, restart the development server so the rebuilt Tailwind plugin is picked up:
-
-```sh
 yarn dev
 ```
 
@@ -57,11 +41,9 @@ A typical customize-test cycle:
 
 1. Edit `designTokens.json`.
 
-2. Run `yarn sync:theme-tokens`.
+2. Save the file — changes are applied automatically if `yarn dev` is running.
 
-3. Stop the server with **Ctrl+C** and run `yarn dev`.
-
-4. Refresh the browser and verify.
+3. Refresh the browser and verify.
 
 {% /steps %}
 

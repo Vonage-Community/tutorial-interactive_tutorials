@@ -8,23 +8,12 @@ All visual styles for the Vonage Video React App are driven by a single file at 
 
 {% filetree %}
 
-- designTokens.json          ← All theme configuration goes here
-- designTokens.example.json  ← Auto-generated reference (do not edit)
+- designTokens.json ← All theme configuration goes here
 - backend/
 - frontend/
 - libs/
-  - ui/
-    - src/
-      - theme/
-        - helpers/
-          - designTokens/
-            - designTokens.json  ← Synced automatically from root
 
 {% /filetree %}
-
-{% aside type="caution" %}
-Never edit `libs/ui/src/theme/helpers/designTokens/designTokens.json` directly. It is overwritten every time you run `yarn sync:theme-tokens`. Always edit the root `designTokens.json`.
-{% /aside %}
 
 ## File Structure
 
@@ -47,16 +36,16 @@ Never edit `libs/ui/src/theme/helpers/designTokens/designTokens.json` directly. 
 
 ### Key color tokens
 
-| Token | Role |
-|-------|------|
-| `primary` | Brand accent — buttons, active states |
-| `primaryHover` | Hover state of the primary color |
-| `surface` | Card and panel backgrounds |
-| `background` | Page background |
-| `textPrimary` | Primary text color |
-| `textSecondary` | Secondary / subdued text |
-| `error` | Destructive actions and error states |
-| `success` | Confirmation and success states |
+| Token           | Role                                  |
+| --------------- | ------------------------------------- |
+| `primary`       | Brand accent — buttons, active states |
+| `primaryHover`  | Hover state of the primary color      |
+| `surface`       | Card and panel backgrounds            |
+| `background`    | Page background                       |
+| `textPrimary`   | Primary text color                    |
+| `textSecondary` | Secondary / subdued text              |
+| `error`         | Destructive actions and error states  |
+| `success`       | Confirmation and success states       |
 
 ## Opening the File
 
