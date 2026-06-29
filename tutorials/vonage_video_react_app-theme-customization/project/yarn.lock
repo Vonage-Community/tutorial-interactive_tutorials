@@ -5237,14 +5237,14 @@
   dependencies:
     "@vonage/server-client" "1.18.1"
 
-"@vonage/vcr-sdk@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@vonage/vcr-sdk/-/vcr-sdk-1.3.0.tgz#9b2381ac6211a6be6b417d46f9efa4c1689f213f"
-  integrity sha512-drkttjmq4EBI4fNx1Qh4bK3sk04982clk6p+Pjg/XmEgNmF9ivWHt0hWjHqXYQDsqO2UgR10a90HA510o9LcUg==
+"@vonage/vcr-sdk@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@vonage/vcr-sdk/-/vcr-sdk-1.4.0.tgz#71ebdbf70d8e807124adf9a1765bb1e6662494c6"
+  integrity sha512-EFxKWqZ0lRdE6n0ZW8SHueKE0b68M4DUTKl0szxxFiCBWohy0cSXH0p1JhH5drtAjOkPTufdIWKoM2nCp8d2EQ==
   dependencies:
     agentkeepalive "^4.2.1"
-    axios "^1.2.1"
-    express "^4.17.2"
+    axios "^1.7.4"
+    express "^4.20.0"
     form-data "^4.0.0"
     glob "^10.3.3"
     jsonwebtoken "^9.0.0"
@@ -5955,7 +5955,7 @@ axe-core@^4.10.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.11.1.tgz#052ff9b2cbf543f5595028b583e4763b40c78ea7"
   integrity sha512-BASOg+YwO2C+346x3LZOeoovTIoTrRqEsqMa6fmfAV0P+U9mFr9NsyOEpiYvFjbc64NMrSswhV50WdXzdb/Z5A==
 
-axios@1.16.0, axios@^1.12.0, axios@^1.2.1, axios@^1.6.3, axios@^1.8.3:
+axios@1.16.0, axios@^1.12.0, axios@^1.6.3, axios@^1.7.4, axios@^1.8.3:
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.16.0.tgz#f8e5dd931cef2a5f8c32216d5784eda2f8750eb7"
   integrity sha512-6hp5CwvTPlN2A31g5dxnwAX0orzM7pmCRDLnZSX772mv8WDqICwFjowHuPs04Mc8deIld1+ejhtaMn5vp6b+1w==
@@ -8029,7 +8029,7 @@ express-rate-limit@8.5.2:
   dependencies:
     ip-address "^10.2.0"
 
-express@4.22.1, express@^4.17.2, express@^4.21.2:
+express@4.22.1, express@^4.20.0, express@^4.21.2:
   version "4.22.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.22.1.tgz#1de23a09745a4fffdb39247b344bb5eaff382069"
   integrity sha512-F2X8g9P1X7uCPZMA3MVf9wcTqlyNp7IhH5qPCI0izhaOIYXaW9L535tGA3qmjRzpH+bZczqq7hVKxTR4NWnu+g==
