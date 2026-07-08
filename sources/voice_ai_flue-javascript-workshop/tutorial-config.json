@@ -1,0 +1,16 @@
+{
+  "files": [],
+  "openFiles": [],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "",
+  "starterFiles": [],
+  "capabilities": [],
+  "version": "0.0.1",
+  "filename": "voice_ai_flue-javascript-workshop",
+  "customInstallCmd": "",
+  "customSetupCmd": "",
+  "customStartCmd": "npm run flue:dev"
+}

@@ -5,7 +5,7 @@
     "edit-tutorial": "node edit-tutorial.js"
   },
   "dependencies": {
-    "fs-extra": "^11.3.5",
+    "fs-extra": "^11.3.6",
     "unzipper": "^0.12.5"
   }
 }
