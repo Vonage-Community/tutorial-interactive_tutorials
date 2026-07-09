@@ -39,6 +39,7 @@ let publisher;
 let currentSessionId;
 let latestArchiveId;
 let isJoining = false;
+const remoteStreams = new Map();
 
 function setStatus(message) {
   els.callStatus.textContent = message;
@@ -98,6 +99,11 @@ async function joinCall() {
     session = OT.initSession(credentials.applicationId, credentials.sessionId);
 
     session.on("streamCreated", (event) => {
+      const streamId = event.stream?.streamId;
+      if (streamId) {
+        remoteStreams.set(streamId, event.stream);
+      }
+
       const container = document.createElement("div");
       container.className = "ratio ratio-16x9 rounded overflow-hidden border bg-black flex-shrink-0";
       els.subscribers.append(container);
@@ -110,7 +116,13 @@ async function joinCall() {
       updateFocusTargets();
     });
 
-    session.on("streamDestroyed", updateFocusTargets);
+    session.on("streamDestroyed", (event) => {
+      const streamId = event.stream?.streamId;
+      if (streamId) {
+        remoteStreams.delete(streamId);
+      }
+      updateFocusTargets();
+    });
     registerDebugLogging({ session, elements: els, postJson, getSessionId: () => currentSessionId });
     setupSignalingChat({ session, elements: els, postJson });
     setupArchivingControls({
@@ -151,6 +163,7 @@ function leaveCall(statusMessage) {
   session = null;
   publisher = null;
   currentSessionId = null;
+  remoteStreams.clear();
   els.publisher.innerHTML = "";
   els.subscribers.innerHTML = "";
   els.joinBtn.disabled = false;
@@ -168,13 +181,16 @@ function updateFocusTargets() {
   localOption.textContent = "Local publisher";
   els.focusTarget.append(localOption);
 
-  if (session?.streams) {
-    for (const stream of Object.values(session.streams)) {
-      const option = document.createElement("option");
-      option.value = stream.streamId;
-      option.textContent = `Subscriber ${stream.streamId.slice(-6)}`;
-      els.focusTarget.append(option);
+  for (const stream of remoteStreams.values()) {
+    const streamId = stream?.streamId;
+    if (!streamId) {
+      continue;
     }
+
+    const option = document.createElement("option");
+    option.value = streamId;
+    option.textContent = `Subscriber ${streamId.slice(-6)}`;
+    els.focusTarget.append(option);
   }
 }
 
