@@ -16,6 +16,7 @@ const els = {
   callStatus: document.querySelector("#callStatus"),
   publisher: document.querySelector("#publisher"),
   subscribers: document.querySelector("#subscribers"),
+  muteAudioBtn: document.querySelector("#muteAudioBtn"),
   chatMessages: document.querySelector("#chatMessages"),
   chatForm: document.querySelector("#chatForm"),
   chatInput: document.querySelector("#chatInput"),
@@ -39,6 +40,7 @@ let publisher;
 let currentSessionId;
 let latestArchiveId;
 let isJoining = false;
+let isAudioMuted = false;
 const remoteStreams = new Map();
 
 function setStatus(message) {
@@ -74,6 +76,11 @@ function populatePublisherProfiles() {
   }
 }
 
+function updateMuteAudioButton() {
+  els.muteAudioBtn.disabled = !publisher;
+  els.muteAudioBtn.textContent = isAudioMuted ? "Unmute audio" : "Mute audio";
+}
+
 async function joinCall() {
   if (isJoining || session) {
     return;
@@ -105,7 +112,7 @@ async function joinCall() {
       }
 
       const container = document.createElement("div");
-      container.className = "ratio ratio-16x9 rounded overflow-hidden border bg-black flex-shrink-0";
+      container.className = "video-stage subscriber-tile rounded overflow-hidden border bg-black";
       els.subscribers.append(container);
       const subscriber = session.subscribe(event.stream, container, {
         insertMode: "append",
@@ -140,11 +147,13 @@ async function joinCall() {
 
     const selectedProfile = els.publisherProfile.value || "Balanced";
     publisher = OT.initPublisher("publisher", getPublisherOptions(selectedProfile));
+    publisher.publishAudio(!isAudioMuted);
     await new Promise((resolve, reject) => {
       session.publish(publisher, (error) => error ? reject(error) : resolve());
     });
 
     els.leaveBtn.disabled = false;
+    updateMuteAudioButton();
     setStatus(`Connected to ${room}.`);
     updateFocusTargets();
   } catch (error) {
@@ -163,11 +172,13 @@ function leaveCall(statusMessage) {
   session = null;
   publisher = null;
   currentSessionId = null;
+  isAudioMuted = false;
   remoteStreams.clear();
   els.publisher.innerHTML = "";
   els.subscribers.innerHTML = "";
   els.joinBtn.disabled = false;
   els.leaveBtn.disabled = true;
+  updateMuteAudioButton();
   if (statusMessage) {
     setStatus(statusMessage);
   }
@@ -196,6 +207,15 @@ function updateFocusTargets() {
 
 els.joinBtn.addEventListener("click", () => joinCall().catch((error) => setStatus(error.message)));
 els.leaveBtn.addEventListener("click", () => leaveCall("Disconnected."));
+els.muteAudioBtn.addEventListener("click", () => {
+  if (!publisher) {
+    return;
+  }
+
+  isAudioMuted = !isAudioMuted;
+  publisher.publishAudio(!isAudioMuted);
+  updateMuteAudioButton();
+});
 
 els.applyPublisherProfile.addEventListener("click", async () => {
   if (!session || !publisher) {
@@ -206,6 +226,7 @@ els.applyPublisherProfile.addEventListener("click", async () => {
   session.unpublish(publisher);
   els.publisher.innerHTML = "";
   publisher = OT.initPublisher("publisher", getPublisherOptions(profile));
+  publisher.publishAudio(!isAudioMuted);
   session.publish(publisher, async (error) => {
     if (error) {
       els.publisherStatus.textContent = error.message;

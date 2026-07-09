@@ -6,6 +6,44 @@
     <title>Advanced Video App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <style>
+      .video-stage {
+        aspect-ratio: 16 / 9;
+        min-height: 240px;
+      }
+
+      .video-stage .OT_root,
+      .video-stage .OT_widget-container,
+      .video-stage video,
+      .video-stage object {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .video-stage video {
+        background: #000;
+        object-fit: contain;
+      }
+
+      .subscriber-grid {
+        align-content: start;
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+        overflow: auto;
+        padding: 1rem;
+      }
+
+      .subscriber-tile {
+        min-height: 200px;
+      }
+
+      @media (min-width: 768px) {
+        .subscriber-grid {
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+      }
+    </style>
   </head>
   <body class="bg-body-tertiary">
     <main class="container py-4 py-lg-5">
@@ -14,7 +52,7 @@
           <div class="card-body p-4">
             <p class="mb-3"><a class="link-secondary text-decoration-none" href="/guide/">Back to guide</a></p>
             <h1 class="h2 mb-2">Advanced Video App</h1>
-            <p class="text-body-secondary mb-0">Join a call first, then open this app in another tab or window to add a subscriber. The other panels show placeholder messages until you implement their sections in the local guide.</p>
+            <p class="text-body-secondary mb-0">This is your testing Advanced Video application. Feel free to play with the features. Join a call first, then add a subscriber. Remember that the other features may not work until you implement them in the coding exercise. Have fun!</p>
           </div>
         </header>
 
@@ -32,6 +70,9 @@
               <div class="col-6 col-md-auto">
                 <button id="leaveBtn" type="button" class="btn btn-outline-secondary w-100" disabled>Leave call</button>
               </div>
+              <div class="col-12 col-md-auto">
+                <button id="muteAudioBtn" type="button" class="btn btn-outline-secondary w-100" disabled>Mute audio</button>
+              </div>
             </div>
             <p id="callStatus" class="alert alert-secondary py-2 px-3 mb-4">Not connected.</p>
 
@@ -40,7 +81,7 @@
                 <div class="card h-100">
                   <div class="card-body">
                     <h3 class="h5 mb-3">You</h3>
-                    <div id="publisher" class="ratio ratio-16x9 rounded border overflow-hidden bg-dark"></div>
+                    <div id="publisher" class="video-stage rounded border overflow-hidden bg-dark"></div>
                   </div>
                 </div>
               </div>
@@ -48,9 +89,7 @@
                 <div class="card h-100">
                   <div class="card-body">
                     <h3 class="h5 mb-3">Subscribers</h3>
-                    <div class="ratio ratio-16x9 rounded border overflow-hidden bg-dark">
-                      <div id="subscribers" class="d-flex flex-column gap-3 overflow-auto p-3"></div>
-                    </div>
+                    <div id="subscribers" class="video-stage subscriber-grid rounded border bg-dark"></div>
                     <p class="small text-body-secondary mt-3 mb-0">To add a subscriber, copy this app URL, open it in another tab or window, use the same room name, and click <code>Join call</code>.</p>
                   </div>
                 </div>
