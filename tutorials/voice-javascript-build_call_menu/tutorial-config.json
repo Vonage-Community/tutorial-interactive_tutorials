@@ -1,0 +1,18 @@
+{
+  "files": [],
+  "openFiles": [
+    "project/index.js"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "",
+  "starterFiles": [
+    "project/package.json",
+    "project/index.js"
+  ],
+  "capabilities": [],
+  "version": "0.0.1",
+  "filename": "voice-javascript-build_call_menu"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "voice-api-call-menu",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node --watch index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
