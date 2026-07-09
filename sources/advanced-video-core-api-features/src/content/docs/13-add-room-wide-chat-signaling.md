@@ -6,6 +6,11 @@ description: "Signaling chat"
 Update `setupSignalingChat`:
 
 ```js
+  elements.chatForm.dataset.signalingChatReady = "true";
+  if (elements.chatMessages.textContent === "Signaling chat is not implemented yet.") {
+    elements.chatMessages.textContent = "";
+  }
+
   const render = (from, text) => {
     const line = document.createElement("p");
     line.textContent = `${from}: ${text}`;
@@ -33,4 +38,4 @@ Update `setupSignalingChat`:
 
 Save the file.
 
-> This follows the signaling lesson: use Video API signals to send small room-wide messages.
+> `setupSignalingChat` listens for room-wide `msg` signals, renders incoming messages, and sends the form text through the Video API signal channel.

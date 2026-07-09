@@ -6,6 +6,8 @@ description: "Archiving"
 Update `setupArchivingControls`:
 
 ```js
+  elements.archiveStatus.dataset.archivingReady = "true";
+
   elements.startArchive.onclick = async () => {
     const archive = await postJson("/archive/start", { sessionId: getSessionId() });
     setLatestArchiveId(archive.id || archive.archiveId);
@@ -27,4 +29,4 @@ Update `setupArchivingControls`:
 
 Save the file.
 
-> The UI stays intentionally plain. Frontend polish can come later; this exercise is about wiring the Video API flow.
+> `setupArchivingControls` connects the app buttons to the archive routes and updates the page with the active archive ID and view link.

@@ -47,4 +47,4 @@ Update `getArchiveViewUrl`:
 
 Save the file.
 
-> This follows the archiving lesson: the server owns the archive start, stop, and view actions.
+> `startArchive`, `stopArchive`, and `getArchiveViewUrl` call the server-side Video API archive methods and keep the latest archive state in memory.

@@ -16,6 +16,10 @@ export function setupSignalingChat({ session, elements, postJson }) {
   bindOnce(elements.chatForm, "placeholderSubmit", {
     type: "submit",
     listener: (event) => {
+      if (elements.chatForm.dataset.signalingChatReady === "true") {
+        return;
+      }
+
       event.preventDefault();
       elements.chatMessages.textContent = "Signaling chat is not implemented yet.";
     }
@@ -39,6 +43,14 @@ export async function recordPublisherProfile(profileName, postJson) {
 export function setupSubscriberQuality({ session, elements, postJson }) {
   // TODO function setupSubscriberQuality: replace this function with the code from the guide.
   const showPlaceholder = () => {
+    if (
+      elements.subscriberStatus.dataset.subscriberQualityReady === "true" ||
+      elements.simulateDegraded.onclick ||
+      elements.simulateRecovered.onclick
+    ) {
+      return;
+    }
+
     elements.subscriberStatus.textContent = "Subscriber quality controls are not implemented yet.";
   };
 
@@ -60,6 +72,14 @@ export function getRecordingLayoutPreview({ focusTarget }) {
 export function setupArchivingControls({ elements, postJson, getSessionId, getLatestArchiveId, setLatestArchiveId }) {
   // TODO function setupArchivingControls: replace this function with the code from the guide.
   const showPlaceholder = () => {
+    if (
+      elements.archiveStatus.dataset.archivingReady === "true" ||
+      elements.startArchive.onclick ||
+      elements.stopArchive.onclick
+    ) {
+      return;
+    }
+
     elements.archiveStatus.textContent = "Archiving controls are not implemented yet.";
   };
 

@@ -1,5 +1,5 @@
 ---
-title: "Validate setup in Learning Center"
+title: "Return to Learning Center"
 description: "Workspace setup"
 ---
 

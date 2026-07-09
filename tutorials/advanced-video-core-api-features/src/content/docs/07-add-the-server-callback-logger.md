@@ -27,4 +27,4 @@ Update `recordVideoCallback`:
 
 Save the file.
 
-> This connects browser events and Video callback events into one timeline.
+> `recordClientDebugEvent` stores browser events, and `recordVideoCallback` stores Video API callback payloads, using the session ID to make both sources comparable.

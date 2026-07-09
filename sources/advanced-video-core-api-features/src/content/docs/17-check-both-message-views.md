@@ -7,4 +7,4 @@ Look at both browser windows.
 
 Each window should show both messages once.
 
-> This exercise validates room-wide `signal:msg`, not private or targeted signaling.
+> Both windows should show the same `signal:msg` messages because the chat sends each message to every connected participant in the session.

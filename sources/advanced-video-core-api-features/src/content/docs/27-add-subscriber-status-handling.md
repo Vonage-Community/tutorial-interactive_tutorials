@@ -6,6 +6,8 @@ description: "Subscriber quality"
 Update `setupSubscriberQuality`:
 
 ```js
+  elements.subscriberStatus.dataset.subscriberQualityReady = "true";
+
   const setState = (state, reason, recovered = false) => {
     elements.subscriberStatus.textContent = `Subscriber status: ${state}`;
     postJson("/api/diagnostics/subscriber", { state, reason, recovered }).catch(console.error);
@@ -21,4 +23,4 @@ Update `setupSubscriberQuality`:
 
 Save the file.
 
-> The lesson is about reacting to subscriber quality changes. The workspace uses prepared buttons so you do not need to break your network on purpose.
+> `setupSubscriberQuality` updates the subscriber status in the UI and records each normal, degraded, or recovered state for diagnostics.

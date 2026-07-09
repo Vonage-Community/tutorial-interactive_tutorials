@@ -7,4 +7,4 @@ Click `Simulate recovered`.
 
 The subscriber quality label should return to `normal`.
 
-> The prepared buttons make this exercise repeatable without forcing real network problems.
+> The recovered button uses the same status handler to record that the subscriber moved back to a normal state.

@@ -154,6 +154,7 @@ async function joinCall() {
 
     els.leaveBtn.disabled = false;
     updateMuteAudioButton();
+    els.publisherStatus.textContent = `Active profile: ${selectedProfile}.`;
     setStatus(`Connected to ${room}.`);
     updateFocusTargets();
   } catch (error) {
@@ -176,6 +177,7 @@ function leaveCall(statusMessage) {
   remoteStreams.clear();
   els.publisher.innerHTML = "";
   els.subscribers.innerHTML = "";
+  els.publisherStatus.textContent = "";
   els.joinBtn.disabled = false;
   els.leaveBtn.disabled = true;
   updateMuteAudioButton();

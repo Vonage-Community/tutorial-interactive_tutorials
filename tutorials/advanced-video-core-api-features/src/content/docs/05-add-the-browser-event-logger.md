@@ -20,4 +20,4 @@ Update `registerDebugLogging`:
 
 Save the file.
 
-> This adds browser lifecycle events such as connect, stream created, stream destroyed, and disconnect.
+> `registerDebugLogging` sends selected client lifecycle events to the backend so they appear in the shared debug timeline.

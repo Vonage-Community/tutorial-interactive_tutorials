@@ -16,4 +16,4 @@ Update `getRecordingLayoutPreview`:
 
 Save the file.
 
-> This mirrors the recording layout idea from the lesson without forcing you to wait for a playable archive.
+> `getRecordingLayoutPreview` returns the layout name, focused stream class, and preview URL that the app stores before you test archiving.

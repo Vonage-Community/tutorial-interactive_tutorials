@@ -57,4 +57,4 @@ Update `recordPublisherProfile`:
 
 Save the file.
 
-> This keeps the exercise focused on choosing and applying simple publisher settings, not on building a full settings panel.
+> `getPublisherProfiles` defines the available profiles, `getPublisherOptions` applies the selected profile to the publisher, and `recordPublisherProfile` saves the applied settings for diagnostics.
