@@ -3,10 +3,9 @@ title: "Add archive buttons"
 description: "Archiving"
 ---
 
-Replace `setupArchivingControls` with this snippet:
+Update `setupArchivingControls`:
 
 ```js
-export function setupArchivingControls({ elements, postJson, getSessionId, getLatestArchiveId, setLatestArchiveId }) {
   elements.startArchive.onclick = async () => {
     const archive = await postJson("/archive/start", { sessionId: getSessionId() });
     setLatestArchiveId(archive.id || archive.archiveId);
@@ -24,7 +23,6 @@ export function setupArchivingControls({ elements, postJson, getSessionId, getLa
     elements.startArchive.disabled = false;
     elements.stopArchive.disabled = true;
   };
-}
 ```
 
 Save the file.

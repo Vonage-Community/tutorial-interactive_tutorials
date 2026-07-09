@@ -61,10 +61,7 @@
             }
         },
         "codespaces": {
-            "openFiles": [
-                "project/public/app/exercise-hooks.js",
-                "project/src/advanced-video-server-hooks.js"
-            ]
+            "openFiles": []
         }
     }
 }

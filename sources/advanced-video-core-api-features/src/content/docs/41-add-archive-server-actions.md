@@ -3,10 +3,9 @@ title: "Add archive server actions"
 description: "Archiving"
 ---
 
-Replace the archive functions with this snippet:
+Update `startArchive`:
 
 ```js
-export async function startArchive({ video, body, state }) {
   if (!video) throw new Error("missing_credentials");
   const archive = await video.startArchive(body.sessionId, { name: archiveNameForSession(body.sessionId) });
   state.latestArchive = {
@@ -16,9 +15,11 @@ export async function startArchive({ video, body, state }) {
     updatedAt: new Date().toISOString()
   };
   return archive;
-}
+```
 
-export async function stopArchive({ video, archiveId, state }) {
+Update `stopArchive`:
+
+```js
   if (!video) throw new Error("missing_credentials");
   const archive = await video.stopArchive(archiveId);
   state.latestArchive = {
@@ -28,9 +29,11 @@ export async function stopArchive({ video, archiveId, state }) {
     updatedAt: new Date().toISOString()
   };
   return archive;
-}
+```
 
-export async function getArchiveViewUrl({ video, archiveId, state }) {
+Update `getArchiveViewUrl`:
+
+```js
   if (!video) throw new Error("missing_credentials");
   const archive = await video.getArchive(archiveId);
   state.latestArchive = {
@@ -40,7 +43,6 @@ export async function getArchiveViewUrl({ video, archiveId, state }) {
     updatedAt: new Date().toISOString()
   };
   return archive.status === "available" ? archive.url : null;
-}
 ```
 
 Save the file.

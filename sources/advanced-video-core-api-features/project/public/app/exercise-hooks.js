@@ -1,5 +1,5 @@
-export function registerDebugLogging() {
-  // TODO(debug-timeline): replace this function with the code from the guide.
+export function registerDebugLogging({ session, postJson, getSessionId }) {
+  // TODO function registerDebugLogging: replace this function with the code from the guide.
 }
 
 function bindOnce(element, flag, handler) {
@@ -11,8 +11,8 @@ function bindOnce(element, flag, handler) {
   element.addEventListener(handler.type, handler.listener);
 }
 
-export function setupSignalingChat({ elements }) {
-  // TODO(signaling-chat): replace this function with the code from the guide.
+export function setupSignalingChat({ session, elements, postJson }) {
+  // TODO function setupSignalingChat: replace this function with the code from the guide.
   bindOnce(elements.chatForm, "placeholderSubmit", {
     type: "submit",
     listener: (event) => {
@@ -23,21 +23,21 @@ export function setupSignalingChat({ elements }) {
 }
 
 export function getPublisherProfiles() {
-  // TODO(publisher-tuning): replace this function with the code from the guide.
+  // TODO function getPublisherProfiles: replace this function with the code from the guide.
   return {};
 }
 
-export function getPublisherOptions(_profileName) {
-  // TODO(publisher-tuning): replace this function with the code from the guide.
+export function getPublisherOptions(profileName) {
+  // TODO function getPublisherOptions: replace this function with the code from the guide.
   return { insertMode: "append", width: "100%", height: "100%" };
 }
 
-export async function recordPublisherProfile() {
-  // TODO(publisher-tuning): replace this function with the code from the guide.
+export async function recordPublisherProfile(profileName, postJson) {
+  // TODO function recordPublisherProfile: replace this function with the code from the guide.
 }
 
-export function setupSubscriberQuality({ elements }) {
-  // TODO(subscriber-quality): replace this function with the code from the guide.
+export function setupSubscriberQuality({ session, elements, postJson }) {
+  // TODO function setupSubscriberQuality: replace this function with the code from the guide.
   const showPlaceholder = () => {
     elements.subscriberStatus.textContent = "Subscriber quality controls are not implemented yet.";
   };
@@ -52,13 +52,13 @@ export function setupSubscriberQuality({ elements }) {
   });
 }
 
-export function getRecordingLayoutPreview() {
-  // TODO(recording-layout): replace this function with the code from the guide.
+export function getRecordingLayoutPreview({ focusTarget }) {
+  // TODO function getRecordingLayoutPreview: replace this function with the code from the guide.
   return { layout: null, streamClass: null, focused: false };
 }
 
-export function setupArchivingControls({ elements }) {
-  // TODO(archiving): replace this function with the code from the guide.
+export function setupArchivingControls({ elements, postJson, getSessionId, getLatestArchiveId, setLatestArchiveId }) {
+  // TODO function setupArchivingControls: replace this function with the code from the guide.
   const showPlaceholder = () => {
     elements.archiveStatus.textContent = "Archiving controls are not implemented yet.";
   };

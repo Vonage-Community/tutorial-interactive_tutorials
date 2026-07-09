@@ -57,9 +57,4 @@ You have finished the workspace setup in the Codespace.
 
 This URL uses the app and validation port `3000`. The guide itself runs on port `1234`.
 
-Then validate the setup exercise there.
-**Continue the tutorial** in Learning Center until it asks you to start the Debug timeline exercise.
-
-Then return to this guide and press Next.
-
-> Learning Center is still the source of completion. This guide only helps you do the work inside Codespaces.
+Now, switch the tab to **continue the tutorial in Learning Center** until it asks you to start the Debug timeline exercise. Then return to this guide and press Next.

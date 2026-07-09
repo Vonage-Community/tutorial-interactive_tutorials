@@ -3,7 +3,7 @@ title: "Add publisher profiles"
 description: "Publisher tuning"
 ---
 
-Replace the publisher tuning functions with this snippet:
+Add the profile settings above `getPublisherProfiles`:
 
 ```js
 const profiles = {
@@ -22,12 +22,17 @@ const profiles = {
     maxBitrate: 150000
   }
 };
+```
 
-export function getPublisherProfiles() {
+Update `getPublisherProfiles`:
+
+```js
   return profiles;
-}
+```
 
-export function getPublisherOptions(profileName) {
+Update `getPublisherOptions`:
+
+```js
   const profile = profiles[profileName] || profiles.Balanced;
   return {
     insertMode: "append",
@@ -37,16 +42,17 @@ export function getPublisherOptions(profileName) {
     frameRate: profile.frameRate,
     maxBitrate: profile.maxBitrate
   };
-}
+```
 
-export async function recordPublisherProfile(profileName, postJson) {
+Update `recordPublisherProfile`:
+
+```js
   const profile = profiles[profileName] || profiles.Balanced;
   await postJson("/api/diagnostics/publisher", {
     profile: profileName,
     applied: true,
     settings: profile
   });
-}
 ```
 
 Save the file.

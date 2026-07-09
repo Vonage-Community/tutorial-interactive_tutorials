@@ -1,11 +1,11 @@
 import { pushLimited, state, findRoomForSession } from "./advanced-video-state.js";
 
-export function recordClientDebugEvent(_event) {
-  // TODO(debug-timeline): replace this function with the code from the guide.
+export function recordClientDebugEvent(event) {
+  // TODO function recordClientDebugEvent: replace this function with the code from the guide.
 }
 
-export function recordVideoCallback(_payload) {
-  // TODO(debug-timeline): replace this function with the code from the guide.
+export function recordVideoCallback(payload) {
+  // TODO function recordVideoCallback: replace this function with the code from the guide.
 }
 
 export function recordSignalActivity(message) {
@@ -44,18 +44,18 @@ export function recordLayoutPreview(preview) {
   };
 }
 
-export async function startArchive() {
-  // TODO(archiving): replace this function with the code from the guide.
+export async function startArchive({ video, body, state }) {
+  // TODO function startArchive: replace this function with the code from the guide.
   throw new Error("TODO_NOT_IMPLEMENTED_ARCHIVING_START");
 }
 
-export async function stopArchive() {
-  // TODO(archiving): replace this function with the code from the guide.
+export async function stopArchive({ video, archiveId, state }) {
+  // TODO function stopArchive: replace this function with the code from the guide.
   throw new Error("TODO_NOT_IMPLEMENTED_ARCHIVING_STOP");
 }
 
-export async function getArchiveViewUrl() {
-  // TODO(archiving): replace this function with the code from the guide.
+export async function getArchiveViewUrl({ video, archiveId, state }) {
+  // TODO function getArchiveViewUrl: replace this function with the code from the guide.
   throw new Error("TODO_NOT_IMPLEMENTED_ARCHIVING_VIEW");
 }
 

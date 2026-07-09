@@ -3,10 +3,9 @@ title: "Add room-wide chat signaling"
 description: "Signaling chat"
 ---
 
-Replace `setupSignalingChat` with this snippet:
+Update `setupSignalingChat`:
 
 ```js
-export function setupSignalingChat({ session, elements, postJson }) {
   const render = (from, text) => {
     const line = document.createElement("p");
     line.textContent = `${from}: ${text}`;
@@ -30,7 +29,6 @@ export function setupSignalingChat({ session, elements, postJson }) {
     session.signal({ type: "msg", data });
     elements.chatInput.value = "";
   });
-}
 ```
 
 Save the file.

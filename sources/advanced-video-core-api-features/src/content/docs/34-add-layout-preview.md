@@ -3,17 +3,15 @@ title: "Add layout preview"
 description: "Recording layout"
 ---
 
-Replace `getRecordingLayoutPreview` with this snippet:
+Update `getRecordingLayoutPreview`:
 
 ```js
-export function getRecordingLayoutPreview({ focusTarget }) {
   return {
     layout: "horizontalPresentation",
     streamClass: "focus",
     focused: Boolean(focusTarget),
     previewUrl: "/app/"
   };
-}
 ```
 
 Save the file.

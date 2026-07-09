@@ -3,10 +3,9 @@ title: "Add subscriber status handling"
 description: "Subscriber quality"
 ---
 
-Replace `setupSubscriberQuality` with this snippet:
+Update `setupSubscriberQuality`:
 
 ```js
-export function setupSubscriberQuality({ session, elements, postJson }) {
   const setState = (state, reason, recovered = false) => {
     elements.subscriberStatus.textContent = `Subscriber status: ${state}`;
     postJson("/api/diagnostics/subscriber", { state, reason, recovered }).catch(console.error);
@@ -18,7 +17,6 @@ export function setupSubscriberQuality({ session, elements, postJson }) {
 
   elements.simulateDegraded.onclick = () => setState("degraded", "prepared test action");
   elements.simulateRecovered.onclick = () => setState("normal", "prepared recovery action", true);
-}
 ```
 
 Save the file.
