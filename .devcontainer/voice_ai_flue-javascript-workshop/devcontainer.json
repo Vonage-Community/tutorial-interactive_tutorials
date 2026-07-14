@@ -28,10 +28,7 @@
         }
     },
     "features": {
-        "ghcr.io/devcontainers/features/github-cli:1": {},
-        "ghcr.io/devcontainers/features/node:1": {
-          "version": "22.19.0"
-        }
+        "ghcr.io/devcontainers/features/github-cli:1": {}
     },
     "customizations": {
         "vscode": {
@@ -65,8 +62,8 @@
         },
         "codespaces": {
             "openFiles": [
-                "project/app.ts",
-                "project/agents/leonardo.ts"
+                "project/src/app.ts",
+                "project/src/agents/leonardo.ts"
             ]
         }
     }

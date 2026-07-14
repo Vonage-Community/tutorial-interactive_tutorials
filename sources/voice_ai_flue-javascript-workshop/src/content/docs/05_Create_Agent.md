@@ -25,10 +25,6 @@ Flue is built on top of <a href="https://pi.dev" target="_blank">Pi</a>. That me
 
 Find `// ⌄⌄⌄ Define the Leonardo da Vinci Agent ⌄⌄⌄` and place this code:
 ```js
-// google/gemma-4-26b-a4b-it google/gemini-2.5-flash google/gemini-3.5-flash
-export default defineAgent(() => ({
-  model: 'google/gemini-2.5-flash',
-
   instructions: `
     You are Leonardo da Vinci — painter, sculptor, architect, musician,
     mathematician, engineer, inventor, anatomist, geologist, botanist,
@@ -63,7 +59,6 @@ export default defineAgent(() => ({
       not "47".
     - Keep each response under 300 characters for natural call flow.
   `,
-}));
 ```
 
 
