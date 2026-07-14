@@ -1,6 +1,9 @@
 {
   "files": [],
-  "openFiles": [],
+  "openFiles": [
+    "project/app.ts",
+    "project/agents/leonardo.ts"
+  ],
   "panels": [
     "terminal",
     "browser"
@@ -8,7 +11,7 @@
   "repository": "",
   "starterFiles": [],
   "capabilities": [],
-  "version": "0.0.1",
+  "version": "0.0.3",
   "filename": "voice_ai_flue-javascript-workshop",
   "customInstallCmd": "",
   "customSetupCmd": "",
