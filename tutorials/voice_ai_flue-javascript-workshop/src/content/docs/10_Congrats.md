@@ -8,3 +8,5 @@ You've now used the Flue Framework to create an Agent that can answer calls usin
 Any ideas on what you would like to create?
 
 Let us know on Twitter, LinkedIn and our Developer Slack Community!
+
+I'll be back in NYC to do another workshop! You can RSVP on the event page.

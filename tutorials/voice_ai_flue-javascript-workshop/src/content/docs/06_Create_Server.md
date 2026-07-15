@@ -19,7 +19,34 @@ There are a lot of different actions that can be used during a call, but for thi
 
 <a href="https://developer.vonage.com/en/voice/voice-api/ncco-reference#input" target="_blank">Input</a>: so that we can process what the caller is saying.
 
+<a href="https://developer.vonage.com/en/voice/voice-api/ncco-reference#stream" target="_blank">Stream</a>: to keep the call open, we'll play music while the AI Agent thinks of a response.
+
 The following code will be placed in the `src/app.ts` file.
+
+Since there will be many instances of `talk` and `input` actions, let's create some helper functions so that the code is much cleaner.
+
+Find `// ⌄⌄⌄ Vonage NCCO Helper Functions ⌄⌄⌄` and add this code:
+
+```js
+const generateTalkAction = (text: String) => ({
+  action: 'talk',
+  text: text,
+  language: 'en-US',
+  style: 22,
+});
+
+const generateInputAction = (callUUID: String) => ({
+  action: 'input',
+  type: ['speech'],
+  eventUrl: [`https://${host}/speech?uuid=${callUUID}`],
+  speech: {
+    language: 'en-US',
+    endOnSilence: 2,
+    startTimeout: 15,
+    maxDuration: 30,
+  },
+});
+```
 
 When a call is answered, Vonage will make a request to this endpoint. The NCCO tells Vonage to say the Welcome message and then listen for what the caller says.
 
@@ -30,31 +57,22 @@ app.get('/voice/answer', async (c) => {
   const callUUID = c.req.query('uuid') ?? '';
 
   return c.json([
-    {
-      action: 'talk',
-      text: agentWelcome,
-      language: 'en-US',
-      style: 22,
-    },
-    {
-      action: 'input',
-      type: ['speech'],
-      eventUrl: [`https://${host}/speech?uuid=${callUUID}`],
-      speech: {
-        language: 'en-US',
-        endOnSilence: 2,
-        startTimeout: 15,
-        maxDuration: 30,
-      },
-    },
+    generateTalkAction(agentWelcome),
+    generateInputAction(callUUID)
   ]);
-});
 
+});
 ```
 
 Once the caller is finished speaking, Vonage will do speech recognition and send the results as a request to the endpoint specified in `eventUrl` along with the Call's ID so the Agent can keep track of which response goes to which caller.
 
 Here is the code for the `/speech` route that will take the speech recognition results and pass them to the Agent, get the Agent's response and then let Vonage know to say the Agent's response and then listen for what the caller says in the NCCO. This then creates a loop where the caller says something, the Agent responds and waits for the caller to say something again so that the Agent can respond again.
+
+What happens if the Agent takes longer than the window Vonage has set to recieve a response from a Webhook endpoint to keep the call going and not hang up?
+
+In this scenario, a 3 second timer is set and if the Agent has not responded by then, we quickly return a `talk` action saying 'Hmmmmm... Let me think about that.' and a `stream` action to keep the call going until the Agent has created a reply. Then we modify the ongoing call to send a `talk` action with the Agent's reply and an `input` action to listen for what the caller says.
+
+We'll also take into consideration some other edge cases where errors can occur.
 
 Find `// ⌄⌄⌄ /speech endpoint ⌄⌄⌄` and add this code:
 
@@ -63,16 +81,19 @@ app.post('/speech', async (c) => {
   const callUUID = c.req.query('uuid') ?? '';
   const body = await c.req.json();
 
-  const transcript: string =
-    body?.speech?.results?.[0]?.text ?? '';
+  const transcript: string = body?.speech?.results?.[0]?.text ?? '';
 
   console.log(`[ASR] Call ${callUUID}: "${transcript}"`);
 
-  let agentReply = '';
-
   if (!transcript.trim()) {
-    agentReply = 'Forgive me, I did not hear you clearly. Could you speak again?';
-  } else {
+    return c.json([
+      generateTalkAction('Forgive me, I did not hear you clearly. Could you speak again?'),
+      generateInputAction(callUUID)
+    ]);
+  }
+
+  // 1. Inflight Agent Task
+  const agentTask = (async () => {
     try {
       const agentRes = await fetch(
         `https://${host}/agents/${agent}/${callUUID}?wait=result`,
@@ -82,46 +103,95 @@ app.post('/speech', async (c) => {
           body: JSON.stringify({ message: transcript }),
         }
       );
+
+      if (!agentRes.ok) {
+        console.error(`[Flue API Error] HTTP ${agentRes.status}: ${agentRes.statusText}`);
+        return 'I am having a little trouble thinking right now. Can you try again?';
+      }
+
       const data = await agentRes.json() as any;
-      agentReply =
+      let reply =
         data?.result?.text ??
         data?.result ??
         data?.text ??
         data?.content ??
         '';
 
-        console.log(`[${agent} reply]`, agentReply);
-
-      if (!agentReply) {
-        console.error('[Flue] Unexpected shape:', JSON.stringify(data));
-        agentReply = 'My thoughts drift for a moment. Please ask again.';
+      if (!reply) {
+        console.error('[Flue] Empty response or unexpected shape:', JSON.stringify(data));
+        return 'My thoughts drifted for a moment. What were we discussing?';
       }
-    } catch (err) {
-      console.error('[Flue Agent Error]', err);
-      agentReply = 'My mind wanders for a moment. Please, ask me again.';
-    }
-  }
 
-  // Exactly the Vonage guide pattern — talk + input keeps the loop alive
-  return c.json([
-    {
-      action: 'talk',
-      text: agentReply,
-      language: 'en-US',
-      style: 22,
-    },
-    {
-      action: 'input',
-      type: ['speech'],
-      eventUrl: [`https://${host}/speech?uuid=${callUUID}`],
-      speech: {
-        language: 'en-US',
-        endOnSilence: 2,
-        startTimeout: 15,
-        maxDuration: 30,
-      },
-    },
-  ]);
+      console.log(`[${agent} reply]`, reply);
+      return reply;
+
+    } catch (error) {
+      console.error('[Network or Parsing Error]', error);
+      return 'My connection seems unstable at the moment. Please ask me again.';
+    }
+  })();
+
+  // 2. 3-Second Timeout
+  const timeoutPromise = new Promise((resolve) =>
+    setTimeout(() => resolve('TIMEOUT'), 3000)
+  );
+
+  // 3. Race Condition & Background Transfer
+  try {
+    const raceResult = await Promise.race([agentTask, timeoutPromise]);
+
+    if (raceResult === 'TIMEOUT') {
+      const backgroundTask = async () => {
+        try {
+          const delayedReply = await agentTask;
+
+          await vonage.voice.transferCallWithNCCO(callUUID, [
+            generateTalkAction(delayedReply),
+            generateInputAction(callUUID)
+          ]);
+        } catch (bgError: any) {
+          console.error('[Background Task Error]', bgError);
+          if (bgError.response) {
+            const errorBody = await bgError.response.json();
+            console.error('Vonage API Error Details:', JSON.stringify(errorBody, null, 2));
+          } else {
+            console.error('Unknown Error:', bgError);
+          }
+
+          await vonage.voice.transferCallWithNCCO(callUUID, [
+            generateTalkAction('I seem to have lost my train of thought. What were we discussing?'),
+            generateInputAction(callUUID)
+          ]);
+        }
+      };
+
+      backgroundTask();
+      console.log('Hmmmmm.....');
+
+      return c.json([
+        generateTalkAction('Hmmmmm... Let me think about that.'),
+        {
+          action: 'stream',
+          streamUrl: [`https://${host}/public/Ink_on_Iron.mp3`],
+          loop: 0
+        }
+      ]);
+
+    } else {
+      // AI responded within 3 seconds
+      return c.json([
+        generateTalkAction(raceResult as string),
+        generateInputAction(callUUID)
+      ]);
+    }
+
+  } catch (err) {
+    console.error('[Route Error]', err);
+    return c.json([
+      generateTalkAction('An unexpected error occurred. Please try again.'),
+      generateInputAction(callUUID)
+    ]);
+  }
 });
 ```
 

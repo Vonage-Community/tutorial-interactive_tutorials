@@ -59,4 +59,6 @@ In the `app.ts` file, change the name of the `agent` variable with the new file 
 
 Change the `language code` and `voice name` to something suitable for your new agent.
 
+If you want to change your Agent's 'thinking' hold music, have Google Gemini create an audio file for you. Then upload it to the `public` folder and link to it in the `stream` action's `streamUrl` property.
+
 Now you can call and speak with the new Agent you just created.
