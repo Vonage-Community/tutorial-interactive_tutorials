@@ -25,6 +25,7 @@ If the call does not connect or you hear an error, check:
 - The server is still running in the terminal.
 - Port 3000 is still set to **Public** in the Ports tab.
 - The Answer URL and Event URL in your Vonage Dashboard are correct and match your current Codespace URL.
+- Your Vonage virtual number is linked to the Voice Application you configured.
 {% /aside %}
 
 You can watch incoming events in the terminal — the event webhook logs each `req.body` to the console.

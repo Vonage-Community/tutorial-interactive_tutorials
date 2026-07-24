@@ -5,16 +5,16 @@ description: Install the Express dependency inside the project/ directory.
 
 # Install Dependencies
 
-`project/package.json` already lists `express` as a dependency. You just need to install it.
+`project/package.json` already lists `express` as a dependency, and Codespaces installs the project dependencies when it creates the workspace.
 
-Open the terminal and run:
+The terminal opens in the `project/` directory. Run the following command to make sure the dependencies are installed:
 
 ```sh
-cd project && npm install
+npm install
 ```
 
 {% aside type="tip" %}
-The `package.json` also defines a `start` script that runs `node --watch index.js`, so the server will automatically reload whenever you save a change.
+The `package.json` defines a `start` script that uses `node --watch index.js`. The Codespace starts this script automatically, so the server reloads whenever you save a change.
 {% /aside %}
 
-Once npm finishes, you are ready to start adding code.
+Once npm finishes, you are ready to add the Voice API logic.

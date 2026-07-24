@@ -24,5 +24,5 @@ app.get('/webhooks/answer', (req, res) => {
 This route calls `mainMenu()` (which you will write in the next step) and returns the resulting NCCO as JSON.
 
 {% aside %}
-The answer webhook must use **GET** — you will configure this in the Vonage Dashboard later.
+For this exercise, configure the Answer URL to use **GET** so that it matches this Express route.
 {% /aside %}

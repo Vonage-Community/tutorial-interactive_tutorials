@@ -5,18 +5,11 @@ description: Further reading and next steps after completing the Vonage Voice AP
 
 # What's Next
 
-Congratulations — you have built a working call menu with the Vonage Voice API!
+Congratulations - Your call menu is working!
 
-Here are some ideas for what to explore next:
+Before moving on, head back to the learning path:
 
-- **Add more menu options** — extend the `switch` statement in the DTMF webhook to handle additional keypresses.
-- **Text-to-speech voices** — customise the `talk` action with a different language or voice using the [`style` and `language` properties](https://developer.vonage.com/en/voice/voice-api/ncco-reference#talk).
-- **Record calls** — add a [`record` action](https://developer.vonage.com/en/voice/voice-api/ncco-reference#record) to your NCCO.
-- **Outbound calls** — use the [Create an outbound call](https://developer.vonage.com/en/api/voice#createCall) API to initiate calls programmatically.
+- Check your terminal for the final status value logged by the event webhook. Paste it into the **Completed exercise credentials** field back in the learning path to mark this exercise as complete.
+- Continue to the **Add Speech Recognition** course, where you will extend this same Codespace to also accept spoken responses.
 
-## Further reading
-
-- [Voice API overview](https://developer.vonage.com/en/voice/voice-api/overview)
-- [NCCO reference](https://developer.vonage.com/en/voice/voice-api/ncco-reference)
-- [Voice API code snippets](https://developer.vonage.com/en/voice/voice-api/code-snippets/before-you-begin)
-- [Vonage Developer Portal](https://developer.vonage.com)
+Visit the [Vonage Developer Portal](https://developer.vonage.com) to explore more Voice API guides and reference documentation.

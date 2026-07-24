@@ -5,7 +5,7 @@ description: Point your Vonage application's answer and event URLs at this Codes
 
 # Configure Vonage Webhooks
 
-Now point your Vonage Voice Application at this Codespace.
+Now point your Vonage Voice Application at this Codespace. In the following URLs, replace `<forwarded-address>` with the complete address you copied in the previous step, without a trailing slash.
 
 {% steps %}
 
@@ -13,20 +13,22 @@ Now point your Vonage Voice Application at this Codespace.
 
 2. Set the **Answer URL** to:
    ```
-   https://<your-codespace-name>-3000.app.github.dev/webhooks/answer
+   <forwarded-address>/webhooks/answer
    ```
    Set the method to **GET**.
 
 3. Set the **Event URL** to:
    ```
-   https://<your-codespace-name>-3000.app.github.dev/webhooks/events
+   <forwarded-address>/webhooks/events
    ```
    Set the method to **POST**.
 
 4. Save your changes.
 
+5. Confirm that the Voice-capable virtual number you plan to call is linked to this application.
+
 {% /steps %}
 
 {% aside type="tip" %}
-Replace `<your-codespace-name>` with the forwarded address you copied in the previous step — everything before `-3000.app.github.dev`.
+For example, if the forwarded address is `https://example-3000.app.github.dev`, the Answer URL is `https://example-3000.app.github.dev/webhooks/answer`.
 {% /aside %}
