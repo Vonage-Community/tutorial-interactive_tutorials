@@ -2,7 +2,16 @@
  
 # Ensure execution stops if a step fails 
 set -e 
- 
+
+echo "📦 Clearing environment tokens..."
+unset GITHUB_TOKEN && gh auth login --scopes repo
+
+# Check if the user is authenticated with repo scopes
+if ! gh auth status &>/dev/null; then
+    echo "🔑 Please authenticate your personal GitHub account to create a new repository:"
+    gh auth login --scopes repo
+fi
+
 echo "=========================================" 
 echo "  📦 Exporting Your Workshop Project     " 
 echo "=========================================" 
@@ -24,8 +33,12 @@ echo "--------------------------------------------------"
  
 # 'gh repo create' natively prompts the user if they want to create a repo from the current folder, 
 # names it, sets visibility, creates it on GitHub, and adds/pushes the remote automatically! 
-gh repo create --source=. --remote=origin --push 
- 
+# gh repo create --source=. --remote=origin --push 
+read -p "Enter a name for your new GitHub repository: " repo_name
+
+echo "🚀 Creating repository and pushing code..."
+gh repo create "$repo_name" --source=. --remote=origin --push
+
 echo "" 
 echo "=========================================" 
 echo " 🎉 SUCCESS! Your project is safely on GitHub." 

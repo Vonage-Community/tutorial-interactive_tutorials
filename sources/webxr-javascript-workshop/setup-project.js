@@ -346,7 +346,8 @@ function sanitizeWorkshopEnvironment() {
         );
       }
     }
-    process.exit();
+    // process.exit();
+    writeEnv();
   } catch (error) {
     console.error(
       'Warning: Failed to safely disconnect parent repository framework:',
