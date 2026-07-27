@@ -1,8 +1,6 @@
 {
   "files": [],
-  "openFiles": [
-    "project/src/monitoring.js"
-  ],
+  "openFiles": [],
   "panels": [
     "terminal",
     "browser"
@@ -11,9 +9,10 @@
   "starterFiles": [
     "project/package.json",
     "project/server.js",
+    "project/setup-credentials.js",
+    "project/.env.example",
     "project/src/monitoring.js",
     "project/src/telemetry-store.js",
-    "project/src/fixtures.js",
     "project/src/exercise-validation.js",
     "project/public/index.html",
     "project/public/app.js",

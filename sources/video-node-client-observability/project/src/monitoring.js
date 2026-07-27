@@ -29,7 +29,7 @@ export function findSustainedIssues(records, minimumSamples = 3) {
   return [];
 }
 
-export function correlateSupportCase(records, report, platformSession) {
+export function correlateSupportCase(records, report) {
   // TODO: Correlate a support case
   return {
     caseId: report.caseId,
@@ -42,8 +42,7 @@ export function correlateSupportCase(records, report, platformSession) {
       connectionIds: [],
       streamIds: []
     },
-    telemetry: [],
-    platformSamples: []
+    telemetry: []
   };
 }
 

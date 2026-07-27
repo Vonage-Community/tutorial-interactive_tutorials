@@ -1,51 +1,104 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Video Quality Monitor</title>
     <link rel="stylesheet" href="/styles.css">
-    <script src="/app.js" type="module"></script>
+    <script src="https://unpkg.com/@vonage/client-sdk-video@2/dist/js/opentok.js"></script>
   </head>
   <body>
     <header class="app-header">
       <div>
         <p class="product-label">Vonage Video API</p>
         <h1>Video Quality Monitor</h1>
+        <p>Collect and analyze publisher and subscriber telemetry from a live routed session.</p>
       </div>
-      <button id="reset-button" class="secondary-button" type="button">
-        Reset data
-      </button>
+      <a class="text-link" href="/guide/">Open guide</a>
     </header>
 
     <main>
       <section class="status-band" aria-labelledby="exercise-status-heading">
         <div>
-          <p class="section-label">Exercise status</p>
+          <p class="section-label">Exercise progress</p>
           <h2 id="exercise-status-heading">Backend monitoring checks</h2>
         </div>
         <ol id="exercise-checks" class="check-list"></ol>
-        <output id="completion-token" class="completion-token" hidden></output>
+        <output id="completion-credential" class="completion-credential" hidden></output>
       </section>
 
-      <section class="workspace" aria-labelledby="scenarios-heading">
+      <section id="setup-notice" class="notice notice-warning" hidden>
+        <div>
+          <h2>Connect your Vonage account</h2>
+          <p>Run <code>cd project &amp;&amp; npm run setup-credentials</code> in the terminal, then check the setup again.</p>
+        </div>
+        <button id="check-setup" class="button button-secondary" type="button">
+          Check setup
+        </button>
+      </section>
+
+      <section class="workspace" aria-labelledby="live-session-heading">
         <div class="section-heading">
           <div>
-            <p class="section-label">Incoming telemetry</p>
-            <h2 id="scenarios-heading">Run a sample scenario</h2>
+            <p class="section-label">Live Video API operation</p>
+            <h2 id="live-session-heading">Routed session</h2>
+            <p>The prepared client publishes an animated video stream and subscribes to it through a second connection.</p>
           </div>
-          <p id="request-status" class="request-status" role="status"></p>
+          <div class="actions">
+            <button id="start-session" class="button" type="button" disabled>
+              Start session
+            </button>
+            <button id="stop-session" class="button button-secondary" type="button" disabled>
+              Stop session
+            </button>
+          </div>
         </div>
-        <div id="scenario-actions" class="scenario-actions"></div>
+
+        <p id="session-status" class="notice" role="status">
+          Connect your account before starting a session.
+        </p>
+
+        <div class="video-grid">
+          <article>
+            <h3>Publisher</h3>
+            <div id="publisher-video" class="video-surface">
+              <span>Not connected</span>
+            </div>
+          </article>
+          <article>
+            <h3>Subscriber</h3>
+            <div id="subscriber-video" class="video-surface">
+              <span>Not connected</span>
+            </div>
+          </article>
+        </div>
+
+        <dl class="session-details">
+          <div>
+            <dt>Application ID</dt>
+            <dd id="application-id">Not configured</dd>
+          </div>
+          <div>
+            <dt>Session ID</dt>
+            <dd id="session-id">Not started</dd>
+          </div>
+          <div>
+            <dt>Client records</dt>
+            <dd id="record-count">0</dd>
+          </div>
+          <div>
+            <dt>Platform callbacks</dt>
+            <dd id="callback-count">0</dd>
+          </div>
+        </dl>
       </section>
 
       <section class="metrics-band" aria-labelledby="session-summary-heading">
         <div class="section-heading">
           <div>
-            <p class="section-label">Session overview</p>
-            <h2 id="session-summary-heading">Quality summary</h2>
+            <p class="section-label">Stored telemetry</p>
+            <h2 id="session-summary-heading">Session summary</h2>
           </div>
-          <p><strong id="record-count">0</strong> stored records</p>
         </div>
         <div id="summary-metrics" class="metric-grid"></div>
         <div class="table-wrap">
@@ -56,7 +109,7 @@
                 <th>Source</th>
                 <th>Condition</th>
                 <th>Reason</th>
-                <th>Bitrate</th>
+                <th>Video bitrate</th>
               </tr>
             </thead>
             <tbody id="records-table"></tbody>
@@ -64,20 +117,44 @@
         </div>
       </section>
 
-      <section class="workspace split-workspace">
-        <div aria-labelledby="alerts-heading">
-          <p class="section-label">Operational signal</p>
-          <h2 id="alerts-heading">Sustained issues</h2>
-          <div id="alerts" class="empty-state">No sustained issues detected.</div>
+      <section class="workspace investigation" aria-labelledby="support-heading">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Post-call investigation</p>
+            <h2 id="support-heading">Match the session evidence</h2>
+            <p>Create a support report from the live subscriber records, then use the same Session ID in Inspector.</p>
+          </div>
+          <div class="actions">
+            <button id="create-support-case" class="button" type="button" disabled>
+              Create support report
+            </button>
+            <a
+              class="button button-secondary"
+              href="https://tools.vonage.com/video/inspector"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open Inspector
+            </a>
+          </div>
         </div>
-        <div aria-labelledby="support-case-heading">
-          <p class="section-label">Support investigation</p>
-          <h2 id="support-case-heading">Correlated evidence</h2>
-          <div id="support-case" class="empty-state">
-            Run the sustained issue scenario to match the report with telemetry.
+        <div class="investigation-grid">
+          <div>
+            <h3>Sustained issues</h3>
+            <div id="alerts" class="empty-state">
+              No sustained issue has been detected in this session.
+            </div>
+          </div>
+          <div>
+            <h3>Correlated evidence</h3>
+            <div id="support-case" class="empty-state">
+              Collect subscriber telemetry before creating a report.
+            </div>
           </div>
         </div>
       </section>
     </main>
+
+    <script type="module" src="/app.js"></script>
   </body>
 </html>

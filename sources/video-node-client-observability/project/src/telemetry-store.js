@@ -1,4 +1,4 @@
-const MAX_RECORDS = 250;
+const MAX_RECORDS = 500;
 
 export class TelemetryStore {
   #records = [];

@@ -1,19 +1,17 @@
 ---
 title: Welcome
-description: Build a backend that turns Video API client telemetry into session summaries, alerts, and support evidence.
+description: Build a backend that processes telemetry from a live Vonage Video API session.
 ---
 
 # Build a Video Quality Monitor
 
-Client telemetry is most useful after a call when it is stored with enough context to identify the session, participant, and stream. In this exercise, you will complete the backend logic for a small Video API quality monitor.
+In this exercise, you will complete the backend logic for a small Video API quality monitor. A prepared web client will create a **live routed session**, publish a video stream, subscribe to that stream through a second connection, and send both sets of statistics to your backend.
 
-The finished monitor will:
+You will implement the functions that:
 
-- Store normalized publisher and subscriber records.
+- Normalize publisher and subscriber records before storing them.
 - Summarize quality across a session.
-- Report a problem only when it continues across several samples.
-- Match a support report with client telemetry and platform quality data.
+- Report a problem only when it continues across several records.
+- Match a support report with telemetry from the same participant and time.
 
-The Codespace includes prepared telemetry, so you can test each workflow without waiting for Insights data from a live application.
-
-By the end, the monitor will turn individual client measurements into evidence that can be used by support and operations teams.
+You will connect the Codespace to your Vonage account, run the completed monitor with real client telemetry, and use the resulting Session ID to find the session in Inspector.
