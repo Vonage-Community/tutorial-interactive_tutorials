@@ -22,8 +22,6 @@ app.post('/webhooks/events', (req, res) => {
 });
 ```
 
-{% aside %}
-Returning **HTTP 204 No Content** tells the Vonage API platform that you have received the event, preventing duplicate delivery.
-{% /aside %}
+> **Note**: Returning **HTTP 204 No Content** tells the Vonage API platform that you have received the event, preventing duplicate delivery.
 
 Your `project/index.js` is now complete. Save the file.

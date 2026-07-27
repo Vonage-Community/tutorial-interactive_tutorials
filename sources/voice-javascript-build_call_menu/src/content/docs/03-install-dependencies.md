@@ -13,8 +13,6 @@ The terminal opens in the `project/` directory. Run the following command to mak
 npm install
 ```
 
-{% aside type="tip" %}
-The `package.json` defines a `start` script that uses `node --watch index.js`. The Codespace starts this script automatically, so the server reloads whenever you save a change.
-{% /aside %}
+> **Tip**: The `package.json` defines a `start` script that uses `node --watch index.js`. The Codespace starts this script automatically, so the server reloads whenever you save a change.
 
 Once npm finishes, you are ready to add the Voice API logic.

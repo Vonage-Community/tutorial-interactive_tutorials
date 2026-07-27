@@ -7,7 +7,7 @@ description: Call your Vonage number and test the IVR menu.
 
 With your server running and your Vonage application configured, it is time to test the IVR.
 
-{% steps %}
+**Steps**:
 
 1. Call your Vonage virtual number from your phone.
 
@@ -18,14 +18,11 @@ With your server running and your Vonage application configured, it is time to t
 
 4. Press any other key. The menu repeats.
 
-{% /steps %}
-
-{% aside type="caution" %}
-If the call does not connect or you hear an error, check:
-- The server is still running in the terminal.
-- Port 3000 is still set to **Public** in the Ports tab.
-- The Answer URL and Event URL in your Vonage Dashboard are correct and match your current Codespace URL.
-- Your Vonage virtual number is linked to the Voice Application you configured.
-{% /aside %}
+> **Important**: If the call does not connect or you hear an error, check:
+>
+> - The server is still running in the terminal.
+> - Port 3000 is still set to **Public** in the Ports tab.
+> - The Answer URL and Event URL in your Vonage Dashboard are correct and match your current Codespace URL.
+> - Your Vonage virtual number is linked to the Voice Application you configured.
 
 You can watch incoming events in the terminal — the event webhook logs each `req.body` to the console.

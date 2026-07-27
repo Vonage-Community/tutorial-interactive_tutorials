@@ -7,13 +7,11 @@ description: Explore the starter project/index.js and understand the TODO paste 
 
 Your Codespace already contains a starter project in the `project/` directory. Open `project/index.js` — it contains a minimal Express server with placeholder comments that mark where you will add code in each step.
 
-{% filetree %}
-
+```
 - project/
   - index.js
   - package.json
-
-{% /filetree %}
+```
 
 Here is what `project/index.js` looks like right now:
 

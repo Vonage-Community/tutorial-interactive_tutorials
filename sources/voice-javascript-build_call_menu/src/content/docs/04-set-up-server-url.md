@@ -24,6 +24,4 @@ const BASE_URL = `https://${process.env.CODESPACE_NAME}-3000.${process.env.GITHU
 
 `BASE_URL` will be used inside your NCCO to tell Vonage where to send DTMF keypresses.
 
-{% aside %}
-`BASE_URL` is constructed automatically — you do not need to hard-code any URLs.
-{% /aside %}
+> **Note**: `BASE_URL` is constructed automatically — you do not need to hard-code any URLs.

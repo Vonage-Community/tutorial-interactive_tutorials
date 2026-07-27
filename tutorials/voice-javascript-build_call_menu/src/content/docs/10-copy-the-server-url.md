@@ -7,7 +7,7 @@ description: Confirm that port 3000 is public and copy its forwarded address.
 
 The Codespace configures port **3000** as public so that the Vonage API platform can reach your webhooks. Confirm its visibility and copy its address before configuring your Vonage application.
 
-{% steps %}
+**Steps**:
 
 1. Click the **Ports** tab at the bottom of VS Code (next to the Terminal tab).
 
@@ -21,8 +21,4 @@ The Codespace configures port **3000** as public so that the Vonage API platform
    ```
    You will use this URL in the next step.
 
-{% /steps %}
-
-{% aside type="caution" %}
-Your Codespace URL changes every time you create a new Codespace. If you rebuild your environment you will need to update the webhook URLs in your Vonage application.
-{% /aside %}
+> **Important**: Your Codespace URL changes every time you create a new Codespace. If you rebuild your environment, you will need to update the webhook URLs in your Vonage application.
