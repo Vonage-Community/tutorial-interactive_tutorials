@@ -8,6 +8,10 @@ let tutorial: {
   starterFiles: string[];
   capabilities: string[];
   version: string;
+  filename: string;
+  customInstallCmd: string;
+  customSetupCmd: string;
+  customStartCmd: string;
 } = {
   files: [],
   openFiles: [],
@@ -16,12 +20,17 @@ let tutorial: {
   starterFiles: [],
   capabilities: [],
   version: '',
+  filename: '',
+  customInstallCmd: '',
+  customSetupCmd: '',
+  customStartCmd: ''
 };
 
 export default defineToolbarApp({
   init(canvas, app, server) {
     const myWindow = document.createElement('astro-dev-toolbar-window');
     const myContent = document.createElement('div');
+    myContent.style.overflowY = 'auto';
     myContent.innerHTML = `
     <details name='steps' open>
       <summary>Step 1: Select panels needed</summary>
@@ -39,8 +48,14 @@ export default defineToolbarApp({
     </details>
     <details name='steps'>
       <summary>Step 2: Load an external repo (optional)</summary>
-      The repo will be loaded in the project folder. If there are any setup scripts needed to run the repo, please put them in the setup-project.js file.
+      The repo will be loaded in the project folder.
       <input id='repository' style="width: 100%;" placeholder='https://github.com/Vonage-Community/repo-name.git'/>
+      <br><br>Default install command is <code>npm install</code>, if you have custom install command, please enter it here: <input id='custom-install-command' style="width: 100%;" placeholder='yarn install'/>
+
+      <br><br>Default setup command is <code>node setup-project.js</code> that will run the code in the setup-project.js file. If you have a custom setup command, please enter it here and make sure to create any files you need:
+      <textarea id='custom-setup-command' style="width: 100%;" placeholder='bash setup.sh' rows="5" cols="33"></textarea>
+
+      <br><br>Default start command is <code>npm start</code>, if you have custom start command, please enter it here: <input id='custom-start-command' style="width: 100%;" placeholder='yarn start'/>
     </details>
     <details name='steps'>
       <summary>Step 3: Set Starter Files to be used</summary>
@@ -60,7 +75,7 @@ export default defineToolbarApp({
     </details>
     <details name='steps'>
       <summary>Step 5: Create steps</summary>
-      In the src -> content -> docs folder, please add the steps for the tutorial and delete reference.mdoc when finished.
+      In the src -> content -> docs folder, please add the steps for the tutorial. If you are using any components from the Reference page, please rename the file type from '.md' to '.mdoc' Delete reference.mdoc when finished.
       <br><br>See <a href='https://vonage-community.github.io/tutorial-interactive_tutorials/toolbar-app' target='blank' style='color: white'>Reference</a> for components you can add.<br><br>
     </details>
     <details name='steps'>
@@ -86,7 +101,12 @@ export default defineToolbarApp({
       <input id='version' placeholder='0.0.0'/>
     </details>
     <details name='steps'>
-      <summary>Step 9: Finish up</summary>
+      <summary>Step 9: Enter filename for the zip file</summary>
+      This will be used also for the repo's folder name
+      <br/><input id='filename' placeholder='product_name-language-topic' style='width: 300px;'/>
+    </details>
+    <details name='steps'>
+      <summary>Step 10: Finish up</summary>
       Click to start generating the tutorial: <button id="generate">generate</button>
       <p id="status"></p>
       <span id="complete">
@@ -102,13 +122,22 @@ export default defineToolbarApp({
 
     const astroToolbarWindow = canvas.querySelector('astro-dev-toolbar-window');
 
+    const filenameInput = astroToolbarWindow?.querySelector(
+      '#filename'
+    ) as HTMLInputElement;
+    filenameInput.value = tutorial.filename !== '' ? tutorial.filename : '';
+    filenameInput?.addEventListener('change', (event) => {
+      tutorial.filename = filenameInput?.value;
+      saveConfig();
+    });
+
     const versionInput = astroToolbarWindow?.querySelector(
       '#version'
     ) as HTMLInputElement;
     versionInput.value = tutorial.version !== '' ? tutorial.version : '';
     versionInput?.addEventListener('change', (event) => {
       tutorial.version = versionInput?.value;
-      saveTutorial();
+      saveConfig();
     });
 
     const repositoryInput = astroToolbarWindow?.querySelector(
@@ -118,45 +147,49 @@ export default defineToolbarApp({
       tutorial.repository !== '' ? tutorial.repository : '';
     repositoryInput?.addEventListener('change', (event) => {
       tutorial.repository = repositoryInput?.value;
-      saveTutorial();
+      saveConfig();
     });
 
-    // check for tutorial-config.json
-    function checkConfig() {
-      server.send('vonage-app:config-check', {});
-    }
 
-    if (localStorage.getItem('config-checked')) {
-      // if config-checked exists
-      // check local storage for tutorial config and load if it exists
-      console.log('config-checked exists');
-      checkLocalStorage();
-    } else {
-      console.log('config checked not there');
-      // if config-checked doesn't exist
-      // - check for tutorial config file
-      checkConfig();
-      //localStorage.setItem('config-checked', 'false');
-    }
+    const customInstallCmdInput = astroToolbarWindow?.querySelector(
+      '#custom-install-command'
+    ) as HTMLInputElement;
+    customInstallCmdInput.value =
+      tutorial.customInstallCmd !== '' ? tutorial.customInstallCmd : '';
+    customInstallCmdInput?.addEventListener('change', (event) => {
+      tutorial.customInstallCmd = customInstallCmdInput?.value;
+      saveConfig();
+    });
+
+    const customSetupCmdInput = astroToolbarWindow?.querySelector(
+      '#custom-setup-command'
+    ) as HTMLInputElement;
+    customSetupCmdInput.value =
+      tutorial.customSetupCmd !== '' ? tutorial.customSetupCmd : '';
+      customSetupCmdInput?.addEventListener('change', (event) => {
+      tutorial.customSetupCmd = customSetupCmdInput?.value;
+      saveConfig();
+    });
+
+    const customStartCmdInput = astroToolbarWindow?.querySelector(
+      '#custom-start-command'
+    ) as HTMLInputElement;
+    customStartCmdInput.value =
+      tutorial.customStartCmd !== '' ? tutorial.customStartCmd : '';
+    customStartCmdInput?.addEventListener('change', (event) => {
+      tutorial.customStartCmd = customStartCmdInput?.value;
+      saveConfig();
+    });
+
+    // Always read tutorial-config.json from disk on toolbar open
+    server.send('vonage-app:config-check', {});
 
     server.on('config-checked', (data: any) => {
-      console.log('config data: ', data);
-      // - if tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI(), and set config-checked to true
       if (data.found) {
-        console.log(
-          'tutorial config file exists, set tutorial to config data, saveTutorial(), updateUI()'
-        );
         tutorial = data.tutorial;
-        saveTutorial();
+        saveConfig();
         updateUI();
-      } else {
-        // - if tutorial config file does not exist, check local storage for tutorial config, load if it exists, and set config-checked to true
-        console.log(
-          'config file does not exist, check local storage for tutorial config, load if it exists'
-        );
-        checkLocalStorage();
       }
-      localStorage.setItem('config-checked', 'true');
     });
 
     function updateUI() {
@@ -182,15 +215,11 @@ export default defineToolbarApp({
       }
       versionInput.value = tutorial.version;
       repositoryInput.value = tutorial.repository;
+      filenameInput.value = tutorial.filename;
+      customInstallCmdInput.value = tutorial.customInstallCmd;
+      customSetupCmdInput.value = tutorial.customSetupCmd;
     }
 
-    function checkLocalStorage() {
-      if (localStorage.getItem('tutorial')) {
-        console.log('localStorage.getItem tutorial');
-        tutorial = JSON.parse(localStorage.getItem('tutorial') || '{}');
-        updateUI();
-      }
-    }
 
     const completeSpan = astroToolbarWindow?.querySelector(
       '#complete'
@@ -208,7 +237,7 @@ export default defineToolbarApp({
       panelsChecked?.forEach((panel) => {
         tutorial.panels.push(panel.id);
       });
-      saveTutorial();
+      saveConfig();
     });
 
     const capabilitiesForm = astroToolbarWindow?.querySelector('#capabilities');
@@ -222,11 +251,11 @@ export default defineToolbarApp({
       capabilitiesChecked?.forEach((capability) => {
         tutorial.capabilities.push(capability.id);
       });
-      saveTutorial();
+      saveConfig();
     });
 
-    function saveTutorial() {
-      localStorage.setItem('tutorial', JSON.stringify(tutorial));
+    function saveConfig() {
+      server.send('vonage-app:save-config', { tutorial });
     }
 
     function refreshFilesList() {
@@ -260,7 +289,7 @@ export default defineToolbarApp({
         fileLi.appendChild(fileButton);
         fileUl.appendChild(fileLi);
       });
-      saveTutorial();
+      saveConfig();
     }
 
     const fileInputError = astroToolbarWindow?.querySelector(
@@ -317,7 +346,7 @@ export default defineToolbarApp({
         fileLi.appendChild(fileButton);
         fileUl.appendChild(fileLi);
       });
-      saveTutorial();
+      saveConfig();
     }
 
     const fileOpenInputError = astroToolbarWindow?.querySelector(
@@ -377,7 +406,7 @@ export default defineToolbarApp({
         fileLi.appendChild(fileButton);
         fileUl.appendChild(fileLi);
       });
-      saveTutorial();
+      saveConfig();
     }
 
     const starterFileInputError = astroToolbarWindow?.querySelector(
@@ -432,11 +461,9 @@ export default defineToolbarApp({
           astroToolbarWindow?.querySelector(
             '#download-link'
           ) as HTMLAnchorElement
-        ).href = `${window.location.origin}/product_name-language-topic.zip`;
+        ).href = `${window.location.origin}/${tutorial.filename}.zip`;
         generateButton.disabled = false;
         completeSpan.style.display = 'block';
-        // clear local storage
-        localStorage.clear();
       }
     });
   },

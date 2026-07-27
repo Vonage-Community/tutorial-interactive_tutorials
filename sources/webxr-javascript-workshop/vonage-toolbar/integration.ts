@@ -45,6 +45,15 @@ export default {
         }
       });
 
+      toolbar.on('vonage-app:save-config', async (data: any) => {
+        try {
+          const configData = JSON.stringify(data.tutorial, null, 2);
+          await fs.writeFile('tutorial-config.json', configData);
+        } catch (err) {
+          console.error('Error saving config:', err);
+        }
+      });
+
       toolbar.on('vonage-app:generate', async (data: any) => {
         try {
           // create tutorial-config.json file
@@ -61,7 +70,7 @@ export default {
           const zip = new AdmZip();
           let exclude = ['node_modules', 'dist'];
           const sourceDir = './';
-          const zipFile = './public/product_name-language-topic.zip';
+          const zipFile = data.tutorial.filename === '' ? './public/product_name-language-topic.zip' : `./public/${data.tutorial.filename}.zip`;
           await zip.addLocalFolderPromise(sourceDir, {
             filter: (filePath) => !exclude.some((ex) => filePath.includes(ex)),
           });
