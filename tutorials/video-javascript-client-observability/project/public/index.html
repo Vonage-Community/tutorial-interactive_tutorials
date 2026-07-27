@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Video Client Observability</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://unpkg.com/@vonage/client-sdk-video@2.34.2/dist/js/opentok.js"></script>
+    <script src="https://unpkg.com/@vonage/video-client-network-test@5.1.5/dist/index.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="product-name">Vonage Video API</p>
+        <h1>Client Observability</h1>
+        <p>Check the network before a call, then review publisher and subscriber quality while it runs.</p>
+      </div>
+      <a href="/guide/">Open guide</a>
+    </header>
+
+    <main>
+      <section class="status-bar" aria-labelledby="exercise-heading">
+        <div>
+          <p class="section-label">Exercise progress</p>
+          <h2 id="exercise-heading">Implementation checks</h2>
+        </div>
+        <ul id="exercise-checks"></ul>
+        <p id="completion-token" class="completion-token" hidden></p>
+      </section>
+
+      <section id="setup-notice" class="notice notice-warning" hidden>
+        <div>
+          <h2>Connect your Vonage account</h2>
+          <p>Run <code>cd project &amp;&amp; npm run setup-credentials</code> in the terminal, then check the setup again.</p>
+        </div>
+        <button id="check-setup" type="button" class="button button-secondary">Check setup</button>
+      </section>
+
+      <section class="workspace-section" aria-labelledby="precall-heading">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Before the call</p>
+            <h2 id="precall-heading">Waiting room</h2>
+            <p>Run a connectivity check and a quality test with a separate routed session.</p>
+          </div>
+          <button id="run-precall" type="button" class="button">Run pre-call test</button>
+        </div>
+
+        <div class="precall-layout">
+          <div>
+            <div id="local-preview" class="video-surface">
+              <span>Check your camera before running the network test.</span>
+            </div>
+            <div class="device-controls">
+              <label for="camera-select">Camera</label>
+              <select id="camera-select"></select>
+              <label for="microphone-select">Microphone</label>
+              <select id="microphone-select"></select>
+              <button id="check-devices" type="button" class="button button-secondary">Check devices</button>
+            </div>
+          </div>
+          <div class="results-panel">
+            <div class="result-row">
+              <span>Join status</span>
+              <strong id="precall-status" class="status-not-tested">Not tested</strong>
+            </div>
+            <p id="precall-reason">Run the pre-call test before joining.</p>
+            <dl class="metric-list">
+              <div><dt>Connectivity</dt><dd id="connectivity-result">Not run</dd></div>
+              <div><dt>Audio</dt><dd id="audio-result">Not run</dd></div>
+              <div><dt>Video</dt><dd id="video-result">Not run</dd></div>
+              <div><dt>Recommended video</dt><dd id="recommendation-result">Not available</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace-section" aria-labelledby="call-heading">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">During the call</p>
+            <h2 id="call-heading">Live quality monitor</h2>
+            <p>Use the same room name in another browser window to add a subscriber.</p>
+          </div>
+          <div class="call-actions">
+            <label for="room-name">Room</label>
+            <input id="room-name" value="observability-room">
+            <button id="join-call" type="button" class="button" disabled>Join call</button>
+            <button id="leave-call" type="button" class="button button-secondary" disabled>Leave</button>
+          </div>
+        </div>
+
+        <p id="call-status" class="notice">Complete the pre-call test before joining.</p>
+
+        <div class="video-grid">
+          <article>
+            <h3>Publisher</h3>
+            <div id="publisher" class="video-surface"></div>
+          </article>
+          <article>
+            <h3>Subscribers</h3>
+            <div id="subscribers" class="video-surface subscriber-grid"></div>
+          </article>
+        </div>
+
+        <div class="telemetry-grid">
+          <article class="telemetry-panel">
+            <h3>Publisher statistics</h3>
+            <dl id="publisher-stats" class="metric-list"></dl>
+          </article>
+          <article class="telemetry-panel">
+            <h3>Subscriber statistics</h3>
+            <dl id="subscriber-stats" class="metric-list"></dl>
+          </article>
+          <article class="telemetry-panel">
+            <h3>Quality changes</h3>
+            <ol id="quality-events" class="event-list"></ol>
+          </article>
+        </div>
+      </section>
+
+      <section class="workspace-section" aria-labelledby="diagnosis-heading">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Troubleshooting</p>
+            <h2 id="diagnosis-heading">Degradation source</h2>
+            <p>Compare local, remote, and unclear subscriber network examples.</p>
+          </div>
+        </div>
+        <div id="diagnostic-actions" class="diagnostic-actions"></div>
+        <div id="diagnostic-result" class="notice">Select an example to review its local and remote conditions.</div>
+      </section>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

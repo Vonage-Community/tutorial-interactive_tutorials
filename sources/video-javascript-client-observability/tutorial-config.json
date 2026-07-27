@@ -1,0 +1,26 @@
+{
+  "files": [],
+  "openFiles": [],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "",
+  "starterFiles": [
+    "project/package.json",
+    "project/server.js",
+    "project/setup-credentials.js",
+    "project/.env.example",
+    "project/src/video-routes.js",
+    "project/src/exercise-state.js",
+    "project/src/exercise-validation.js",
+    "project/public/index.html",
+    "project/public/styles.css",
+    "project/public/app.js",
+    "project/public/client-observability.js",
+    "project/public/pre-call.js"
+  ],
+  "capabilities": [],
+  "version": "0.0.1",
+  "filename": "video-javascript-client-observability"
+}
