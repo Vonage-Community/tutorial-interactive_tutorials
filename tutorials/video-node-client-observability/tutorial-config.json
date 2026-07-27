@@ -1,0 +1,25 @@
+{
+  "files": [],
+  "openFiles": [
+    "project/src/monitoring.js"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "",
+  "starterFiles": [
+    "project/package.json",
+    "project/server.js",
+    "project/src/monitoring.js",
+    "project/src/telemetry-store.js",
+    "project/src/fixtures.js",
+    "project/src/exercise-validation.js",
+    "project/public/index.html",
+    "project/public/app.js",
+    "project/public/styles.css"
+  ],
+  "capabilities": [],
+  "version": "0.0.1",
+  "filename": "video-node-client-observability"
+}

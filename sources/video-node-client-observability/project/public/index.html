@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Quality Monitor</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" type="module"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="product-label">Vonage Video API</p>
+        <h1>Video Quality Monitor</h1>
+      </div>
+      <button id="reset-button" class="secondary-button" type="button">
+        Reset data
+      </button>
+    </header>
+
+    <main>
+      <section class="status-band" aria-labelledby="exercise-status-heading">
+        <div>
+          <p class="section-label">Exercise status</p>
+          <h2 id="exercise-status-heading">Backend monitoring checks</h2>
+        </div>
+        <ol id="exercise-checks" class="check-list"></ol>
+        <output id="completion-token" class="completion-token" hidden></output>
+      </section>
+
+      <section class="workspace" aria-labelledby="scenarios-heading">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Incoming telemetry</p>
+            <h2 id="scenarios-heading">Run a sample scenario</h2>
+          </div>
+          <p id="request-status" class="request-status" role="status"></p>
+        </div>
+        <div id="scenario-actions" class="scenario-actions"></div>
+      </section>
+
+      <section class="metrics-band" aria-labelledby="session-summary-heading">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Session overview</p>
+            <h2 id="session-summary-heading">Quality summary</h2>
+          </div>
+          <p><strong id="record-count">0</strong> stored records</p>
+        </div>
+        <div id="summary-metrics" class="metric-grid"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Captured</th>
+                <th>Source</th>
+                <th>Condition</th>
+                <th>Reason</th>
+                <th>Bitrate</th>
+              </tr>
+            </thead>
+            <tbody id="records-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="workspace split-workspace">
+        <div aria-labelledby="alerts-heading">
+          <p class="section-label">Operational signal</p>
+          <h2 id="alerts-heading">Sustained issues</h2>
+          <div id="alerts" class="empty-state">No sustained issues detected.</div>
+        </div>
+        <div aria-labelledby="support-case-heading">
+          <p class="section-label">Support investigation</p>
+          <h2 id="support-case-heading">Correlated evidence</h2>
+          <div id="support-case" class="empty-state">
+            Run the sustained issue scenario to match the report with telemetry.
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
