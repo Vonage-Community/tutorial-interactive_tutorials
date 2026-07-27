@@ -37,7 +37,7 @@ echo "--------------------------------------------------"
 read -p "Enter a name for your new GitHub repository: " repo_name
 
 echo "🚀 Creating repository and pushing code..."
-gh repo create "$repo_name" --source=. --remote=origin --push
+gh repo create "$repo_name" --public --source=. --remote=origin --push
 
 echo "" 
 echo "=========================================" 
