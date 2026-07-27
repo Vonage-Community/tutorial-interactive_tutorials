@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const fs = require('fs');
+const path = require('path');
 
 const { Vonage } = require('@vonage/server-sdk');
 
@@ -12,24 +13,29 @@ console.log('setup.js running...');
 if (process.env.VONAGE_API_KEY && process.env.VONAGE_API_SECRET) {
   // If the environment variables are already set, use them
   console.log('Environment variables already set. Skipping setup.');
-  process.exit();  
+  process.exit();
 }
-   
+
 let step = 'SET_API_KEY';
 console.log('Vonage setup utility for Github Codespaces -- press "q" to exit');
-console.log('This utility will need your Vonage API key and API secret. They will be saved to your .env file,');
-console.log('where they will be visible only to you and collaborators on this project.');
-console.log('Find your API key and secret at: https://dashboard.vonage.com/getting-started-guide');
+console.log(
+  'This utility will need your Vonage API key and API secret. They will be saved to your .env file,'
+);
+console.log(
+  'where they will be visible only to you and collaborators on this project.'
+);
+console.log(
+  'Find your API key and secret at: https://dashboard.vonage.com/getting-started-guide'
+);
 console.log('process.env.CODESPACE_NAME: ', process.env.CODESPACE_NAME);
 console.log('Enter your API Key:');
 let input = process.stdin;
-input.on('data', data => {
-  
+input.on('data', (data) => {
   if (data.toString().trim() === 'q') {
-    // exit 
+    // exit
     return process.exit();
   }
-  
+
   switch (step) {
     case 'SET_API_KEY':
       return setApiKey(data);
@@ -51,12 +57,13 @@ input.on('data', data => {
       break;
     default:
   }
-  
-
 });
 
 function setApiKey(data) {
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (
+    data.toString().replace(/\n/g, '').length === 0 ||
+    data.toString().replace(/\n/g, '') === ' '
+  ) {
     console.log('(Can not be blank.) Enter you API key:');
   } else {
     process.env.VONAGE_API_KEY = data.toString().replace(/\n/g, '');
@@ -67,7 +74,10 @@ function setApiKey(data) {
 }
 
 function setApiSecret(data) {
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (
+    data.toString().replace(/\n/g, '').length === 0 ||
+    data.toString().replace(/\n/g, '') === ' '
+  ) {
     console.log('(Can not be blank.) Enter you API secret:');
   } else {
     process.env.VONAGE_API_SECRET = data.toString().replace(/\n/g, '');
@@ -78,73 +88,86 @@ function setApiSecret(data) {
 }
 
 function setAppName(data) {
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (
+    data.toString().replace(/\n/g, '').length === 0 ||
+    data.toString().replace(/\n/g, '') === ' '
+  ) {
     console.log('(Can not be blank.) Enter a name for your Application:');
   } else {
-    createApp(data); 
-
+    createApp(data);
   }
   return true;
 }
 
 function buyNumberQuestion(data) {
   // console.log("data:", data);
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
+  if (
+    data.toString().replace(/\n/g, '').length === 0 ||
+    data.toString().replace(/\n/g, '') === ' '
+  ) {
     console.log('(Can not be blank.) Want to Buy a number? (Y/N):');
-  } else if (data.toString().replace(/\n/g, '').toLowerCase() === 'y'){
-    
+  } else if (data.toString().replace(/\n/g, '').toLowerCase() === 'y') {
     //   process.env.VONAGE_API_SECRET = data.toString().replace(/\n/g, '');
     step = 'SET_COUNTRY_CODE';
-    console.log('Set the country code for your number (ex. US or GB):');      
+    console.log('Set the country code for your number (ex. US or GB):');
   } else if (data.toString().replace(/\n/g, '').toLowerCase() === 'n') {
     // answered No to question
-      writeEnv();
+    writeEnv();
   }
   return true;
 }
 
 function setCountryCode(data) {
-  if (data.toString().replace(/\n/g, '').length === 0 || data.toString().replace(/\n/g, '') === ' ') {
-    console.log('(Can not be blank.) Set the country code for your number (ex. US or GB):');
+  if (
+    data.toString().replace(/\n/g, '').length === 0 ||
+    data.toString().replace(/\n/g, '') === ' '
+  ) {
+    console.log(
+      '(Can not be blank.) Set the country code for your number (ex. US or GB):'
+    );
   } else {
-    buyPhoneNumber(data)      
+    buyPhoneNumber(data);
   }
   return true;
 }
 
-function buyPhoneNumber(data){
+function buyPhoneNumber(data) {
   const countryCode = data.toString().replace(/\n/g, '');
   process.env.COUNTRY_CODE = data.toString().replace(/\n/g, '').toUpperCase();
   //Search for a number
   console.log('Searching for a number in country: ', countryCode);
-  vonage.numbers.getAvailableNumbers({
+  vonage.numbers
+    .getAvailableNumbers({
       country: process.env.COUNTRY_CODE,
       features: ['VOICE', 'SMS'],
-  })
-  .then((results) => {
-    const numbers = results.numbers;
-    console.log('Found numbers: ', numbers);
-    // Purchase a number
-    if (numbers.length === 0) {
-        console.log('No numbers found in this country. Please try another country code.');
-        return;
-    }
-    console.log('Found a number: ', numbers[0].msisdn);
-    vonage.numbers.buyNumber({
-        country: numbers[0].country,
-        msisdn: numbers[0].msisdn,
     })
-    .then((result) => {
-        console.log('Bought the number!');
-        updatePhoneNumber(numbers[0]);
+    .then((results) => {
+      const numbers = results.numbers;
+      console.log('Found numbers: ', numbers);
+      // Purchase a number
+      if (numbers.length === 0) {
+        console.log(
+          'No numbers found in this country. Please try another country code.'
+        );
+        return;
+      }
+      console.log('Found a number: ', numbers[0].msisdn);
+      vonage.numbers
+        .buyNumber({
+          country: numbers[0].country,
+          msisdn: numbers[0].msisdn,
+        })
+        .then((result) => {
+          console.log('Bought the number!');
+          updatePhoneNumber(numbers[0]);
+        })
+        .catch((error) => {
+          console.error('Error buying number:', error);
+        });
     })
     .catch((error) => {
-        console.error("Error buying number:", error);
+      console.error(error);
     });
-  })
-  .catch((error) => {
-      console.error(error)
-  });
 }
 
 async function updatePhoneNumber(number) {
@@ -161,56 +184,62 @@ async function updatePhoneNumber(number) {
   } else {
     console.log('Added number to application!');
     process.env.VONAGE_PHONE_NUMBER = number.msisdn;
-    writeEnv();
+    // writeEnv();
+    sanitizeWorkshopEnvironment();
   }
 }
 
 function createApp(data) {
   console.log('Creating your Application...');
-  vonage = new Vonage({
-    apiKey: process.env.VONAGE_API_KEY,
-    apiSecret: process.env.VONAGE_API_SECRET
-  }, {
-      debug: false
-  });
+  vonage = new Vonage(
+    {
+      apiKey: process.env.VONAGE_API_KEY,
+      apiSecret: process.env.VONAGE_API_SECRET,
+    },
+    {
+      debug: false,
+    }
+  );
 
-  vonage.applications.createApplication({
+  vonage.applications
+    .createApplication({
       name: data.toString().replace(/\n/g, ''),
       capabilities: {
-          voice: {
-              webhooks: {
-                  answer_url: {
-                      address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/voice/answer`,
-                      http_method: "GET"
-                  },
-                  event_url: {
-                      address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/voice/event`,
-                      http_method: "POST"
-                  }
-              }
+        voice: {
+          webhooks: {
+            answer_url: {
+              address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/voice/answer`,
+              http_method: 'GET',
+            },
+            event_url: {
+              address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/voice/event`,
+              http_method: 'POST',
+            },
           },
-          messages: {
-              webhooks: {
-                  inbound_url: {
-                      address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/webhooks/inbound`,
-                      http_method: "POST"
-                  },
-                  status_url: {
-                      address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/webhooks/status`,
-                      http_method: "POST"
-                  }
-              }
+        },
+        messages: {
+          webhooks: {
+            inbound_url: {
+              address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/webhooks/inbound`,
+              http_method: 'POST',
+            },
+            status_url: {
+              address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/webhooks/status`,
+              http_method: 'POST',
+            },
           },
-          rtc: {
-              webhooks: {
-                  event_url: {
-                      address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/webhooks/rtcevent`,
-                      http_method: "POST"
-                  }
-              }
-          }
-      }
-  }).then((app) => {
+        },
+        rtc: {
+          webhooks: {
+            event_url: {
+              address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/webhooks/rtcevent`,
+              http_method: 'POST',
+            },
+          },
+        },
+      },
+    })
+    .then((app) => {
       console.log('Application created with ID: ', app.id);
       process.env.API_APPLICATION_ID = app.id;
       fs.writeFile(__dirname + '/private.key', app.keys.private_key, (err) => {
@@ -226,22 +255,22 @@ function createApp(data) {
             process.env.PRIVATE_KEY64 = base64PrivateKey;
 
             //Search and Buy phone number
-            process.env.VONAGE_APPLICATION_NAME = data.toString().replace(/\n/g, '');
+            process.env.VONAGE_APPLICATION_NAME = data
+              .toString()
+              .replace(/\n/g, '');
             step = 'BUY_NUMBER';
             console.log('Want to Buy a number? (Y/N):');
-
           } catch (error) {
             console.error('An error occurred:', error);
           }
-
-
         }
       });
-  }).catch((error) => {
+    })
+    .catch((error) => {
       console.error('Error creating Application: ', error);
       process.exit();
-  });
-  return true;  
+    });
+  return true;
 }
 
 function writeEnv() {
@@ -254,36 +283,74 @@ API_APPLICATION_ID="${process.env.API_APPLICATION_ID}"
 COUNTRY_CODE="${process.env.COUNTRY_CODE}"
 VONAGE_PHONE_NUMBER="${process.env.VONAGE_PHONE_NUMBER}"
 PRIVATE_KEY64="${process.env.PRIVATE_KEY64}"`;
-  
+
   fs.writeFile(__dirname + '/.env', contents, (err) => {
     if (err) {
-      console.log('Error writing .env file: ',err);
+      console.log('Error writing .env file: ', err);
     } else {
       console.log('Environment variables saved to .env');
       process.exit();
     }
   });
-
 }
 
 function createUser() {
-    //create user
-  const vonage = new Vonage({
-  apiKey: process.env.VONAGE_API_KEY,
-  apiSecret: process.env.VONAGE_API_SECRET,
-  applicationId: process.env.API_APPLICATION_ID,
-  privateKey: __dirname + process.env.PRIVATE_KEY
-  }, {debug: false});
-  vonage.users.create({
+  //create user
+  const vonage = new Vonage(
+    {
+      apiKey: process.env.VONAGE_API_KEY,
+      apiSecret: process.env.VONAGE_API_SECRET,
+      applicationId: process.env.API_APPLICATION_ID,
+      privateKey: __dirname + process.env.PRIVATE_KEY,
+    },
+    { debug: false }
+  );
+  vonage.users.create(
+    {
       name: process.env.ADMIN_NAME,
-      display_name: process.env.ADMIN_NAME
-  },(err, response) => {
+      display_name: process.env.ADMIN_NAME,
+    },
+    (err, response) => {
       if (err) {
-        console.log('Error creating user: ',err);
+        console.log('Error creating user: ', err);
       } else {
         console.log('User created. ID: ', response.id);
         process.exit();
       }
-  });
+    }
+  );
+}
 
+// Allow coding exercise to be exported to user's GitHub account
+function sanitizeWorkshopEnvironment() {
+  // Look for the parent git directory (one level up from the 'project' CWD)
+  const parentGitPath = path.join(__dirname, '../.git');
+  const projectGitPath = path.join(__dirname, '.git');
+
+  try {
+    // 1. Remove any accidentally created git tracker inside the project folder
+    if (fs.existsSync(projectGitPath)) {
+      fs.rmSync(projectGitPath, { recursive: true, force: true });
+      console.log('Cleared local .git directory to ensure a clean slate.');
+    }
+
+    // 2. Sever the tie with your main multi-workshop repository
+    if (fs.existsSync(parentGitPath)) {
+      // Renaming it prevents Git from looking upwards for tracking configurations,
+      // while preserving your workshop configuration integrity.
+      const backupPath = path.join(__dirname, '../.git_bak');
+      if (!fs.existsSync(backupPath)) {
+        fs.renameSync(parentGitPath, backupPath);
+        console.log(
+          'Successfully separated current workspace from the main repository tracking.'
+        );
+      }
+    }
+    process.exit();
+  } catch (error) {
+    console.error(
+      'Warning: Failed to safely disconnect parent repository framework:',
+      error.message
+    );
+  }
 }
