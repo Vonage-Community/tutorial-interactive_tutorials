@@ -5,7 +5,7 @@ description: Modify the Voice of Leonardo.
 
 Vonage offers a few different <a href="https://developer.vonage.com/en/voice/voice-api/concepts/text-to-speech#voice-options" target="_blank">Voice Options</a> to choose from that have different price points. Take a look at the page and listen to some Voice samples.
 
-So far, we have been using `Standard`. Before trying the other options, let's give Leonardo an Italian accent. To do this, we just need to change the `language` from `en-US` to `it-IT` and change the `style` to one from the table in the Vonage documentation (I like 6) in the `talk` actions in both the `generateTalkAction` function in the `src/app.ts` file.
+So far, we have been using `Standard`. Before trying the other options, let's give Leonardo an Italian accent. To do this, we just need to change the `language` from `en-US` to `it-IT` and change the `style` to one from the table in the Vonage documentation (I like 6) in the `talk` action in the `generateTalkAction` function in the `src/app.ts` file.
 
 After the changes, the `talk` action should look like:
 ```js

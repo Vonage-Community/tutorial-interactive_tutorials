@@ -48,7 +48,7 @@ const generateInputAction = (callUUID: String) => ({
 });
 ```
 
-When a call is answered, Vonage will make a request to this endpoint. The NCCO tells Vonage to say the Welcome message and then listen for what the caller says.
+When a call is answered, Vonage will make a request to the Answer Webhook endpoint. The NCCO tells Vonage to say the Welcome message and then listen for what the caller says.
 
 Find `// ⌄⌄⌄ Vonage Answer Webhook ⌄⌄⌄` and add this code:
 

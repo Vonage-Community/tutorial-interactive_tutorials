@@ -9,7 +9,7 @@ Let's do that now using AI to help.
 
 In <a href="https://gemini.google.com/" target="_blank">Google Gemini</a> or your favorite LLM, copy and paste this prompt:
 ```plaintext
-Using the following as a guide please, create a welcome message and instructions for an AI agent that can answer phone calls and questions as if it were <insert name>:
+Using the following as a guide please, create a welcome message and instructions for an AI Agent that can answer phone calls and questions as if it were <insert name>:
 
 agentWelcome = "Buongiorno! I am Leonardo da Vinci. What curiosity brings you to speak with me today?"
 
@@ -53,7 +53,7 @@ Let's take the LLM's output and incorporate it into our application.
 
 Create a new file in the `src/agents` folder. The file name will be the name that Flue uses to reference the Agent. For example, `leonardo.ts` will be referenced as `leonardo` in the code.
 
-Copy the code in `leonardo.ts `and paste it into your new Agent file. Replace the `instructions` with with the instructions that your LLM created.
+Copy the code in `leonardo.ts `and paste it into your new Agent file. Switch the name in the `description` to the name of your new Agent. Replace the `instructions` with with the instructions that your LLM created.
 
 In the `app.ts` file, change the name of the `agent` variable with the new file name without the `.ts`. Replace the `agentWelcome` value with what the LLM created.
 
