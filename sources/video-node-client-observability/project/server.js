@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import express from "express";
-import { Video } from "@vonage/video";
+import { MediaMode, Video } from "@vonage/video";
 import {
   correlateSupportCase,
   findSustainedIssues,
@@ -45,7 +45,7 @@ app.post("/api/session", async (_req, res) => {
   }
 
   try {
-    const session = await video.createSession({ mediaMode: "routed" });
+    const session = await video.createSession({ mediaMode: MediaMode.ROUTED });
     state.liveSessionId = session.sessionId;
     state.supportReport = null;
     store.clear();
@@ -79,6 +79,9 @@ app.post("/api/telemetry", (req, res) => {
 
   try {
     const record = normalizeTelemetry(req.body);
+    if (!record || typeof record !== "object") {
+      throw new TypeError("normalizeTelemetry must return a telemetry record.");
+    }
     store.add(record);
     res.status(201).json({ accepted: true });
   } catch (error) {
@@ -183,9 +186,9 @@ function getVideoClient() {
 function buildDashboard() {
   const records = store.all();
   const grouped = groupBy(records, (record) => record.sessionId);
-  const sessions = [...grouped.values()].map((sessionRecords) =>
-    summarizeSession(sessionRecords)
-  );
+  const sessions = [...grouped.values()]
+    .map((sessionRecords) => summarizeSession(sessionRecords))
+    .filter(Boolean);
 
   return {
     applicationId: runtime.getEnv("VONAGE_APPLICATION_ID") || null,
@@ -195,7 +198,7 @@ function buildDashboard() {
     ).length,
     recordCount: records.length,
     sessions,
-    alerts: findSustainedIssues(records),
+    alerts: findSustainedIssues(records) ?? [],
     recentRecords: records.slice(-12).reverse(),
     supportCase: buildSupportCase()
   };

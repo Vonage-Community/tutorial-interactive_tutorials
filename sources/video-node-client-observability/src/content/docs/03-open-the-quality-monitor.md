@@ -1,9 +1,7 @@
 ---
 title: Open the Quality Monitor
-description: Confirm that the prepared backend and monitoring interface are running.
+description: Open the monitoring interface and confirm that it can read the generated credentials.
 ---
-
-# Open the Quality Monitor
 
 The **Simple Browser** displays this exercise guide. The **Video Quality Monitor** is a separate application running on port **3000**.
 
@@ -16,10 +14,12 @@ To open the Video Quality Monitor:
 If port 3000 is not listed, open a terminal and run:
 
 ```sh
-cd project && npm start
+npm start
 ```
 
 Leave this terminal open, then return to **Ports** and open the forwarded address for port 3000.
+
+Select **Check setup**. The account notice should disappear and the Application ID field should show that the Codespace is configured.
 
 The server restarts whenever you save `monitoring.js`. Reload the Video Quality Monitor in its browser tab after each restart so that it shows the latest check results.
 
