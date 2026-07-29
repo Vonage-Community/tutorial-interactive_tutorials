@@ -14,7 +14,7 @@ console.log('setup.js running...');
 // 1. Grab the active attendee's username directly from the Codespace environment variables
 const currentUser = process.env.GITHUB_USER;
 // 2. Define the hardcoded repository name matching your export script
-const repoName = "vonage-voice-workshop";
+const repoName = "createher-vonage-webxr-workshop";
 
 function configureReadme() {
   console.log("⚙️ Automatically pre-configuring your Codespaces README shortcut...");
