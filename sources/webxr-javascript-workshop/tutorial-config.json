@@ -22,7 +22,7 @@
     "project/static/ExitButton.js"
   ],
   "capabilities": [],
-  "version": "0.0.9",
+  "version": "0.0.10",
   "customInstallCmd": "",
   "customSetupCmd": "",
   "filename": "webxr-javascript-workshop"
