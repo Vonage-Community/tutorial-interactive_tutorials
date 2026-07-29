@@ -16,6 +16,8 @@
     "project/src/exercise-validation.js",
     "project/public/index.html",
     "project/public/app.js",
+    "project/public/subscriber.html",
+    "project/public/subscriber.js",
     "project/public/styles.css"
   ],
   "capabilities": [],

@@ -61,9 +61,9 @@
 </script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-vrdttmbt">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-67yu43on">  <div class="main-pane astro-67yu43on">  <main data-pagefind-body class="astro-bguv2lll" lang="en" dir="ltr">    <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <h1 id="_top" class="astro-j6tvhyss">Start a Live Session</h1>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <p>Select <strong>Start session</strong> in the monitor.</p>
 <p>The backend uses the Video API Server SDK to create a new routed session and generate separate publisher and subscriber tokens. The prepared browser client then:</p>
 <ol>
-<li>Connects two clients to the session.</li>
+<li>Connects the publisher in the Video Quality Monitor.</li>
 <li>Publishes an animated video source with sender statistics enabled.</li>
-<li>Subscribes to that stream through the second connection.</li>
+<li>Subscribes to that stream in a separate browser frame.</li>
 <li>Sends publisher and subscriber statistics to your backend.</li>
 </ol>
 <p>The animated source avoids requesting camera or microphone access, but the media still travels through a real Video API session.</p>

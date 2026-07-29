@@ -22,9 +22,9 @@ const els = {
 let configured = false;
 let activeCredentials;
 let publisherSession;
-let subscriberSession;
+let subscriberFrame;
+let subscriberConnected = false;
 let publisher;
-let subscriber;
 let syntheticVideo;
 let starting = false;
 const cleanupCallbacks = [];
@@ -82,29 +82,21 @@ async function startLiveSession() {
     els.sessionId.textContent = activeCredentials.sessionId;
 
     syntheticVideo = createSyntheticVideo();
-    subscriberSession = OT.initSession(
-      activeCredentials.applicationId,
-      activeCredentials.sessionId
-    );
     publisherSession = OT.initSession(
       activeCredentials.applicationId,
       activeCredentials.sessionId
     );
 
-    const subscriberReady = waitForSubscriber();
-    await connectSession(
-      subscriberSession,
-      activeCredentials.subscriberToken
-    );
     await connectSession(
       publisherSession,
-      activeCredentials.publisherToken
+      activeCredentials.publisherToken,
+      "publisher"
     );
 
     publisher = await initializePublisher(syntheticVideo.track);
     await publishToSession(publisherSession, publisher);
     startPublisherTelemetry();
-    await withTimeout(subscriberReady, 15000);
+    await startSubscriberFrame();
 
     setSessionStatus(
       "Publisher and subscriber are connected. Live telemetry is being sent to the backend."
@@ -119,30 +111,57 @@ async function startLiveSession() {
   }
 }
 
-function waitForSubscriber() {
-  return new Promise((resolve, reject) => {
-    subscriberSession.on("streamCreated", (event) => {
-      els.subscriberVideo.replaceChildren();
-      subscriber = subscriberSession.subscribe(
-        event.stream,
-        els.subscriberVideo,
-        {
-          insertMode: "append",
-          width: "100%",
-          height: "100%",
-          subscribeToAudio: false
-        },
-        (error) => {
-          if (error) {
-            reject(error);
-            return;
-          }
+function startSubscriberFrame() {
+  if (!activeCredentials?.subscriberToken) {
+    return Promise.reject(new Error("Subscriber credentials are missing."));
+  }
 
-          startSubscriberTelemetry(event.stream);
-          resolve();
-        }
-      );
-    });
+  els.subscriberVideo.replaceChildren();
+  subscriberConnected = false;
+  subscriberFrame = document.createElement("iframe");
+  subscriberFrame.title = "Subscriber video";
+  subscriberFrame.className = "subscriber-frame";
+  subscriberFrame.allow = "autoplay";
+
+  const params = new URLSearchParams({
+    applicationId: activeCredentials.applicationId,
+    sessionId: activeCredentials.sessionId,
+    token: activeCredentials.subscriberToken
+  });
+
+  return new Promise((resolve, reject) => {
+    const handleMessage = (event) => {
+      if (
+        event.origin !== window.location.origin ||
+        event.source !== subscriberFrame.contentWindow
+      ) {
+        return;
+      }
+
+      const data = event.data ?? {};
+      if (data.type === "subscriber-ready") {
+        subscriberConnected = true;
+        cleanup();
+        resolve();
+      } else if (data.type === "subscriber-error") {
+        cleanup();
+        reject(new Error(data.message || "Subscriber failed to connect."));
+      }
+    };
+
+    const cleanup = () => {
+      window.removeEventListener("message", handleMessage);
+      window.clearTimeout(timeoutId);
+    };
+
+    const timeoutId = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("The subscriber did not receive the stream."));
+    }, 15000);
+
+    window.addEventListener("message", handleMessage);
+    subscriberFrame.src = `/subscriber.html?${params.toString()}`;
+    els.subscriberVideo.append(subscriberFrame);
   });
 }
 
@@ -166,10 +185,10 @@ function initializePublisher(videoTrack) {
   });
 }
 
-function connectSession(session, token) {
-  return new Promise((resolve, reject) => {
+function connectSession(session, token, label = "session") {
+  return withTimeout(new Promise((resolve, reject) => {
     session.connect(token, (error) => error ? reject(error) : resolve());
-  });
+  }), 15000, `The ${label} did not connect.`);
 }
 
 function publishToSession(session, activePublisher) {
@@ -230,54 +249,6 @@ function startPublisherTelemetry() {
   cleanupCallbacks.push(() => window.clearInterval(intervalId));
 }
 
-function startSubscriberTelemetry(stream) {
-  const collect = () => {
-    subscriber?.getStats((error, stats) => {
-      if (error) {
-        setSessionStatus(`Subscriber statistics error: ${error.message}`, true);
-        return;
-      }
-
-      const transport = stats.mediaLink?.transport ?? {};
-      sendTelemetry({
-        participantId: "subscriber-demo",
-        source: "subscriber",
-        connectionId:
-          subscriberSession.connection?.connectionId || "subscriber-connection",
-        streamId: stream.streamId,
-        metrics: {
-          networkCondition: transport.networkCondition ?? "unknown",
-          networkConditionReason:
-            transport.networkConditionReason ?? "unknown",
-          networkDegradationSource:
-            stats.mediaLink?.networkDegradationSource ?? "none",
-          connectionEstimatedBandwidth:
-            numberOrNull(transport.connectionEstimatedBandwidth),
-          videoBitrate: numberOrNull(stats.video?.bitrate),
-          videoWidth: numberOrNull(stats.video?.width),
-          videoHeight: numberOrNull(stats.video?.height),
-          encodedFrameRate: null,
-          decodedFrameRate: numberOrNull(stats.video?.decodedFrameRate),
-          freezeCount: numberOrNull(stats.video?.freezeCount),
-          totalFreezesDuration:
-            numberOrNull(stats.video?.totalFreezesDuration),
-          pauseCount: numberOrNull(stats.video?.pauseCount),
-          totalPausesDuration:
-            numberOrNull(stats.video?.totalPausesDuration),
-          senderEstimatedBandwidth:
-            numberOrNull(stats.senderStats?.connectionEstimatedBandwidth),
-          scalabilityMode: null,
-          qualityLimitationReason: null
-        }
-      });
-    });
-  };
-
-  collect();
-  const intervalId = window.setInterval(collect, 2500);
-  cleanupCallbacks.push(() => window.clearInterval(intervalId));
-}
-
 async function sendTelemetry({ participantId, source, connectionId, streamId, metrics }) {
   if (!activeCredentials) {
     return;
@@ -314,12 +285,16 @@ function stopLiveSession(message) {
   }
 
   publisherSession?.disconnect();
-  subscriberSession?.disconnect();
+  subscriberFrame?.contentWindow?.postMessage(
+    { type: "stop-subscriber" },
+    window.location.origin
+  );
+  subscriberFrame?.remove();
   syntheticVideo?.stop();
   publisherSession = null;
-  subscriberSession = null;
+  subscriberFrame = null;
+  subscriberConnected = false;
   publisher = null;
-  subscriber = null;
   syntheticVideo = null;
   els.publisherVideo.innerHTML = "<span>Not connected</span>";
   els.subscriberVideo.innerHTML = "<span>Not connected</span>";
@@ -491,7 +466,7 @@ function createMetric(label, value) {
 }
 
 function updateControls() {
-  const connected = Boolean(publisherSession && subscriberSession);
+  const connected = Boolean(publisherSession && subscriberConnected);
   els.startSession.disabled = !configured || starting || connected;
   els.stopSession.disabled = !connected;
 }
@@ -505,12 +480,13 @@ function showSessionError(error) {
   setSessionStatus(error.message || "The operation failed.", true);
 }
 
-function withTimeout(promise, milliseconds) {
+function withTimeout(promise, milliseconds, message) {
+  let timeoutId;
   return Promise.race([
-    promise,
+    promise.finally(() => window.clearTimeout(timeoutId)),
     new Promise((_, reject) => {
-      window.setTimeout(
-        () => reject(new Error("The subscriber did not receive the stream.")),
+      timeoutId = window.setTimeout(
+        () => reject(new Error(message)),
         milliseconds
       );
     })

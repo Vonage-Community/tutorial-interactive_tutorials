@@ -3,7 +3,7 @@ title: Welcome
 description: Build a backend that processes telemetry from a live Vonage Video API session.
 ---
 
-In this exercise, you will complete the backend logic for a small Video API quality monitor. A prepared web client will create a **live routed session**, publish a video stream, subscribe to that stream through a second connection, and send both sets of statistics to your backend.
+In this exercise, you will complete the backend logic for a small Video API quality monitor. A prepared web client will create a **live routed session**, publish a video stream, subscribe to that stream in a separate browser frame, and send both sets of statistics to your backend.
 
 You will implement the functions that:
 

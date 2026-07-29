@@ -15,6 +15,10 @@ body {
   min-width: 320px;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 button,
 input {
   font: inherit;
@@ -216,6 +220,38 @@ h3 {
   overflow: hidden;
   color: #c9ced3;
   background: #1c2023;
+}
+
+.subscriber-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #1c2023;
+}
+
+.subscriber-body {
+  width: 100vw;
+  height: 100vh;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  background: #1c2023;
+}
+
+.subscriber-root {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  overflow: hidden;
+  color: #c9ced3;
+  background: #1c2023;
+}
+
+.subscriber-root .OT_root,
+.subscriber-root .OT_video-container {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .session-details,
