@@ -3,6 +3,22 @@
 # Ensure execution stops if a step fails 
 set -e 
 
+# Load the single source of truth configuration
+if [ -f .env ]; then
+    echo "Loading workshop configuration..."
+    # 'export' ensures sourced variables are available to child processes if needed
+    export $(cat .env | grep -v '^#' | xargs)
+else
+    echo "❌ Error: .env file missing. Run setup script first."
+    exit 1
+fi
+
+# Validate that the variables were successfully read
+if [ -z "$EXPORT_REPO_NAME" ]; then
+    echo "❌ Error: EXPORT_REPO_NAME is not set in the .env file."
+    exit 1
+fi
+
 echo "📦 Clearing environment tokens..."
 unset GITHUB_TOKEN && gh auth login --scopes repo
 
@@ -34,10 +50,10 @@ echo "--------------------------------------------------"
 # 'gh repo create' natively prompts the user if they want to create a repo from the current folder, 
 # names it, sets visibility, creates it on GitHub, and adds/pushes the remote automatically! 
 # gh repo create --source=. --remote=origin --push 
-read -p "Enter a name for your new GitHub repository: " repo_name
+# read -p "Enter a name for your new GitHub repository: " repo_name
 
 echo "🚀 Creating repository and pushing code..."
-gh repo create "$repo_name" --public --source=. --remote=origin --push
+gh repo create "$EXPORT_REPO_NAME" --public --source=. --remote=origin --push
 
 echo "" 
 echo "=========================================" 

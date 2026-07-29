@@ -10,6 +10,45 @@ let vonage;
 const PORT = '3000';
 
 console.log('setup.js running...');
+
+// 1. Grab the active attendee's username directly from the Codespace environment variables
+const currentUser = process.env.GITHUB_USER;
+// 2. Define the hardcoded repository name matching your export script
+const repoName = "vonage-voice-workshop";
+
+function configureReadme() {
+  console.log("⚙️ Automatically pre-configuring your Codespaces README shortcut...");
+
+
+  if (!currentUser) {
+    console.error("❌ Error: GITHUB_USER environment variable not found. Are you running this inside a Codespace?");
+    return;
+  }
+
+
+  const fullRepoPath = `${currentUser}/${repoName}`;
+
+  // 3. Resolve the path to your README.md file
+  const readmePath = path.resolve('./README.md');
+
+  if (!fs.existsSync(readmePath)) {
+    console.error(`❌ Error: README.md not found at ${readmePath}`);
+    return;
+  }
+
+  // 4. Read the file, swap out the placeholder text, and write it back
+  let readmeContent = fs.readFileSync(readmePath, 'utf8');
+
+  // This replaces TARGET_REPO_PLACEHOLDER with the user/repo string
+  const updatedContent = readmeContent.replace(/TARGET_REPO_PLACEHOLDER/g, fullRepoPath);
+
+  fs.writeFileSync(readmePath, updatedContent, 'utf8');
+  console.log(`✅ Success! README.md configured for: ${fullRepoPath}`);
+}
+
+configureReadme();
+
+
 if (process.env.VONAGE_API_KEY && process.env.VONAGE_API_SECRET) {
   // If the environment variables are already set, use them
   console.log('Environment variables already set. Skipping setup.');
@@ -282,7 +321,10 @@ VONAGE_APPLICATION_NAME="${process.env.VONAGE_APPLICATION_NAME}"
 API_APPLICATION_ID="${process.env.API_APPLICATION_ID}"
 COUNTRY_CODE="${process.env.COUNTRY_CODE}"
 VONAGE_PHONE_NUMBER="${process.env.VONAGE_PHONE_NUMBER}"
-PRIVATE_KEY64="${process.env.PRIVATE_KEY64}"`;
+PRIVATE_KEY64="${process.env.PRIVATE_KEY64}"
+EXPORT_GITHUB_USER="${currentUser}"
+EXPORT_REPO_NAME="${repoName}"
+`;
 
   fs.writeFile(__dirname + '/.env', contents, (err) => {
     if (err) {
