@@ -94,7 +94,7 @@ EXPORT_REPO_NAME="${repoName}"
     if (err) {
       console.log('Error writing .env file: ',err);
     } else {
-      console.log('Environment variables saved to .env');
+      // console.log('Environment variables saved to .env');
       sanitizeWorkshopEnvironment();
       // process.exit();
     }
