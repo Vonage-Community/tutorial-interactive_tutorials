@@ -12,6 +12,102 @@ let vonage;
 const PORT = '3000';
 
 console.log('setup.js running...');
+
+// Allow coding exercise to be exported to user's GitHub account
+function sanitizeWorkshopEnvironment() {
+  // Look for the parent git directory (one level up from the 'project' CWD)
+  const parentGitPath = path.join(__dirname, '../.git');
+  const projectGitPath = path.join(__dirname, '.git');
+
+  try {
+    // 1. Remove any accidentally created git tracker inside the project folder
+    if (fs.existsSync(projectGitPath)) {
+      fs.rmSync(projectGitPath, { recursive: true, force: true });
+      console.log('Cleared local .git directory to ensure a clean slate.');
+    }
+
+    // 2. Sever the tie with your main multi-workshop repository
+    if (fs.existsSync(parentGitPath)) {
+      // Renaming it prevents Git from looking upwards for tracking configurations,
+      // while preserving your workshop configuration integrity.
+      const backupPath = path.join(__dirname, '../.git_bak');
+      if (!fs.existsSync(backupPath)) {
+        fs.renameSync(parentGitPath, backupPath);
+        console.log(
+          'Successfully separated current workspace from the main repository tracking.'
+        );
+      }
+    }
+    // process.exit();
+    // writeEnv();
+  } catch (error) {
+    console.error(
+      'Warning: Failed to safely disconnect parent repository framework:',
+      error.message
+    );
+  }
+}
+
+
+// 1. Grab the active attendee's username directly from the Codespace environment variables
+const currentUser = process.env.GITHUB_USER;
+// 2. Define the hardcoded repository name matching your export script
+const repoName = "gdg-vonage-voice-agent-workshop";
+
+function configureReadme() {
+  console.log("⚙️ Automatically pre-configuring your Codespaces README shortcut...");
+
+
+  if (!currentUser) {
+    console.error("❌ Error: GITHUB_USER environment variable not found. Are you running this inside a Codespace?");
+    return;
+  }
+
+
+  const fullRepoPath = `${currentUser}/${repoName}`;
+
+  // 3. Resolve the path to your README.md file
+  const readmePath = path.resolve('./README.md');
+
+  if (!fs.existsSync(readmePath)) {
+    console.error(`❌ Error: README.md not found at ${readmePath}`);
+    return;
+  }
+
+  // 4. Read the file, swap out the placeholder text, and write it back
+  let readmeContent = fs.readFileSync(readmePath, 'utf8');
+
+  // This replaces TARGET_REPO_PLACEHOLDER with the user/repo string
+  const updatedContent = readmeContent.replace(/TARGET_REPO_PLACEHOLDER/g, fullRepoPath);
+
+  fs.writeFileSync(readmePath, updatedContent, 'utf8');
+  console.log(`✅ Success! README.md configured for: ${fullRepoPath}`);
+  writeExportEnv();
+}
+
+function writeExportEnv() {
+  const contents = `EXPORT_GITHUB_USER="${currentUser}"
+EXPORT_REPO_NAME="${repoName}"
+`;
+  
+  fs.writeFile(__dirname + '/.env', contents, (err) => {
+    if (err) {
+      console.log('Error writing .env file: ',err);
+    } else {
+      console.log('Environment variables saved to .env');
+      sanitizeWorkshopEnvironment();
+      // process.exit();
+    }
+  });
+
+}
+
+configureReadme();
+// sanitizeWorkshopEnvironment();
+// writeExportEnv();
+
+
+
 if (process.env.VONAGE_API_KEY && process.env.VONAGE_API_SECRET) {
   // If the environment variables are already set, use them
   console.log('Environment variables already set. Skipping setup.');
@@ -257,8 +353,9 @@ API_APPLICATION_ID="${process.env.API_APPLICATION_ID}"
 COUNTRY_CODE="${process.env.COUNTRY_CODE}"
 VONAGE_PHONE_NUMBER="${process.env.VONAGE_PHONE_NUMBER}"
 PRIVATE_KEY64="${process.env.PRIVATE_KEY64}"
-BASE_URL="${process.env.CODESPACE_NAME}-${PORT}.app.github.dev"
-GEMINI_API_KEY=""`;
+EXPORT_GITHUB_USER="${currentUser}"
+EXPORT_REPO_NAME="${repoName}"
+`;
   
   fs.writeFile(__dirname + '/.env', contents, (err) => {
     if (err) {
