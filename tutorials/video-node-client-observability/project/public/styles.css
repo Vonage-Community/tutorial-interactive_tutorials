@@ -130,14 +130,27 @@ h3 {
 }
 
 .completion-credential {
-  display: block;
   width: 100%;
   margin-top: 16px;
   padding: 12px;
-  overflow-wrap: anywhere;
   color: #0b4f3c;
   background: #d7f3e9;
   border: 1px solid #69bb9f;
+}
+
+.completion-credential:not([hidden]) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.completion-credential output {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.completion-credential .button {
+  flex: none;
 }
 
 .notice {

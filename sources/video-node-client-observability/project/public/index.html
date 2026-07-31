@@ -24,17 +24,12 @@
           <h2 id="exercise-status-heading">Backend monitoring checks</h2>
         </div>
         <ol id="exercise-checks" class="check-list"></ol>
-        <output id="completion-credential" class="completion-credential" hidden></output>
-      </section>
-
-      <section id="setup-notice" class="notice notice-warning" hidden>
-        <div>
-          <h2>Connect your Vonage account</h2>
-          <p>Run <code>npm run setup-credentials</code> in a new terminal, then check the setup again.</p>
+        <div id="completion-credential-panel" class="completion-credential" hidden>
+          <output id="completion-credential"></output>
+          <button id="copy-credential" class="button button-secondary" type="button">
+            Copy
+          </button>
         </div>
-        <button id="check-setup" class="button button-secondary" type="button">
-          Check setup
-        </button>
       </section>
 
       <section class="workspace" aria-labelledby="live-session-heading">
@@ -55,7 +50,7 @@
         </div>
 
         <p id="session-status" class="notice" role="status">
-          Connect your account before starting a session.
+          Set up video credentials before starting a session.
         </p>
 
         <div class="video-grid">

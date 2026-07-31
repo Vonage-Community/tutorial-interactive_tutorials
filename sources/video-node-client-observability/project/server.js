@@ -160,7 +160,7 @@ makeCodespacePortPublic(PORT);
 
 const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`Video quality monitor: ${runtime.getAppUrl()}`);
-  console.log(`Learning Center validation URL: ${runtime.getAppUrl()}`);
+  console.log(`Learning Path validation URL: ${runtime.getAppUrl()}`);
   console.log(`Interactive guide: ${getPortUrl(GUIDE_PORT)}`);
   console.log("Server is running. Leave this terminal open.");
 });

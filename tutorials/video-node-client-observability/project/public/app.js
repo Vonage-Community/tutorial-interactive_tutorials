@@ -1,8 +1,8 @@
 const els = {
-  setupNotice: document.querySelector("#setup-notice"),
-  checkSetup: document.querySelector("#check-setup"),
   exerciseChecks: document.querySelector("#exercise-checks"),
+  completionCredentialPanel: document.querySelector("#completion-credential-panel"),
   completionCredential: document.querySelector("#completion-credential"),
+  copyCredential: document.querySelector("#copy-credential"),
   startSession: document.querySelector("#start-session"),
   stopSession: document.querySelector("#stop-session"),
   sessionStatus: document.querySelector("#session-status"),
@@ -27,12 +27,12 @@ let subscriberConnected = false;
 let publisher;
 let syntheticVideo;
 let starting = false;
+let completionUrl = "";
 const cleanupCallbacks = [];
 
 await initialize();
 
 async function initialize() {
-  els.checkSetup.addEventListener("click", refreshWorkspaceStatus);
   els.startSession.addEventListener("click", () =>
     startLiveSession().catch(showSessionError)
   );
@@ -42,12 +42,14 @@ async function initialize() {
   els.createSupportCase.addEventListener("click", () =>
     createSupportCase().catch(showSessionError)
   );
+  els.copyCredential.addEventListener("click", copyCompletionUrl);
 
   await Promise.all([
     refreshWorkspaceStatus(),
     refreshDashboard(),
     refreshExerciseStatus()
   ]);
+  window.setInterval(refreshWorkspaceStatus, 3000);
   window.setInterval(refreshDashboard, 2000);
   window.setInterval(refreshExerciseStatus, 3000);
 }
@@ -55,7 +57,6 @@ async function initialize() {
 async function refreshWorkspaceStatus() {
   const status = await requestJson("/workspace/status");
   configured = status.configured;
-  els.setupNotice.hidden = configured;
   els.applicationId.textContent = status.configured
     ? "Configured for this Codespace"
     : "Not configured";
@@ -340,10 +341,28 @@ async function refreshExerciseStatus() {
     })
   );
 
-  els.completionCredential.hidden = !status.complete;
+  completionUrl = status.complete && status.credential ? status.credential : "";
+  els.completionCredentialPanel.hidden = !status.complete;
   els.completionCredential.textContent = status.credential
-    ? `Learning Center validation URL: ${status.credential}`
+    ? `Learning Path validation URL: ${status.credential}`
     : "";
+  els.copyCredential.textContent = "Copy";
+}
+
+async function copyCompletionUrl() {
+  if (!completionUrl) {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(completionUrl);
+    els.copyCredential.textContent = "Copied";
+    window.setTimeout(() => {
+      els.copyCredential.textContent = "Copy";
+    }, 1800);
+  } catch {
+    setSessionStatus("Copy the Learning Path validation URL manually.", true);
+  }
 }
 
 function renderSummary(summary) {
