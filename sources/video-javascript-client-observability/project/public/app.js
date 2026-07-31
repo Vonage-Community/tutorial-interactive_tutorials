@@ -12,8 +12,6 @@ import {
 } from "/pre-call.js";
 
 const els = {
-  setupNotice: document.querySelector("#setup-notice"),
-  checkSetup: document.querySelector("#check-setup"),
   exerciseChecks: document.querySelector("#exercise-checks"),
   completionToken: document.querySelector("#completion-token"),
   runPreCall: document.querySelector("#run-precall"),
@@ -87,7 +85,6 @@ const diagnosticExamples = {
 await initialize();
 
 async function initialize() {
-  els.checkSetup.addEventListener("click", refreshWorkspaceStatus);
   els.checkDevices.addEventListener("click", () => startDevicePreview().catch(showPreCallError));
   els.cameraSelect.addEventListener("change", () => startDevicePreview().catch(showPreCallError));
   els.microphoneSelect.addEventListener("change", () => startDevicePreview().catch(showPreCallError));
@@ -96,13 +93,13 @@ async function initialize() {
   els.leaveCall.addEventListener("click", () => leaveCall("Disconnected."));
   renderDiagnosticExamples();
   await Promise.all([refreshWorkspaceStatus(), refreshExerciseStatus()]);
+  window.setInterval(refreshWorkspaceStatus, 3000);
   window.setInterval(refreshExerciseStatus, 3000);
 }
 
 async function refreshWorkspaceStatus() {
   const status = await requestJson("/workspace/status");
   workspaceConfigured = status.configured;
-  els.setupNotice.hidden = workspaceConfigured;
   els.runPreCall.disabled = !workspaceConfigured;
   els.checkDevices.disabled = !workspaceConfigured;
   updateJoinButton();

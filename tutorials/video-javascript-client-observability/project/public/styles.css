@@ -14,6 +14,10 @@ body {
   margin: 0;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 button,
 input,
 select {

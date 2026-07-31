@@ -1,6 +1,6 @@
 {
-  "recommendations": [
-    "astro-build.astro-vscode",
-    "ms-vscode.live-server"
-  ]
+    "recommendations": [
+        "astro-build.astro-vscode",
+        "ms-vscode.live-server"
+    ]
 }

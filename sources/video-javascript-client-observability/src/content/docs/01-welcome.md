@@ -3,8 +3,6 @@ title: Welcome
 description: Add pre-call checks and live quality monitoring to a Vonage Video API web application.
 ---
 
-# Monitor Video Quality in the Browser
-
 In this exercise, you will complete the browser-side observability features in a prepared Video API application. The application includes a waiting room, a live routed session, and a quality monitor.
 
 By the end, the application will:
@@ -15,4 +13,4 @@ By the end, the application will:
 - Display publisher and subscriber statistics during the call.
 - Report quality changes and identify whether subscriber degradation is local or remote.
 
-You will edit `client-observability.js` and `pre-call.js`. The server and user interface are already prepared, so the exercise stays focused on the Web SDK and Network Test APIs.
+You will edit `project/public/client-observability.js` and `project/public/pre-call.js`. The server and user interface are already prepared, so the exercise stays focused on the Web SDK and Network Test APIs.
