@@ -13,4 +13,4 @@ If the server is running correctly, the page displays:
 I'm listening!
 ```
 
-The server uses `node --watch`, so it automatically reloads the completed `index.js` whenever you save the file. Leave it running for the next steps.
+Leave the server running for the next steps.
