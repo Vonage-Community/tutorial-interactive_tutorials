@@ -37,6 +37,27 @@ VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
 Never commit `backend/.env` to source control. The repo's `.gitignore` already excludes it, but double-check before pushing.
 {% /aside %}
 
+## Configure the Frontend Environment
+
+The frontend needs to know the public URL of the backend. In the **Ports** tab, copy the forwarded address for port **3345** — it will look like:
+
+```
+https://stunning-rotary-phone-wrx67xjvj6w93v4j5-3345.app.github.dev
+```
+
+Create `frontend/.env` with that URL:
+
+```sh
+# frontend/.env
+API_URL=https://<your-codespace-subdomain>-3345.app.github.dev
+```
+
+Only the subdomain portion (e.g. `stunning-rotary-phone-wrx67xjvj6w93v4j5`) differs between Codespaces — the rest of the URL stays the same.
+
+{% aside type="caution" %}
+Never commit `frontend/.env` to source control. The repo's `.gitignore` already excludes it.
+{% /aside %}
+
 ## Install Dependencies and Start the App
 
 Install all dependencies, then start the development server:
@@ -66,27 +87,6 @@ If you miss the dialogs, you can do this manually:
 
 {% aside type="caution" %}
 Both ports must be public for the app to work correctly. If only one is public, you will see CORS errors or a blank frontend.
-{% /aside %}
-
-## Configure the Frontend Environment
-
-The frontend needs to know the public URL of the backend. In the **Ports** tab, copy the forwarded address for port **3345** — it will look like:
-
-```
-https://stunning-rotary-phone-wrx67xjvj6w93v4j5-3345.app.github.dev
-```
-
-Create `frontend/.env` with that URL:
-
-```sh
-# frontend/.env
-API_URL=https://<your-codespace-subdomain>-3345.app.github.dev
-```
-
-Only the subdomain portion (e.g. `stunning-rotary-phone-wrx67xjvj6w93v4j5`) differs between Codespaces — the rest of the URL stays the same.
-
-{% aside type="caution" %}
-Never commit `frontend/.env` to source control. The repo's `.gitignore` already excludes it.
 {% /aside %}
 
 ## Verify in the Browser
