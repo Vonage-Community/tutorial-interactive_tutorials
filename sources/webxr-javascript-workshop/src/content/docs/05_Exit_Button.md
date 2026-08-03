@@ -64,7 +64,7 @@ Initialize Class when loaded into the page:
 `// ⌄⌄⌄ Initialize ⌄⌄⌄`
 ```js
   init() {
-    console.log("Exit Button init!",this.client);
+    console.log("Exit Button init!");
     this.createExitPanel();
   }
 ```
