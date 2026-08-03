@@ -1,4 +1,4 @@
-# CreateHER x Vonage WebXR workshop
+# CreateHER Fest x Vonage WebXR workshop
 
 In this workshop, we will create a WebXR application that allows for a user to answer a phone call and have a conversation.
 
