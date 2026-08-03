@@ -1,0 +1,63 @@
+---
+title: Backend & Environment Setup
+---
+
+The iOS app doesn't have a backend of its own. It talks to the same Node.js server the Vonage Video React App uses, running on port **3345**. Before you can generate environment constants for the iOS app, you need that backend running and reachable from this Codespace.
+
+## Start and Expose the Backend
+
+{% steps %}
+
+1. Start (or confirm) the backend server is running on port **3345**.
+
+2. Click the **Ports** tab at the bottom of the Codespace, then right-click on port **3345** → **Port Visibility → Public**.
+
+{% /steps %}
+
+{% aside type="caution" %}
+The port must be public for the iOS app's generated environment constants to reach the backend. If it's still private, requests from the app will fail.
+{% /aside %}
+
+## Export the Backend URL
+
+Copy the forwarded address for port 3345 from the **Ports** tab, then export it as `BASE_API_URL`:
+
+```sh
+export BASE_API_URL=https://<codespace-subdomain>-3345.app.github.dev
+```
+
+Only the `<codespace-subdomain>` portion differs between Codespaces — the rest of the URL stays the same.
+
+## Generate the Environment Constants
+
+With `BASE_API_URL` exported, run the environment generator script from the `VERA/` directory:
+
+```sh
+./Scripts/generateEnvironmentConstants.sh
+```
+
+The script reads `BASE_API_URL` from your shell environment and writes the generated Swift constants to `VERAApp/VERA/App/Generated/EnvironmentConstants.swift`.
+
+| Script | Run from | Reads | Writes |
+|---|---|---|---|
+| `generateEnvironmentConstants.sh` | `VERA/` | `$BASE_API_URL` env var | `VERAApp/VERA/App/Generated/EnvironmentConstants.swift` |
+
+### Other Environment Variables (Out of Scope)
+
+The iOS app's generator scripts also consume a few signing/versioning environment variables. These are unrelated to the backend connection and are **out of scope for this tutorial** — you don't need to set them here.
+
+| Variable | Purpose |
+|---|---|
+| `DEVELOPMENT_TEAM` | Xcode code-signing team identifier |
+| `MARKETING_VERSION` | App version shown to users |
+| `CURRENT_PROJECT_VERSION` | Internal build number |
+
+{% aside type="caution" %}
+If you run the script before exporting `BASE_API_URL`, it fails with:
+
+```
+❌ Error: BASE_API_URL environment variable is not set
+```
+
+Export `BASE_API_URL` as shown above, then re-run `./Scripts/generateEnvironmentConstants.sh` from `VERA/`.
+{% /aside %}

@@ -1,0 +1,20 @@
+# Generated or irrelevant files
+*.log
+frontend/docs/
+
+# Documentation [todo]: We should be able to use prettier for this to ensure consistent formatting
+*.md
+
+# Build and dependency folders
+dist/
+node_modules/
+coverage/
+.nx/
+.turbo/
+integration-tests/node_modules/
+integration-tests/playwright-report/
+integration-tests/test-results/
+
+# Public compiled assets
+public/js/
+

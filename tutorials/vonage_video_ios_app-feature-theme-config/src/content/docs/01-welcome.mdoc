@@ -1,0 +1,23 @@
+---
+title: Welcome
+description: Learn how to configure feature flags and customize the theme of the Vonage Video iOS App.
+---
+
+Welcome! In this tutorial you will configure the **Vonage Video iOS App** (`vonage-video-ios-app`), a Swift application built with [Tuist](https://tuist.io). Building it natively requires **Xcode 26+** and **SwiftLint**, but you won't need either of those for this tutorial — everything you'll do here happens through JSON configuration files and Python/shell generator scripts run from a terminal.
+
+Unlike the sibling React app tutorials, which split feature-flag configuration and theme customization into two separate tutorials, this tutorial covers **both** in a single walkthrough, since the iOS app manages both concerns through similar generator scripts.
+
+## In this tutorial you will
+
+- Set up the shared backend server and generate the app's environment constants
+- Explore how feature flags are structured in `VERA/Config/app-config.json`
+- Edit feature flags and regenerate the corresponding Swift configuration
+- Explore how color, border radius, and typography tokens are structured in `VERA/Theme/semantics.json`
+- Edit theme tokens and regenerate the corresponding color assets
+- Confirm your changes by inspecting generator output and generated files
+
+{% aside type="caution" %}
+This Codespace does not include Xcode or macOS, so you cannot build, run, or preview the iOS app here. Verification in this tutorial is limited to confirming that generator scripts complete successfully and that the expected values show up in the generated Swift and asset catalog files — never a simulator, a device build, or a browser preview.
+{% /aside %}
+
+Let's start by setting up the backend server and generating the app's environment constants.

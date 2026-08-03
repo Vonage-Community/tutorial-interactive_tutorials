@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/vitest",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest"],
+    "tsBuildInfoFile": "dist/tsconfig.spec.tsbuildinfo"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "srcBrowser/**/*.ts",
+    "srcBrowser/**/*.tsx",
+    "srcNode/**/*.ts",
+    "test/**/*.ts",
+    "testBrowser/**/*.ts",
+    "testBrowser/**/*.tsx",
+    "vite.config.ts"
+  ]
+}

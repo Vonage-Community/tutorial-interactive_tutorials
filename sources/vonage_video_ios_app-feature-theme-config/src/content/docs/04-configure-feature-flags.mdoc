@@ -1,0 +1,58 @@
+---
+title: Configure & Regenerate Feature Flags
+---
+
+Now that you know how `VERA/Config/app-config.json` is structured, it's time to edit it and regenerate the Swift source that the app actually reads.
+
+## Edit a Flag
+
+Open `VERA/Config/app-config.json` and change one or more flags in `meetingRoomSettings`. For example, turn off screen sharing and switch the default layout to a grid:
+
+```json
+{
+  "meetingRoomSettings": {
+    "allowScreenShare": false,
+    "defaultLayoutMode": "grid"
+  }
+}
+```
+
+Save the file once you've made your edit.
+
+## Regenerate `AppConfig.swift`
+
+From the `VERA/` directory, run the config generator script:
+
+```sh
+python3 ./Scripts/generate-app-config.py
+```
+
+The script reads `Config/app-config.json` and writes the generated Swift source to `VERAConfiguration/VERAConfiguration/AppConfig.swift`. On success, you'll see:
+
+```
+✅ Generated AppConfig.swift
+```
+
+| Script | Run from | Reads | Writes |
+|---|---|---|---|
+| `generate-app-config.py` | `VERA/` | `Config/app-config.json` | `VERAConfiguration/VERAConfiguration/AppConfig.swift` |
+
+## Regenerate the Xcode Project
+
+Feature flags are compiled into `AppConfig.swift`, so the Xcode project needs to be regenerated afterward:
+
+```sh
+tuist generate
+```
+
+{% aside type="caution" %}
+If `app-config.json` has invalid JSON (a trailing comma, a missing quote, etc.), the generator script fails with something like:
+
+```
+❌ Error parsing JSON: Expecting ',' delimiter: line 12 column 3 (char 245)
+```
+
+Fix the JSON syntax in `VERA/Config/app-config.json` and re-run `python3 ./Scripts/generate-app-config.py` from `VERA/`.
+{% /aside %}
+
+Next, you'll move on to the app's theme tokens.
