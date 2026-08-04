@@ -24,8 +24,6 @@ if (useSceneMesh) {
   options.depth.depthMesh.colliderUpdateFps = depthMeshColliderUpdateFps;
   options.depth.matchDepthView = false;
 }
-options.reticles.enabled = false;
-options.controllers.performRaycastOnUpdate = false;
 options.xrButton = {
   ...options.xrButton,
   startText: '<i id="xrlogo"></i> LET THE FUN BEGIN',
