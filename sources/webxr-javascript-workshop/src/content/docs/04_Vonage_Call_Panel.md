@@ -13,7 +13,7 @@ The Vonage Voice Client SDK's <a href="https://developer.vonage.com/en/vonage-cl
 
 The virtual keyboard that allows us to type those messages will come from the <a href="https://xrblocks.github.io/docs/manual/UI/#virtual-keyboard-addon" target="_blank">Virtual Keyboard (Addon)</a>.
 
-The following code will be placed in the `VonageAudioCall.js` file.
+The following code will be placed in the `static/VonageAudioCall.js` file.
 
 First, we will set the Quick Replies that the user can send into the call.
 Find `// ⌄⌄⌄ Set Quick Replies ⌄⌄⌄` and add this code:

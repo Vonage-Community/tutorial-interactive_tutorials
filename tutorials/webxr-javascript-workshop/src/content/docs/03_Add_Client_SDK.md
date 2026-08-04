@@ -5,7 +5,7 @@ description: Add Vonage Client SDK to index.html
 
 We'll be creating a WebXR application using <a href="https://xrblocks.github.io" target="_blank">XR Blocks</a> that can answer phone calls.
 
-The following code will be placed in the `index.html` file.
+The following code will be placed in the `pages/index.html` file.
 
 First, we will need to load the Vonage Client SDK from a CDN (`<!-- ⌄⌄⌄ Load the Vonage Client SDK ⌄⌄⌄ -->`):
 ```html

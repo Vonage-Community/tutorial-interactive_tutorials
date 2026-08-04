@@ -5,7 +5,7 @@ description: adding panels to WebXR application
 
 Let's add the 2 panels to the application.
 
-The following code will be placed in the `main.js` file.
+The following code will be placed in the `static/main.js` file.
 
 First, import the Panels:
 `// ⌄⌄⌄ import Vonage Call Panel and Exit Button ⌄⌄⌄`

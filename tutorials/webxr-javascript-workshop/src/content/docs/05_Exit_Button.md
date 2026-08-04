@@ -5,7 +5,7 @@ description: Button to exit WebXR application
 
 When in the WebXR environment using a headset, I could not figure out how to leave the experience, so I made an Exit Demo Panel.
 
-The following code will be placed in the `ExitButton.js` file.
+The following code will be placed in the `static/ExitButton.js` file.
 
 Create the constructor for the Class:
 `// ⌄⌄⌄ Create constructor ⌄⌄⌄`
