@@ -1,0 +1,144 @@
+---
+title: Reference
+description: Get started building your docs site with Starlight.
+<!-- template: splash -->
+hero:
+  tagline: Components that can be used in Tutorials
+---
+
+## Asides
+
+{% aside %}
+Note aside.
+{% /aside %}
+
+```
+{% aside %}
+Note aside.
+{% /aside %}
+```
+
+{% aside type="caution" %}
+Caution aside.
+{% /aside %}
+
+```
+{% aside type="caution" %}
+Caution aside.
+{% /aside %}
+```
+
+{% aside type="tip" %}
+Tip aside.
+{% /aside %}
+
+```
+{% aside type="tip" %}
+Tip aside.
+{% /aside %}
+```
+
+{% aside type="danger" %}
+Danger aside.
+{% /aside %}
+
+```
+{% aside type="danger" %}
+Danger aside.
+{% /aside %}
+```
+
+## Blockquotes
+
+> This is a blockquote.
+>
+> This is another line in the blockquote.
+
+## Code Blocks
+
+```js
+function demo() {
+  // This is a comment
+  console.log('Hello World');
+}
+```
+
+## File Trees
+
+{% filetree %}
+
+- astro.config.mjs
+- package.json
+- src
+  - components
+    - Header.astro
+    - Title.astro
+  - pages/
+
+{% /filetree %}
+
+```
+{% filetree %}
+
+- astro.config.mjs
+- package.json
+- src
+  - components
+    - Header.astro
+    - Title.astro
+  - pages/
+
+{% /filetree %}
+```
+
+## Steps
+
+{% steps %}
+
+1. Import the component into your MDX file:
+
+   ```js
+   import { Steps } from '@astrojs/starlight/components';
+   ```
+
+2. Wrap `<Steps>` around your ordered list items.
+
+{% /steps %}
+
+```
+  {% steps %}
+
+  1. Import the component into your MDX file:
+
+    ```js
+    import { Steps } from '@astrojs/starlight/components';
+    ```
+
+  2. Wrap `<Steps>` around your ordered list items.
+
+  {% /steps %}
+```
+
+## Tabs
+
+{% tabs %}
+{% tabitem label="Tab 1" %}
+Tab 1 text
+{% /tabitem %}
+
+{% tabitem label="Tab 2" %}
+Tab 2 text
+{% /tabitem %}
+{% /tabs %}
+
+```
+{% tabs %}
+{% tabitem label="Tab 1" %}
+Tab 1 text
+{% /tabitem %}
+
+{% tabitem label="Tab 2" %}
+Tab 2 text
+{% /tabitem %}
+{% /tabs %}
+```
