@@ -1,0 +1,82 @@
+---
+title: Feature Flag Configuration Overview
+---
+
+The iOS app's feature flags live in a single JSON file in your local clone: **`VERA/Config/app-config.json`**. This is the file you'll edit to turn features on or off without touching any Swift source code.
+
+## Where It Lives
+
+{% filetree %}
+
+- VERA/
+  - App/
+  - Config/
+    - app-config.json   ← Feature flags live here
+  - Scripts/
+  - Theme/
+    - semantics.json
+  - VERAApp/
+  - VERAConfiguration/
+  - VERACommonUI/
+
+{% /filetree %}
+
+## How It's Structured
+
+`app-config.json` is organized into four top-level sections, one per area of the app:
+
+```json
+{
+  "videoSettings": {
+    "allowBackgroundEffects": true,
+    "allowCameraControl": true,
+    "allowVideoOnJoin": true,
+    "defaultResolution": "640x480"
+  },
+  "audioSettings": {
+    "allowAdvancedNoiseSuppression": true,
+    "allowAudioOnJoin": true,
+    "allowMicrophoneControl": true,
+    "allowAudioDiagnostics": true
+  },
+  "waitingRoomSettings": {
+    "allowDeviceSelection": true,
+    "allowSettings": true
+  },
+  "meetingRoomSettings": {
+    "allowArchiving": true,
+    "allowCaptions": true,
+    "allowChat": true,
+    "allowDeviceSelection": true,
+    "allowEmojis": true,
+    "allowFeedback": true,
+    "allowPictureInPicture": true,
+    "allowScreenShare": true,
+    "allowSettings": true,
+    "defaultLayoutMode": "activespeaker",
+    "showParticipantList": true
+  }
+}
+```
+
+- **`videoSettings`** — controls camera behavior and video quality before and during a call.
+- **`audioSettings`** — controls microphone behavior and audio diagnostics.
+- **`waitingRoomSettings`** — controls what participants can do while waiting to be admitted.
+- **`meetingRoomSettings`** — controls in-call features once a participant has joined the meeting room.
+
+## Representative Flags
+
+Here's a closer look at some of the most commonly changed flags:
+
+| Flag | Section | Type | Default | Effect |
+|---|---|---|---|---|
+| `allowChat` | `meetingRoomSettings` | boolean | `true` | Shows or hides the in-call chat panel |
+| `allowArchiving` | `meetingRoomSettings` | boolean | `true` | Enables or disables session recording (archiving) controls |
+| `allowCaptions` | `meetingRoomSettings` | boolean | `true` | Enables or disables live captions during a call |
+| `allowEmojis` | `meetingRoomSettings` | boolean | `true` | Enables or disables the emoji reaction picker |
+| `allowScreenShare` | `meetingRoomSettings` | boolean | `true` | Enables or disables the screen-share button |
+| `allowBackgroundEffects` | `videoSettings` | boolean | `true` | Enables or disables virtual background/blur effects |
+| `defaultResolution` | `videoSettings` | string | `"640x480"` | Sets the default camera capture resolution used when a call starts |
+| `defaultLayoutMode` | `meetingRoomSettings` | string | `"activespeaker"` | Sets the default video layout (e.g. active speaker vs. grid) when a meeting room loads |
+
+Next, you'll edit some of these flags and regenerate the corresponding Swift source in your local clone.

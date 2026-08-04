@@ -1,0 +1,53 @@
+---
+title: Apply & Verify
+---
+
+With your feature flags edited and `AppConfig.swift` regenerated, this step shows you how to rebuild the app in Xcode and confirm your changes in the Simulator.
+
+## Rebuild and Run
+
+Back in Xcode, rebuild and relaunch the app:
+
+{% steps %}
+
+1. Make sure the **VERA** scheme and a Simulator destination are still selected.
+
+2. Press **Cmd+R** (or click the ▶️ Run button) to rebuild and relaunch the app.
+
+{% /steps %}
+
+{% aside type="caution" %}
+If Xcode is still showing the previous build, stop the running app first (Cmd+.) before pressing Cmd+R again — otherwise you may see stale behavior.
+{% /aside %}
+
+## Verify in the Simulator
+
+Join or start a meeting in the Simulator and check that your changes are reflected. Following the example from the previous step:
+
+{% steps %}
+
+1. Join a meeting room — confirm the initial layout matches your `defaultLayoutMode` setting (for example, a grid layout).
+
+2. Check the in-call toolbar — confirm the screen-share button is hidden if you set `allowScreenShare` to `false`.
+
+3. Try any other flags you changed — for example `allowChat`, `allowCaptions`, or `allowEmojis` — and confirm the corresponding UI element appears or disappears.
+
+{% /steps %}
+
+## Iterating Quickly
+
+A typical configure-test cycle:
+
+{% steps %}
+
+1. Edit `VERA/Config/app-config.json`.
+
+2. Run `python3 ./Scripts/generate-app-config.py`.
+
+3. Run `tuist generate`.
+
+4. Rebuild in Xcode with Cmd+R and verify in the Simulator.
+
+{% /steps %}
+
+Your feature flag configuration is live. Head to the final step for further resources.

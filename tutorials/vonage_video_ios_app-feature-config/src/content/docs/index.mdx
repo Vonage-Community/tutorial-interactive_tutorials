@@ -1,0 +1,29 @@
+---
+title: Vonage Video iOS App
+description: Learn how to configure feature flags in the Vonage Video iOS App using its JSON configuration file and generator script.
+template: splash
+hero:
+  tagline: Feature Config
+---
+
+The Vonage Video iOS App (`vonage-video-ios-app`) is a Swift application built with Tuist. It controls which features are enabled through a single JSON configuration file — **`VERA/Config/app-config.json`** — paired with a Python generator script that turns your edits into Swift source. This tutorial's Codespace has no Xcode or macOS, so all editing and building happens in a clone of the repo on your own Mac; the Codespace only runs the shared backend server the app connects to.
+
+In this tutorial you will:
+
+- Clone `vonage-video-ios-app` locally and run it in Xcode against the shared backend
+- Understand how feature flags are structured in `app-config.json`
+- Edit feature flags and regenerate the corresponding Swift configuration
+- Rebuild and confirm your changes in the iOS Simulator
+
+---
+
+## Tutorial structure
+
+| #   | Page                                  | What you'll do                                                              |
+| --- | -------------------------------------- | ---------------------------------------------------------------------------- |
+| 01  | Welcome                                | Learn what the iOS reference app is and what this tutorial covers            |
+| 02  | Backend & Local App Setup              | Start the shared backend, clone the iOS repo locally, and run it in Xcode    |
+| 03  | Feature Flag Configuration Overview    | Explore the sections and flags in `app-config.json`                          |
+| 04  | Configure & Regenerate Feature Flags   | Edit feature flags and regenerate `AppConfig.swift`                          |
+| 05  | Apply & Verify                         | Rebuild in Xcode and confirm your changes in the Simulator                   |
+| 06  | What's Next                            | Review what you accomplished and find further resources                     |

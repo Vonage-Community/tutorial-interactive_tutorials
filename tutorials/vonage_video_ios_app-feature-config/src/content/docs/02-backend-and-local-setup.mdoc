@@ -1,0 +1,133 @@
+---
+title: Backend & Local App Setup
+---
+
+The iOS app doesn't have a backend of its own — it talks to the same Node.js server the Vonage Video React App uses, running on port **3345**. In this step you will start that backend here in the Codespace, expose its port publicly, then clone the iOS app to your own Mac and run it in Xcode against that public URL.
+
+## Configure Backend Credentials
+
+Open a terminal inside the Codespace by clicking the **hamburger menu (☰)** in the top-left corner, then selecting **Terminal → New Terminal**. The cloned repo lives under `project/`, so run all commands below from there:
+
+```sh
+cd project
+cp backend/.env.example backend/.env
+code backend/.env
+```
+
+Replace the placeholder values in `backend/.env`:
+
+```sh
+# backend/.env
+VONAGE_APP_ID=your-vonage-application-id
+VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+'
+```
+
+| Variable             | Where to find it                                                                                            |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `VONAGE_APP_ID`      | [Vonage Dashboard](https://dashboard.vonage.com) → Your Applications → the app you created for this project |
+| `VONAGE_PRIVATE_KEY` | The `private.key` file downloaded when you created the Vonage Application — paste its full contents here    |
+
+{% aside type="caution" %}
+Never commit `backend/.env` to source control. The repo's `.gitignore` already excludes it, but double-check before pushing.
+{% /aside %}
+
+## Start the Backend
+
+Install dependencies, then start **only the backend** (you don't need the React frontend for this tutorial):
+
+```sh
+yarn
+yarn dev backend
+```
+
+This starts the Node.js backend server on port **3345**.
+
+## Make the Port Public
+
+When the server starts, a notification dialog will appear in the **bottom-right corner** of the Codespace asking whether to make port 3345 publicly accessible. **Click "Make Public".**
+
+If you miss the dialog, you can do this manually:
+
+{% steps %}
+
+1. Click the **Ports** tab at the bottom of the Codespace.
+
+2. Right-click on port **3345** → **Port Visibility → Public**.
+
+{% /steps %}
+
+{% aside type="caution" %}
+The port must be public — otherwise the iOS app running on your local machine cannot reach it.
+{% /aside %}
+
+Copy the forwarded address for port 3345 from the **Ports** tab. You'll use it as `BASE_API_URL` in the next section:
+
+```
+https://<codespace-subdomain>-3345.app.github.dev
+```
+
+## Clone the iOS App Locally
+
+On your own Mac (not in this Codespace), clone the iOS app repository and install its tooling:
+
+```sh
+git clone https://github.com/Vonage/vonage-video-ios-app.git
+cd vonage-video-ios-app
+brew install tuist
+```
+
+{% aside %}
+You'll need **Xcode 26+** installed from the Mac App Store, plus **SwiftLint** (`brew install swiftlint`), before you can build the project.
+{% /aside %}
+
+## Point the Local App at the Backend
+
+From the `VERA/` directory of your local clone, export `BASE_API_URL` with the forwarded address you copied earlier, then run the environment generator script:
+
+```sh
+cd VERA
+export BASE_API_URL=https://<codespace-subdomain>-3345.app.github.dev
+./Scripts/generateEnvironmentConstants.sh
+```
+
+The script writes the generated Swift constants to `VERAApp/VERA/App/Generated/EnvironmentConstants.swift`.
+
+{% aside type="caution" %}
+If you run the script before exporting `BASE_API_URL`, it fails with:
+
+```
+❌ Error: BASE_API_URL environment variable is not set
+```
+
+Export `BASE_API_URL` as shown above, then re-run `./Scripts/generateEnvironmentConstants.sh` from `VERA/`.
+{% /aside %}
+
+## Generate the Xcode Project and Run It
+
+Still from `VERA/`, generate the Xcode project with Tuist and open it:
+
+```sh
+tuist generate
+open VERA.xcworkspace
+```
+
+{% steps %}
+
+1. In Xcode's scheme selector (top toolbar), choose the **VERA** scheme.
+
+2. Next to the scheme, choose a Simulator destination — for example **iPhone 17**.
+
+3. Press **Cmd+R** (or click the ▶️ Run button) to build and launch the app.
+
+{% /steps %}
+
+The app should launch in the Simulator and be able to reach your Codespace's backend. If you see a network error on launch, double-check that port 3345 is still public and that `BASE_API_URL` matches the forwarded address exactly.
+
+{% aside type="tip" %}
+Running on a **physical device** instead of the Simulator requires code signing. Set the `DEVELOPMENT_TEAM` environment variable to your Apple Developer Team ID before running `tuist generate`, then select your device and a valid signing team in Xcode's **Signing & Capabilities** tab. This is optional — the Simulator is enough to complete this tutorial.
+{% /aside %}
+
+With the backend running and the app built and running locally, you're ready to start configuring feature flags.
