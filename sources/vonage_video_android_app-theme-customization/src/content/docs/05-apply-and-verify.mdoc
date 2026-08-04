@@ -1,0 +1,57 @@
+---
+title: Apply & Verify
+---
+
+With your theme tokens edited and the Compose theme resources regenerated, this step shows you how to rebuild the app and confirm your changes on an emulator or device.
+
+## Rebuild and Run
+
+Back on your machine, rebuild and relaunch the app:
+
+{% steps %}
+
+1. Run `./gradlew installDebug` from the project root.
+
+2. Or in Android Studio, press the ▶️ **Run** button (or **Shift+F10**) with your emulator or device selected.
+
+{% /steps %}
+
+{% aside type="caution" %}
+If the app is still running from a previous build, stop it first before reinstalling — otherwise you may see stale colors or assets.
+{% /aside %}
+
+## Verify on the Emulator or Device
+
+Check that your changes are reflected across the app:
+
+{% steps %}
+
+1. **Landing / waiting room** — confirm the background and primary button color match your `background` and `primary` tokens.
+
+2. **Buttons and cards** — check that corner rounding matches your updated `borderRadius` tokens.
+
+3. **Meeting room** — join a call and verify the toolbar and controls use your updated colors.
+
+4. **Light / dark mode** — switch the emulator or device's system theme (**Settings → Display → Dark theme**) and confirm both palettes look correct.
+
+5. **Text and labels** — scan the UI for `text-primary` and other text token usage, and confirm typography sizes match your `desktop`/`mobile` scale edits.
+
+{% /steps %}
+
+## Iterating Quickly
+
+A typical customize-test cycle:
+
+{% steps %}
+
+1. Edit `config/theme.json`.
+
+2. Run `./gradlew generateVonageConfig`.
+
+3. Run `./gradlew installDebug` (or Run in Android Studio).
+
+4. Verify on the emulator or device.
+
+{% /steps %}
+
+Your theme is live. Head to the final step for further resources.

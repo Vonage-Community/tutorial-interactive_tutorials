@@ -1,0 +1,122 @@
+---
+title: Theme Configuration Overview
+---
+
+The Android app's visual theme lives in a single JSON file in your local clone: **`config/theme.json`**. This is the file you'll edit to customize colors, corner rounding, and typography without touching any Kotlin or Compose source code.
+
+## Where It Lives
+
+{% filetree %}
+
+- config/
+  - app-config.json
+  - theme.json   ← Theme tokens live here
+- app/
+- vonage-video-ui-compose/
+- ...
+
+{% /filetree %}
+
+## How It's Structured
+
+`theme.json` nests every token under `themes.vonage`, split into three groups: `colors`, `borderRadius`, and `typography`:
+
+```json
+{
+  "themes": {
+    "vonage": {
+      "colors": {
+        "light": { "primary": "#9941FF", "background": "#F5F0FD", "...": "..." },
+        "dark":  { "primary": "#B377FF", "background": "#1C1C1E", "...": "..." }
+      },
+      "borderRadius": {
+        "none": 0, "extra-small": 2, "small": 4, "medium": 8, "large": 12, "extra-large": 24
+      },
+      "typography": {
+        "font-family": "Inter",
+        "desktop": { "headline": { "font-size": "66px", "line-height": "88px", "font-weight": 500 }, "...": "..." },
+        "mobile":  { "headline": { "font-size": "32px", "line-height": "40px", "font-weight": 500 }, "...": "..." }
+      }
+    }
+  }
+}
+```
+
+- **`colors.light` / `colors.dark`** — Separate color palettes for each mode. Both modes use the same set of semantic token keys, including `on-*` pairs (e.g. `on-primary`) for text/icon color placed on top of that token.
+- **`borderRadius`** — Six named tokens controlling the corner rounding of buttons, cards, and dialogs.
+- **`typography`** — A shared `font-family`, plus separate `desktop` and `mobile` type scales. Both scales use the same named tokens, just with different point sizes.
+
+## Color Token Reference
+
+Here's the subset of color tokens you'll work with most often:
+
+| Token | Light default | Dark default | Role |
+|-------|--------------|--------------|------|
+| `primary` | `#9941FF` | `#B377FF` | Main brand accent |
+| `on-primary` | `#FFFFFF` | `#000000` | Text/icons drawn on top of `primary` |
+| `secondary` | `#000000` | `#FFFFFF` | Secondary accent |
+| `background` | `#F5F0FD` | `#1C1C1E` | Page background |
+| `surface` | `#FFFFFF` | `#2C2C2E` | Cards and panels |
+| `text-primary` | `#9941FF` | `#B377FF` | Primary text |
+| `error` | `#E61D1D` | `#FF6B6B` | Errors and destructive actions |
+| `warning` | `#BE5702` | `#FF9F4A` | Warnings |
+| `success` | `#1C8731` | `#4CD964` | Confirmations |
+| `border` | `#E6E6E6` | `#3A3A3C` | Dividers and borders |
+| `disabled` | `#E6E6E6` | `#3A3A3C` | Disabled control backgrounds |
+
+## Border Radius Tokens
+
+Border radius tokens are shared between light and dark mode — they only control shape, not color:
+
+| Token | Default (dp) |
+|-------|--------------|
+| `none` | `0` |
+| `extra-small` | `2` |
+| `small` | `4` |
+| `medium` | `8` |
+| `large` | `12` |
+| `extra-large` | `24` |
+
+## Typography Tokens
+
+`typography.font-family` sets the single font used across the app. The `desktop` and `mobile` scales each define the same named tokens with different sizes:
+
+| Token | Value |
+|-------|-------|
+| `font-family` | `Inter` |
+
+### Desktop scale (`typography.desktop`)
+
+| Token | Font size | Line height | Font weight |
+|-------|-----------|-------------|--------------|
+| `headline` | `66px` | `88px` | `500` |
+| `subtitle` | `52px` | `68px` | `500` |
+| `heading-1` | `40px` | `52px` | `500` |
+| `heading-2` | `32px` | `44px` | `500` |
+| `heading-3` | `26px` | `36px` | `500` |
+| `heading-4` | `20px` | `28px` | `500` |
+| `body-extended` | `16px` | `24px` | `400` |
+| `body-extended-semibold` | `16px` | `24px` | `600` |
+| `body-base` | `14px` | `20px` | `400` |
+| `body-base-semibold` | `14px` | `20px` | `600` |
+| `caption` | `12px` | `16px` | `400` |
+| `caption-semibold` | `12px` | `16px` | `600` |
+
+### Mobile scale (`typography.mobile`)
+
+| Token | Font size | Line height | Font weight |
+|-------|-----------|-------------|--------------|
+| `headline` | `32px` | `40px` | `500` |
+| `subtitle` | `30px` | `40px` | `500` |
+| `heading-1` | `28px` | `36px` | `500` |
+| `heading-2` | `24px` | `32px` | `300` |
+| `heading-3` | `20px` | `28px` | `500` |
+| `heading-4` | `18px` | `24px` | `500` |
+| `body-extended` | `16px` | `24px` | `400` |
+| `body-extended-semibold` | `16px` | `24px` | `600` |
+| `body-base` | `14px` | `20px` | `400` |
+| `body-base-semibold` | `14px` | `20px` | `600` |
+| `caption` | `12px` | `16px` | `400` |
+| `caption-semibold` | `12px` | `16px` | `600` |
+
+Next, you'll edit some of these tokens and regenerate the corresponding Compose theme resources in your local clone.

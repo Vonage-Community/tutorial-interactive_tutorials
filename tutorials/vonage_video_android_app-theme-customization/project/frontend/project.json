@@ -1,0 +1,134 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "frontend",
+  "projectType": "application",
+  "root": "frontend",
+  "sourceRoot": "frontend/src",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && vite build && nx run frontend:cp-build'"
+      }
+    },
+    "build-room": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/distRoom"],
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && BUILD_TARGET=vcr vite build --config src/VeraRoom/vite.veraroom.config.ts'"
+      },
+      "configurations": {
+        "standalone": {
+          "command": "bash -c 'source ../vcrBuild.env.sh && BUILD_TARGET=standalone vite build --config src/VeraRoom/vite.veraroom.config.ts && find distRoom/assets -type f ! -name \"*.js\" ! -name \"*.mp3\" -delete'"
+        }
+      }
+    },
+    "build-room-example": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/distRoom"],
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && vite build --config src/VeraRoom/example/vite.example.config.ts'"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && concurrently \"nx run frontend:ts-check:watch\" \"vite --host\"'"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && vite --host'"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && vite preview'"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint 'frontend/src/**/*.{ts,tsx}' --config frontend/eslint.config.mjs --report-unused-disable-directives --max-warnings 0"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint 'frontend/src/**/*.{ts,tsx}' --config frontend/eslint.config.mjs --fix --report-unused-disable-directives --max-warnings 0"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && vitest run'"
+      },
+      "configurations": {
+        "coverage": {
+          "command": "bash -c 'source ../vcrBuild.env.sh && vitest run --coverage'"
+        }
+      }
+    },
+    "docs": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "typedoc"
+      }
+    },
+    "docs:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "typedoc --watch"
+      }
+    },
+    "ts-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "tsc -p tsconfig.json --pretty true --noEmit"
+      }
+    },
+    "ts-check:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "tsc -p tsconfig.json --noEmit --watch --preserveWatchOutput"
+      }
+    },
+    "cp-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "mkdir -p ../backend/dist/dist && cp -R dist/. ../backend/dist/dist/"
+      }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && storybook dev -p 6006'"
+      }
+    },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/storybook-static"],
+      "options": {
+        "cwd": "frontend",
+        "command": "bash -c 'source ../vcrBuild.env.sh && storybook build'"
+      }
+    }
+  },
+  "tags": []
+}

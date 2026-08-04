@@ -1,0 +1,55 @@
+---
+title: Customize & Regenerate Theme
+---
+
+Now that you know how `config/theme.json` is structured, it's time to edit it in your local clone and regenerate the Compose theme resources the app actually reads.
+
+## Edit a Token
+
+In your local clone of `vonage-video-android-app`, open `config/theme.json` and change one or more tokens under `colors`, `borderRadius`, or `typography`. For example, update the primary brand color for both light and dark mode, and increase the medium border radius:
+
+```json
+{
+  "themes": {
+    "vonage": {
+      "colors": {
+        "light": { "primary": "#1D6FE6", "on-primary": "#FFFFFF" },
+        "dark":  { "primary": "#5FA0FF", "on-primary": "#000000" }
+      },
+      "borderRadius": {
+        "medium": 10
+      }
+    }
+  }
+}
+```
+
+Save the file once you've made your edit.
+
+## Regenerate the Theme Resources
+
+From the root of your local clone, run the same config generator Gradle task used for feature flags — it also regenerates the theme:
+
+```sh
+./gradlew generateVonageConfig
+```
+
+The `ThemeGeneratorPlugin` reads `config/theme.json` and (re)generates the Compose theme resources into:
+
+```
+vonage-video-ui-compose/src/main/java/com/vonage/android/compose/theme/
+```
+
+{% aside type="caution" %}
+Do **not** edit the generated theme files under `vonage-video-ui-compose/.../theme/` directly — they are overwritten on every build. Always make your changes in `config/theme.json` instead.
+{% /aside %}
+
+## Rebuild the App
+
+```sh
+./gradlew installDebug
+```
+
+Or in Android Studio, press the ▶️ **Run** button (or **Shift+F10**) with your emulator or device selected.
+
+Next, you'll confirm your changes in the running app.

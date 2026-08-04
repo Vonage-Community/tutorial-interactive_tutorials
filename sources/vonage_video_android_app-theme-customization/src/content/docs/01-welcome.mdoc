@@ -1,0 +1,26 @@
+---
+title: Welcome
+description: Learn how to customize the theme of the Vonage Video Android App.
+---
+
+Welcome! In this tutorial you will customize the theme of the **Vonage Video Android App** (`vonage-video-android-app`), a Kotlin application built with Gradle. Building and running it natively requires **Android Studio Ladybug (2024.2.1)+**, **JDK 17+**, and an emulator or physical device — none of which this Codespace has. So instead of editing and building here, you will clone the repo to your own machine and do all of that work there.
+
+This Codespace's only job is to run the shared Node.js backend server that the Android app talks to, and to expose its port so your locally-running app can reach it.
+
+## In this tutorial you will
+
+- Start the shared backend server in this Codespace and make its port public
+- Clone `vonage-video-android-app` to your own machine and run it in Android Studio against that backend
+- Explore how color, border radius, and typography tokens are structured in `config/theme.json`
+- Edit theme tokens and regenerate the corresponding Compose theme resources
+- Rebuild the app and confirm your changes in the Android emulator
+
+{% aside type="caution" %}
+This Codespace cannot run Android Studio or an emulator. You cannot build, run, or preview the Android app here — everything you do in this Codespace is limited to running the backend server. Building and verifying the app happens in Android Studio on your own machine.
+{% /aside %}
+
+{% aside %}
+Looking to enable or disable app features instead? See the companion **Vonage Video Android App Feature Config** tutorial.
+{% /aside %}
+
+Let's start by setting up the backend server and getting the app running locally.
