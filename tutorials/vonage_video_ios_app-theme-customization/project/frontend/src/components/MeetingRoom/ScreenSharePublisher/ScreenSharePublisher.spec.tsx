@@ -1,0 +1,64 @@
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { Publisher } from '@vonage/client-sdk-video';
+import { EventEmitter } from 'stream';
+import ScreenSharePublisher from './ScreenSharePublisher';
+import { defaultAudioDevice } from '../../../utils/mockData/device';
+
+describe('ScreenSharePublisher component', () => {
+  it('renders nothing if box is undefined', () => {
+    const { container } = render(
+      <ScreenSharePublisher
+        box={undefined}
+        element={undefined}
+        publisher={null}
+        isEntireScreen={false}
+      />
+    );
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it('renders VideoTile with ScreenShareNameDisplay and appends element with classes', () => {
+    const box = { height: 100, width: 100, top: 0, left: 0 };
+    const mockPublisher = Object.assign(new EventEmitter(), {
+      applyVideoFilter: vi.fn(),
+      clearVideoFilter: vi.fn(),
+      applyAudioFilter: vi.fn(),
+      clearAudioFilter: vi.fn(),
+      getAudioSource: () => defaultAudioDevice,
+      getAudioFilter: () => null,
+      videoWidth: () => 1280,
+      videoHeight: () => 720,
+      stream: { name: 'Test Stream' },
+    }) as unknown as Publisher;
+
+    // Create a dummy element to append (simulate HTMLElement)
+    const element = document.createElement('div');
+    element.className = 'original-class';
+
+    render(
+      <ScreenSharePublisher
+        box={box}
+        element={element}
+        publisher={mockPublisher}
+        isEntireScreen={false}
+      />
+    );
+
+    expect(screen.getByText('Test Stream')).toBeInTheDocument();
+    expect(element.style.width).toBe('100%');
+    expect(element.style.position).toBe('absolute');
+    expect(element.classList.contains('rounded-vera-large')).toBe(true);
+    expect(element.style.objectFit).toBe('contain');
+  });
+
+  it('renders hidden message when entire screen is shared', () => {
+    const box = { height: 100, width: 100, top: 0, left: 0 };
+
+    render(
+      <ScreenSharePublisher box={box} element={undefined} publisher={null} isEntireScreen={true} />
+    );
+
+    expect(screen.getByText('You are sharing your screen.')).toBeInTheDocument();
+  });
+});
