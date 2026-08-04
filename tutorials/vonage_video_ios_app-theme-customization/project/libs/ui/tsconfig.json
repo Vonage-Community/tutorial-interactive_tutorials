@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": ["eslint.config.mjs"],
+  "references": [{ "path": "./tsconfig.lib.json" }, { "path": "./tsconfig.spec.json" }],
+  "compilerOptions": {
+    "rootDir": "..",
+    "composite": true,
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "paths": {
+      "@ui/*": ["./src/*"],
+      "@common": ["../common/src"],
+      "@common/*": ["../common/src/*"],
+      "@web": ["../common/srcBrowser"],
+      "@web/*": ["../common/srcBrowser/*"],
+      "@common-test": ["../common/test"],
+      "@common-test/*": ["../common/test/*"],
+      "@web-test": ["../common/testBrowser"],
+      "@web-test/*": ["../common/testBrowser/*"],
+      "@core": ["../core/src"],
+      "@core/*": ["../core/src/*"],
+      "@core-test": ["../core/test"],
+      "@core-test/*": ["../core/test/*"],
+
+      // video-router paths (this is just for linter and types)
+      "@api-lib/*": ["../api/src/*"],
+      "@node/*": ["../common/srcNode/*"]
+    },
+    "lib": ["DOM", "DOM.Iterable", "ESNext"]
+  }
+}
