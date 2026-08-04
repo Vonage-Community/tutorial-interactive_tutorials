@@ -7,7 +7,9 @@ description: Further reading and next steps after completing the Vonage Voice AP
 
 Congratulations - Your call menu is working!
 
-Before moving on, head back to the learning path:
+Before moving on, return to the Vonage Learning Path in your browser:
 
-- Check your terminal for the final status value logged by the event webhook. Paste it into the **Completed exercise credentials** field back in the learning path to mark this exercise as complete.
-- Continue to the **Add Speech Recognition** course, where you will extend this same Codespace to also accept spoken responses.
+- Check the codespace terminal and look for the last event that contains a status field and paste its value (no extra text) into the Completed exercise credentials field back in the learning path to mark this exercise as complete.
+- Once marked complete, continue to the **Add Speech Recognition** course there — the instructions for that course are on the portal, not in this Codespace.
+
+**Keep this Codespace open** — the **Add Speech Recognition** course will ask you to return here and update the code you just built.
