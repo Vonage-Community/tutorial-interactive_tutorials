@@ -1,0 +1,29 @@
+---
+title: Vonage Video Android App
+description: Learn how to configure feature flags in the Vonage Video Android App using its JSON configuration file and Gradle plugin.
+template: splash
+hero:
+  tagline: Feature Config
+---
+
+The Vonage Video Android App (`vonage-video-android-app`) is a Kotlin application built with Gradle. It controls which features are enabled through a single JSON configuration file — **`config/app-config.json`** — paired with a custom Gradle plugin that turns your edits into Kotlin constants and build configuration. This tutorial's Codespace can't run Android Studio or an emulator, so all editing and building happens in a clone of the repo on your own machine; the Codespace only runs the shared backend server the app connects to.
+
+In this tutorial you will:
+
+- Clone `vonage-video-android-app` locally and run it in Android Studio against the shared backend
+- Understand how feature flags are structured in `app-config.json`
+- Edit feature flags and regenerate the corresponding Kotlin configuration
+- Rebuild and confirm your changes in the Android emulator
+
+---
+
+## Tutorial structure
+
+| #   | Page                                  | What you'll do                                                              |
+| --- | -------------------------------------- | ---------------------------------------------------------------------------- |
+| 01  | Welcome                                | Learn what the Android reference app is and what this tutorial covers        |
+| 02  | Backend & Local App Setup              | Start the shared backend, clone the Android repo locally, and run it         |
+| 03  | Feature Flag Configuration Overview    | Explore the sections and flags in `app-config.json`                          |
+| 04  | Configure & Regenerate Feature Flags   | Edit feature flags and regenerate `AppConfig.kt`                             |
+| 05  | Apply & Verify                         | Rebuild the app and confirm your changes in the emulator                     |
+| 06  | What's Next                            | Review what you accomplished and find further resources                     |

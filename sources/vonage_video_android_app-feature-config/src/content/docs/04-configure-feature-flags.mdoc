@@ -1,0 +1,57 @@
+---
+title: Configure & Regenerate Feature Flags
+---
+
+Now that you know how `config/app-config.json` is structured, it's time to edit it in your local clone and regenerate the Kotlin configuration that the app actually reads.
+
+## Edit a Flag
+
+In your local clone of `vonage-video-android-app`, open `config/app-config.json` and change one or more flags in `meetingRoomSettings`. For example, turn off screen sharing and switch the default layout to a grid:
+
+```json
+{
+  "meetingRoomSettings": {
+    "allowScreenShare": false,
+    "defaultLayoutMode": "grid"
+  }
+}
+```
+
+Save the file once you've made your edit.
+
+{% aside type="caution" %}
+Leave `"baseApiUrl": "${BASE_API_URL}"` untouched — it's substituted automatically from `local.properties` or the `BASE_API_URL` environment variable you set up in the previous step.
+{% /aside %}
+
+## Regenerate the Build Configuration
+
+From the root of your local clone, run the config generator Gradle task:
+
+```sh
+./gradlew generateVonageConfig
+```
+
+This reads `config/app-config.json` and regenerates:
+
+- `app/build/generated/source/jsonConfig/com/vonage/android/config/AppConfig.kt` — runtime Kotlin constants
+- `gradle/generated-config.properties` — build properties used for product flavor selection
+
+{% aside type="caution" %}
+Never hand-edit `gradle/generated-config.properties` — it is always overwritten by `generateVonageConfig`. If you need to force a regeneration after a change that doesn't seem to have picked up, run:
+
+```sh
+./gradlew clean generateVonageConfig
+```
+{% /aside %}
+
+## Rebuild the App
+
+Because some flags select entirely different Gradle product flavor variants (for example, disabling `allowChat` swaps in the `vonage-feature-chat` module's `disabled` variant), do a full rebuild rather than an incremental one:
+
+```sh
+./gradlew clean installDebug
+```
+
+Or in Android Studio: **Build → Clean Project**, then run the app again with the ▶️ Run button.
+
+Next, you'll confirm your changes in the running app.

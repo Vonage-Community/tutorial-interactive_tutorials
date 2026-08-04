@@ -1,0 +1,130 @@
+---
+title: Backend & Local App Setup
+---
+
+The Android app doesn't have a backend of its own — it talks to the same Node.js server the Vonage Video React App uses, running on port **3345**. In this step you will start that backend here in the Codespace, expose its port publicly, then clone the Android app to your own machine and run it in Android Studio against that public URL.
+
+## Configure Backend Credentials
+
+Open a terminal inside the Codespace by clicking the **hamburger menu (☰)** in the top-left corner, then selecting **Terminal → New Terminal**. The cloned repo lives under `project/`, so run all commands below from there:
+
+```sh
+cd project
+cp backend/.env.example backend/.env
+code backend/.env
+```
+
+Replace the placeholder values in `backend/.env`:
+
+```sh
+# backend/.env
+VONAGE_APP_ID=your-vonage-application-id
+VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+'
+```
+
+| Variable             | Where to find it                                                                                            |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `VONAGE_APP_ID`      | [Vonage Dashboard](https://dashboard.vonage.com) → Your Applications → the app you created for this project |
+| `VONAGE_PRIVATE_KEY` | The `private.key` file downloaded when you created the Vonage Application — paste its full contents here    |
+
+{% aside type="caution" %}
+Never commit `backend/.env` to source control. The repo's `.gitignore` already excludes it, but double-check before pushing.
+{% /aside %}
+
+## Start the Backend
+
+Install dependencies, then start **only the backend** (you don't need the React frontend for this tutorial):
+
+```sh
+yarn
+yarn dev backend
+```
+
+This starts the Node.js backend server on port **3345**.
+
+## Make the Port Public
+
+When the server starts, a notification dialog will appear in the **bottom-right corner** of the Codespace asking whether to make port 3345 publicly accessible. **Click "Make Public".**
+
+If you miss the dialog, you can do this manually:
+
+{% steps %}
+
+1. Click the **Ports** tab at the bottom of the Codespace.
+
+2. Right-click on port **3345** → **Port Visibility → Public**.
+
+{% /steps %}
+
+{% aside type="caution" %}
+The port must be public — otherwise the Android app running on your local machine (or emulator) cannot reach it.
+{% /aside %}
+
+Copy the forwarded address for port 3345 from the **Ports** tab. You'll use it as `BASE_API_URL` in the next section:
+
+```
+https://<codespace-subdomain>-3345.app.github.dev
+```
+
+## Clone the Android App Locally
+
+On your own machine (not in this Codespace), clone the Android app repository:
+
+```sh
+git clone https://github.com/Vonage/vonage-video-android-app.git
+cd vonage-video-android-app
+```
+
+{% aside %}
+You'll need **Android Studio Ladybug (2024.2.1) or newer** and **JDK 17+** installed before you can build the project. The project uses the Gradle wrapper, so you don't need a separate Gradle install.
+{% /aside %}
+
+## Point the Local App at the Backend
+
+The app needs to know the URL of your deployed backend. The recommended way for local development is to create a `local.properties` entry in your clone:
+
+```properties
+# local.properties
+BASE_API_URL=https://<codespace-subdomain>-3345.app.github.dev
+```
+
+{% aside type="tip" %}
+`local.properties` is git-ignored, so this is safe to set per-machine. You can alternatively export `BASE_API_URL` as an environment variable (useful for CI), or edit the `"baseApiUrl"` placeholder directly in `config/app-config.json` — see the next steps for that file's structure.
+{% /aside %}
+
+{% aside type="caution" %}
+If you run the app on the **Android Emulator** with a backend on your own machine's `localhost`, use the special alias `10.0.2.2` instead of `localhost` so the emulator can reach it. This doesn't apply here since your backend is already reachable at a public Codespace URL.
+{% /aside %}
+
+## Generate the Build Configuration and Run It
+
+From the root of your local clone, regenerate the build configuration so the app picks up `BASE_API_URL`:
+
+```sh
+./gradlew generateVonageConfig
+```
+
+{% steps %}
+
+1. Open the project folder in Android Studio and let Gradle sync complete.
+
+2. In the toolbar, choose the **app** run configuration.
+
+3. Choose a target device — either a running **Android emulator** or a connected physical device.
+
+4. Press the ▶️ **Run** button (or **Shift+F10**) to build and launch the app.
+
+{% /steps %}
+
+Or build and install from the command line instead of using Android Studio's Run button:
+
+```sh
+./gradlew installDebug
+```
+
+The app should launch and be able to reach your Codespace's backend. If you see a network error on launch, double-check that port 3345 is still public and that `BASE_API_URL` matches the forwarded address exactly.
+
+With the backend running and the app built and running locally, you're ready to start configuring feature flags.

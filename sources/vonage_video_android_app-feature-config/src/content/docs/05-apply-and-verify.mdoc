@@ -1,0 +1,53 @@
+---
+title: Apply & Verify
+---
+
+With your feature flags edited and the build configuration regenerated, this step shows you how to rebuild the app and confirm your changes on an emulator or device.
+
+## Rebuild and Run
+
+Back on your machine, rebuild and relaunch the app:
+
+{% steps %}
+
+1. If you haven't already, run `./gradlew clean installDebug` from the project root (a full clean build ensures any product-flavor changes take effect).
+
+2. Or in Android Studio, use **Build → Clean Project**, then press the ▶️ **Run** button (or **Shift+F10**) with your emulator or device selected.
+
+{% /steps %}
+
+{% aside type="caution" %}
+If the app is still running from a previous build, stop it first before reinstalling — otherwise you may see stale behavior.
+{% /aside %}
+
+## Verify on the Emulator or Device
+
+Join or start a meeting and check that your changes are reflected. Following the example from the previous step:
+
+{% steps %}
+
+1. Join a meeting room — confirm the initial layout matches your `defaultLayoutMode` setting (for example, a grid layout).
+
+2. Check the in-call toolbar — confirm the screen-share button is hidden if you set `allowScreenShare` to `false`.
+
+3. Try any other flags you changed — for example `allowChat`, `allowCaptions`, or `allowEmojis` — and confirm the corresponding UI element appears or disappears.
+
+{% /steps %}
+
+## Iterating Quickly
+
+A typical configure-test cycle:
+
+{% steps %}
+
+1. Edit `config/app-config.json`.
+
+2. Run `./gradlew generateVonageConfig`.
+
+3. Run `./gradlew clean installDebug` (or Clean Project + Run in Android Studio).
+
+4. Verify on the emulator or device.
+
+{% /steps %}
+
+Your feature flag configuration is live. Head to the final step for further resources.

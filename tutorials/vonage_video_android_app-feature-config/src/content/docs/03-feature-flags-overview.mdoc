@@ -1,0 +1,92 @@
+---
+title: Feature Flag Configuration Overview
+---
+
+The Android app's feature flags live in a single JSON file in your local clone: **`config/app-config.json`**. This is the file you'll edit to turn features on or off without touching any Kotlin source code.
+
+## Where It Lives
+
+{% filetree %}
+
+- config/
+  - app-config.json   ← Feature flags live here
+  - theme.json
+- app/
+- build-tools/
+- vonage-feature-chat/
+- vonage-feature-captions/
+- vonage-feature-screensharing/
+- ...
+
+{% /filetree %}
+
+## How It's Structured
+
+`app-config.json` also carries the backend URL placeholder alongside four feature-flag sections:
+
+```json
+{
+  "baseApiUrl": "${BASE_API_URL}",
+  "videoSettings": {
+    "allowBackgroundEffects": true,
+    "allowCameraControl": true,
+    "allowVideoOnJoin": true,
+    "defaultResolution": "640x480"
+  },
+  "audioSettings": {
+    "allowAdvancedNoiseSuppression": true,
+    "allowAudioOnJoin": true,
+    "allowMicrophoneControl": true
+  },
+  "waitingRoomSettings": {
+    "allowDeviceSelection": true
+  },
+  "meetingRoomSettings": {
+    "allowSettings": true,
+    "allowArchiving": true,
+    "allowCaptions": true,
+    "allowChat": true,
+    "allowDeviceSelection": true,
+    "allowEmojis": true,
+    "allowScreenShare": true,
+    "defaultLayoutMode": "activespeaker",
+    "showParticipantList": true
+  }
+}
+```
+
+- **`baseApiUrl`** — the backend URL placeholder you configured in the previous step (leave this alone; it's substituted from `local.properties` or the `BASE_API_URL` environment variable).
+- **`videoSettings`** — controls camera behavior and video quality before and during a call.
+- **`audioSettings`** — controls microphone behavior and audio settings.
+- **`waitingRoomSettings`** — controls what participants can do while waiting to be admitted.
+- **`meetingRoomSettings`** — controls in-call features once a participant has joined the meeting room.
+
+## Representative Flags
+
+Here's a closer look at some of the most commonly changed flags:
+
+| Flag | Section | Type | Default | Effect |
+|---|---|---|---|---|
+| `allowChat` | `meetingRoomSettings` | boolean | `true` | Shows or hides the in-call chat panel |
+| `allowArchiving` | `meetingRoomSettings` | boolean | `true` | Enables or disables session recording (archiving) controls |
+| `allowCaptions` | `meetingRoomSettings` | boolean | `true` | Enables or disables live captions during a call |
+| `allowEmojis` | `meetingRoomSettings` | boolean | `true` | Enables or disables the emoji reaction picker |
+| `allowScreenShare` | `meetingRoomSettings` | boolean | `true` | Enables or disables the screen-share button |
+| `allowBackgroundEffects` | `videoSettings` | boolean | `true` | Enables or disables virtual background/blur effects |
+| `defaultResolution` | `videoSettings` | string | `"640x480"` | Sets the default camera capture resolution used when a call starts |
+| `defaultLayoutMode` | `meetingRoomSettings` | string | `"activespeaker"` | Sets the default video layout (e.g. active speaker vs. grid) when a meeting room loads |
+
+## How Flags Reach the App
+
+The custom `JsonConfigPlugin` Gradle plugin reads `app-config.json` at build time and generates two things:
+
+| Output | Purpose |
+|---|---|
+| `AppConfig.kt` | Runtime-accessible Kotlin constants (e.g. `AppConfig.MeetingRoomSettings.ALLOW_CHAT`) |
+| `gradle/generated-config.properties` | Build properties used to select product flavor variants for optional feature modules (e.g. `vonage-feature-chat`) |
+
+{% aside %}
+Some features, like chat, are entire optional Gradle modules with `enabled`/`disabled` product flavor variants. The correct variant is selected automatically based on your `app-config.json` values — you never need to pick a flavor manually.
+{% /aside %}
+
+Next, you'll edit some of these flags and regenerate the corresponding Kotlin configuration in your local clone.
