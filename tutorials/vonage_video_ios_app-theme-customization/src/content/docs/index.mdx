@@ -1,7 +1,29 @@
 ---
-title: Starter Tutorial
-description: Get started building a tutorial.
+title: Vonage Video iOS App
+description: Learn how to customize the theme of the Vonage Video iOS App using its JSON configuration file and generator script.
 template: splash
 hero:
-  tagline: Starting a tutorial!
+  tagline: Theme Customization
 ---
+
+The Vonage Video iOS App (`vonage-video-ios-app`) is a Swift application built with Tuist. It controls how the app looks through a single JSON configuration file — **`VERA/Theme/semantics.json`** — paired with a Python generator script that turns your edits into a color asset catalog. This tutorial's Codespace has no Xcode or macOS, so all editing and building happens in a clone of the repo on your own Mac; the Codespace only runs the shared backend server the app connects to.
+
+In this tutorial you will:
+
+- Clone `vonage-video-ios-app` locally and run it in Xcode against the shared backend
+- Understand how color and typography tokens are structured in `semantics.json`
+- Edit color and typography tokens and regenerate the corresponding color assets
+- Rebuild and confirm your changes in the iOS Simulator
+
+---
+
+## Tutorial structure
+
+| #   | Page                             | What you'll do                                                            |
+| --- | ---------------------------------- | ---------------------------------------------------------------------------- |
+| 01  | Welcome                            | Learn what the iOS reference app is and what this tutorial covers            |
+| 02  | Backend & Local App Setup           | Start the shared backend, clone the iOS repo locally, and run it in Xcode    |
+| 03  | Theme Configuration Overview        | Explore the color and typography tokens in `semantics.json`                  |
+| 04  | Customize & Regenerate Theme        | Edit color and typography tokens and regenerate the color asset catalog      |
+| 05  | Apply & Verify                      | Rebuild in Xcode and confirm your changes in the Simulator                   |
+| 06  | What's Next                        | Review what you accomplished and find further resources                     |

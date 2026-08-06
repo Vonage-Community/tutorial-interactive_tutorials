@@ -1,0 +1,55 @@
+---
+title: Apply & Verify
+---
+
+With your theme tokens edited and `SemanticColors.xcassets` regenerated, this step shows you how to rebuild the app in Xcode and confirm your changes in the Simulator.
+
+## Rebuild and Run
+
+Back in Xcode, rebuild and relaunch the app:
+
+{% steps %}
+
+1. Make sure the **VERA** scheme and a Simulator destination are still selected.
+
+2. Press **Cmd+R** (or click the ▶️ Run button) to rebuild and relaunch the app.
+
+{% /steps %}
+
+{% aside type="caution" %}
+If Xcode is still showing the previous build, stop the running app first (Cmd+.) before pressing Cmd+R again — otherwise you may see stale colors or assets.
+{% /aside %}
+
+## Verify in the Simulator
+
+Check that your changes are reflected across the app:
+
+{% steps %}
+
+1. **Landing / waiting room** — confirm the background and primary button color match your `background` and `primary` tokens.
+
+2. **Meeting room** — join a call and verify the toolbar and controls use your updated colors.
+
+3. **Light / dark mode** — switch the Simulator's appearance (**Settings → Developer → Dark Appearance**, or Xcode's Environment Overrides) and confirm both palettes look correct.
+
+4. **Text and labels** — scan the UI for `text-primary` and other text token usage, and confirm typography sizes match your `desktop`/`mobile` scale edits (for example, `body-base`).
+
+{% /steps %}
+
+## Iterating Quickly
+
+A typical customize-test cycle:
+
+{% steps %}
+
+1. Edit `VERA/Theme/semantics.json`.
+
+2. Run `python3 ./Scripts/generate-app-theme.py`.
+
+3. Run `tuist generate`.
+
+4. Rebuild in Xcode with Cmd+R and verify in the Simulator.
+
+{% /steps %}
+
+Your theme is live. Head to the final step for further resources.

@@ -1,0 +1,83 @@
+---
+title: Customize & Regenerate Theme
+---
+
+Now that you know how `VERA/Theme/semantics.json` is structured, it's time to edit it in your local clone and regenerate the color assets the app actually reads.
+
+## Edit a Token
+
+In your local clone of `vonage-video-ios-app`, open `VERA/Theme/semantics.json` and change one or more tokens under `colors` and `typography`. For example, update the primary brand color for both light and dark mode, and increase the `body-base` font size:
+
+```json
+{
+  "themes": {
+    "vonage": {
+      "colors": {
+        "light": { "primary": "#1D6FE6" },
+        "dark":  { "primary": "#5FA0FF" }
+      },
+      "typography": {
+        "desktop": {
+          "body-base": { "font-size": "16px", "line-height": "22px" }
+        },
+        "mobile": {
+          "body-base": { "font-size": "16px", "line-height": "22px" }
+        }
+      }
+    }
+  }
+}
+```
+
+Save the file once you've made your edit.
+
+{% aside type="caution" %}
+Stick to `colors` and the `font-size`/`line-height` values under `typography`. Changing `typography.font-family` has no effect — the app always renders text with the system's native font. Changing `borderRadius` values also has no visible effect on the built iOS app in this exercise, so there's no need to touch them.
+{% /aside %}
+
+## Regenerate `SemanticColors.xcassets`
+
+From the `VERA/` directory of your local clone, run the theme generator script:
+
+```sh
+python3 ./Scripts/generate-app-theme.py
+```
+
+The script reads `Theme/semantics.json` and (re)generates the `VERACommonUI/VERACommonUI/Resources/SemanticColors.xcassets` asset catalog, writing one `.colorset` per semantic token with both its light and dark values. On success, you'll see:
+
+```
+✅ Generated 14 semantic colors in SemanticColors.xcassets
+```
+
+| Script | Run from | Reads | Writes |
+|---|---|---|---|
+| `generate-app-theme.py` | `VERA/` | `Theme/semantics.json` | `VERACommonUI/VERACommonUI/Resources/SemanticColors.xcassets` |
+
+## Regenerate the Xcode Project
+
+Theme tokens are compiled into the asset catalog, so the Xcode project needs to be regenerated afterward:
+
+```sh
+tuist generate
+```
+
+{% aside type="tip" %}
+If Xcode still shows stale values after regenerating, run `tuist clean` first to clear Tuist's cache, then generate again:
+
+```sh
+tuist clean
+tuist generate
+```
+{% /aside %}
+
+{% aside type="caution" %}
+If `semantics.json` has invalid JSON (a trailing comma, a missing quote, etc.), the generator script fails with something like:
+
+```
+❌ Error parsing JSON: Expecting ',' delimiter: line 8 column 5 (char 172)
+```
+
+Fix the JSON syntax in `VERA/Theme/semantics.json` and re-run `python3 ./Scripts/generate-app-theme.py` from `VERA/`.
+{% /aside %}
+
+Next, you'll rebuild the app in Xcode and confirm your changes.
