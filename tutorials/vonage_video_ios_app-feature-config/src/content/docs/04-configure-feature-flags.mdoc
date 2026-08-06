@@ -6,13 +6,14 @@ Now that you know how `VERA/Config/app-config.json` is structured, it's time to 
 
 ## Edit a Flag
 
-In your local clone of `vonage-video-ios-app`, open `VERA/Config/app-config.json` and change one or more flags in `meetingRoomSettings`. For example, turn off screen sharing and switch the default layout to a grid:
+In your local clone of `vonage-video-ios-app`, open `VERA/Config/app-config.json` and change one or more flags in `meetingRoomSettings`. For example, turn off archiving, captions, and chat:
 
 ```json
 {
   "meetingRoomSettings": {
-    "allowScreenShare": false,
-    "defaultLayoutMode": "grid"
+    "allowArchiving": false,
+    "allowCaptions": false,
+    "allowChat": false
   }
 }
 ```
@@ -44,6 +45,15 @@ Feature flags are compiled into `AppConfig.swift`, so the Xcode project needs to
 ```sh
 tuist generate
 ```
+
+{% aside type="tip" %}
+If Xcode still shows stale values after regenerating, run `tuist clean` first to clear Tuist's cache, then generate again:
+
+```sh
+tuist clean
+tuist generate
+```
+{% /aside %}
 
 {% aside type="caution" %}
 If `app-config.json` has invalid JSON (a trailing comma, a missing quote, etc.), the generator script fails with something like:

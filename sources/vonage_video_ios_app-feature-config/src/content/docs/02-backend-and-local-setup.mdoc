@@ -105,6 +105,35 @@ If you run the script before exporting `BASE_API_URL`, it fails with:
 Export `BASE_API_URL` as shown above, then re-run `./Scripts/generateEnvironmentConstants.sh` from `VERA/`.
 {% /aside %}
 
+## Generate the Signing Configuration
+
+Tuist also requires a generated signing configuration file before it can generate the Xcode project — even if you only plan to run on the Simulator. Still from `VERA/`, export the following environment variables, then run the signing config generator script:
+
+```sh
+export DEVELOPMENT_TEAM=AB0C12DE34   # Find in Apple Developer portal → Certificates, Identifiers & Profiles
+export MARKETING_VERSION=1.1
+export CURRENT_PROJECT_VERSION=1
+./Scripts/regenerateSigningConfig.sh
+```
+
+The script writes `Config/Signing.xcconfig`.
+
+| Variable                  | Where to find it                                                                                        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `DEVELOPMENT_TEAM`         | [Apple Developer Portal](https://developer.apple.com/account) → Certificates, Identifiers & Profiles → Membership → Team ID |
+| `MARKETING_VERSION`        | The app version number you want to build, e.g. `1.1`                                                     |
+| `CURRENT_PROJECT_VERSION`  | The build number, e.g. `1`                                                                                |
+
+{% aside type="caution" %}
+If you skip this step, `tuist generate` fails with:
+
+```
+Configuration file not found at path .../VERA/Config/Signing.xcconfig
+```
+
+Export the three variables above and re-run `./Scripts/regenerateSigningConfig.sh` from `VERA/`, then try `tuist generate` again.
+{% /aside %}
+
 ## Generate the Xcode Project and Run It
 
 Still from `VERA/`, generate the Xcode project with Tuist and open it:
@@ -127,7 +156,7 @@ open VERA.xcworkspace
 The app should launch in the Simulator and be able to reach your Codespace's backend. If you see a network error on launch, double-check that port 3345 is still public and that `BASE_API_URL` matches the forwarded address exactly.
 
 {% aside type="tip" %}
-Running on a **physical device** instead of the Simulator requires code signing. Set the `DEVELOPMENT_TEAM` environment variable to your Apple Developer Team ID before running `tuist generate`, then select your device and a valid signing team in Xcode's **Signing & Capabilities** tab. This is optional — the Simulator is enough to complete this tutorial.
+You already set `DEVELOPMENT_TEAM` when generating the signing configuration above, so the Simulator should just work. Running on a **physical device** instead requires selecting your device and a valid signing team in Xcode's **Signing & Capabilities** tab. This is optional — the Simulator is enough to complete this tutorial.
 {% /aside %}
 
 With the backend running and the app built and running locally, you're ready to start configuring feature flags.

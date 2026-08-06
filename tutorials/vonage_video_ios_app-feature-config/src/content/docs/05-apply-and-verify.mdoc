@@ -26,11 +26,13 @@ Join or start a meeting in the Simulator and check that your changes are reflect
 
 {% steps %}
 
-1. Join a meeting room — confirm the initial layout matches your `defaultLayoutMode` setting (for example, a grid layout).
+1. Check the in-call toolbar — confirm the archiving/recording control is hidden if you set `allowArchiving` to `false`.
 
-2. Check the in-call toolbar — confirm the screen-share button is hidden if you set `allowScreenShare` to `false`.
+2. Confirm the captions control no longer appears if you set `allowCaptions` to `false`.
 
-3. Try any other flags you changed — for example `allowChat`, `allowCaptions`, or `allowEmojis` — and confirm the corresponding UI element appears or disappears.
+3. Confirm the chat panel is no longer available if you set `allowChat` to `false`.
+
+4. Try any other flags you changed — for example `allowScreenShare`, `allowEmojis`, or `defaultLayoutMode` — and confirm the corresponding UI element or behavior changes accordingly.
 
 {% /steps %}
 
