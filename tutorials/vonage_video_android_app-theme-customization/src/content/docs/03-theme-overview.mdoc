@@ -44,7 +44,7 @@ The Android app's visual theme lives in a single JSON file in your local clone: 
 
 - **`colors.light` / `colors.dark`** — Separate color palettes for each mode. Both modes use the same set of semantic token keys, including `on-*` pairs (e.g. `on-primary`) for text/icon color placed on top of that token.
 - **`borderRadius`** — Six named tokens controlling the corner rounding of buttons, cards, and dialogs.
-- **`typography`** — A shared `font-family`, plus separate `desktop` and `mobile` type scales. Both scales use the same named tokens, just with different point sizes.
+- **`typography`** — `desktop` and `mobile` type scales. Both scales use the same named tokens, just with different point sizes.
 
 ## Color Token Reference
 
@@ -78,12 +78,6 @@ Border radius tokens are shared between light and dark mode — they only contro
 | `extra-large` | `24` |
 
 ## Typography Tokens
-
-`typography.font-family` sets the single font used across the app. The `desktop` and `mobile` scales each define the same named tokens with different sizes:
-
-| Token | Value |
-|-------|-------|
-| `font-family` | `Inter` |
 
 ### Desktop scale (`typography.desktop`)
 
