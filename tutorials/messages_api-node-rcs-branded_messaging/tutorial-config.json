@@ -1,0 +1,19 @@
+{
+  "files": [],
+  "openFiles": [],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "",
+  "starterFiles": [
+    "project/package.json",
+    "project/server.js",
+    "project/setup-credentials.js",
+    "project/.env.example",
+    "project/.gitignore"
+  ],
+  "capabilities": [],
+  "version": "0.0.1",
+  "filename": "messages_api-node-rcs-branded_messaging"
+}
