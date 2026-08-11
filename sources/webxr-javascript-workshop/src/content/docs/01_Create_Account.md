@@ -8,7 +8,7 @@ First, a Vonage account is needed to get the credentials to set up this workshop
 Here's a coupon to add money to your <a href="https://dashboard.vonage.com/coupons" target="_blank">account</a>:
 
 ```html
-DIMFLCHF26
+ATLDICHF26
 ```
 
 > Note: Make sure to copy your API Key and API Secret somewhere. We will need it in the next step.

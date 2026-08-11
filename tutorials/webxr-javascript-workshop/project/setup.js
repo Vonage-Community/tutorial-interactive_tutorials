@@ -61,7 +61,7 @@ function setApiKey(data) {
   } else {
     process.env.VONAGE_API_KEY = data.toString().trim();
     step = 'SET_API_SECRET';
-    console.log('Enter you API secret:');
+    console.log('Enter your API secret:');
   }
   return true;
 }

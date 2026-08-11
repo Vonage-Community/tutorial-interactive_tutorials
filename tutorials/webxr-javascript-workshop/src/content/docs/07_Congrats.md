@@ -24,6 +24,10 @@ chmod +x export.sh && ./export.sh
 
 Don't forget to stop your Codespace once you are done. Just to <a href="https://github.com/codespaces" target="_blank">https://github.com/codespaces</a>. Click the 3 dots of your `Active` instance and click `Stop codespace`
 
+## Leave us feedback
+
+We would love to know how the workshop went for you. Let us know on the <a href="https://feedback-poc-test.netlify.app/?session=chf-atlanta" target="_blank">workshop feedback page</a>. Thanks.
+
 ## What's Next?
 
 - Can you create a WebXR application that makes phone calls? How about a voice chat in a WebXR environment?

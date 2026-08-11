@@ -103,7 +103,7 @@ function setApiKey(data) {
     data.toString().replace(/\n/g, '').length === 0 ||
     data.toString().replace(/\n/g, '') === ' '
   ) {
-    console.log('(Can not be blank.) Enter you API key:');
+    console.log('(Can not be blank.) Enter your API key:');
   } else {
     process.env.VONAGE_API_KEY = data.toString().replace(/\n/g, '');
     step = 'SET_API_SECRET';
