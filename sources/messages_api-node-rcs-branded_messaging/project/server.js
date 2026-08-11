@@ -3,20 +3,12 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const { URLSearchParams } = require("node:url");
+const { tokenGenerate } = require("@vonage/jwt");
 
 const PORT = 3000;
 const sentMessages = [];
 const statusEvents = [];
 let lastError = null;
-
-function base64Url(value) {
-  return Buffer
-    .from(value)
-    .toString("base64")
-    .replace(/=/g, "")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_");
-}
 
 function readEnv() {
   const envPath = path.join(process.cwd(), ".env");
@@ -81,6 +73,32 @@ function hasCompleteConfig(config) {
   );
 }
 
+function canReadPrivateKey(config) {
+  if (!config.privateKey) {
+    return false;
+  }
+
+  try {
+    crypto.createPrivateKey(config.privateKey);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function canGenerateMessagesJwt(config) {
+  if (!hasCompleteConfig(config) || !canReadPrivateKey(config)) {
+    return false;
+  }
+
+  try {
+    createMessagesJwt(config);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function createMessagesJwt(config) {
   // TODO: Create the Messages API JWT
   throw new Error("createMessagesJwt() is not complete yet.");
@@ -137,8 +155,16 @@ function buildValidationUrl(baseUrl) {
 function getChecks(config) {
   return [
     {
-      label: "RCS credentials are configured",
+      label: "Required RCS values are present",
       passed: hasCompleteConfig(config)
+    },
+    {
+      label: "Private key can be read",
+      passed: canReadPrivateKey(config)
+    },
+    {
+      label: "Messages API JWT can be generated",
+      passed: canGenerateMessagesJwt(config)
     },
     {
       label: "Messages API accepted an RCS request",

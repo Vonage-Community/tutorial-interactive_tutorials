@@ -4,5 +4,8 @@
   "scripts": {
     "setup": "node setup-credentials.js",
     "start": "node --watch server.js"
+  },
+  "dependencies": {
+    "@vonage/jwt": "^1.14.0"
   }
 }

@@ -19,6 +19,8 @@ The setup script asks for:
 - the RCS message category, or `transaction` if you press Enter;
 - the private key for your Vonage Application.
 
-You can either provide the path to a private key file in the Codespace or paste the private key when prompted. The script stores the key in `project/private.key` and writes the remaining values to `project/.env`.
+You can either provide the path to a private key file in the Codespace or paste the private key when prompted. Include the `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----` lines when you paste the key.
+
+The script checks whether Node.js can read the private key, stores it in `project/private.key`, and writes the remaining values to `project/.env`.
 
 Leave the application terminal running. The app reads the latest values from `.env` whenever you use it.

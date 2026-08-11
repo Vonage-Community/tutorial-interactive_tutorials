@@ -1,5 +1,6 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const readline = require("node:readline/promises");
 
 const rl = readline.createInterface({
@@ -46,6 +47,12 @@ async function main() {
   const toNumber = normalizeRecipient(await ask("RCS recipient phone number"));
   const rcsCategory = await ask("RCS category", "transaction");
   const privateKey = await readPrivateKey();
+
+  try {
+    crypto.createPrivateKey(privateKey);
+  } catch {
+    throw new Error("The private key could not be read. Make sure you include the BEGIN and END lines from the private.key file.");
+  }
 
   const privateKeyPath = path.join(process.cwd(), "private.key");
   await fs.writeFile(privateKeyPath, privateKey, { mode: 0o600 });
