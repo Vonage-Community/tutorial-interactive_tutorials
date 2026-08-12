@@ -13,56 +13,32 @@ async function ask(question, fallback = "") {
   return answer.trim() || fallback;
 }
 
-async function readPrivateKey() {
-  const source = await ask("Private key file path, or press Enter to paste the private key");
-
-  if (source) {
-    return fs.readFile(path.resolve(source), "utf8");
-  }
-
-  console.log("Paste the private key. Finish with the line -----END PRIVATE KEY-----");
-
-  const lines = [];
-  while (true) {
-    const line = await rl.question("");
-    lines.push(line);
-
-    if (line.includes("-----END PRIVATE KEY-----")) {
-      break;
-    }
-  }
-
-  return `${lines.join("\n")}\n`;
-}
-
 function normalizeRecipient(number) {
   return number.replace(/^\+/, "").replace(/^00/, "");
 }
 
 async function main() {
   console.log("\nRCS branded messaging setup\n");
+  console.log("Before running this script, add your Vonage private key to project/private.key.\n");
 
   const applicationId = await ask("Vonage Application ID");
   const rcsSenderId = await ask("RCS Sender ID");
   const toNumber = normalizeRecipient(await ask("RCS recipient phone number"));
-  const rcsCategory = await ask("RCS category", "transaction");
-  const privateKey = await readPrivateKey();
+  const privateKeyPath = path.join(process.cwd(), "private.key");
+  const privateKey = await fs.readFile(privateKeyPath, "utf8");
 
   try {
     crypto.createPrivateKey(privateKey);
   } catch {
-    throw new Error("The private key could not be read. Make sure you include the BEGIN and END lines from the private.key file.");
+    throw new Error("The private key in project/private.key could not be read. Make sure you include the BEGIN and END lines from the private.key file.");
   }
-
-  const privateKeyPath = path.join(process.cwd(), "private.key");
-  await fs.writeFile(privateKeyPath, privateKey, { mode: 0o600 });
 
   const env = [
     `VONAGE_APPLICATION_ID=${applicationId}`,
     "VONAGE_PRIVATE_KEY_PATH=./private.key",
     `RCS_SENDER_ID=${rcsSenderId}`,
     `RCS_TO_NUMBER=${toNumber}`,
-    `RCS_CATEGORY=${rcsCategory}`,
+    "RCS_CATEGORY=transaction",
     "MESSAGES_API_URL=https://api.nexmo.com/v1/messages",
     "DEFAULT_RCS_TEXT=Hello from Vonage RCS"
   ].join("\n");
