@@ -62,9 +62,10 @@
 <p>Your Codespace contains a starter project in <code dir="auto">project/</code>. You will add the JWT, request payload, send request, and status webhook logic step by step.</p>
 <p>Before you begin, make sure you have:</p>
 <ul>
-<li>a Vonage Application with <strong>Messages</strong> capability;</li>
-<li>the Application ID and private key for that application;</li>
-<li>an existing <strong>RCS Sender ID</strong> associated with the application;</li>
-<li>an RCS-capable test phone number. If your agent is still in testing, the number must be added as a test device.</li>
+<li>a Vonage Application with <strong>Messages</strong> capability connected to your RCS agent;</li>
+<li>the Application ID and private key for that same application;</li>
+<li>the RCS agent Sender ID, also called the <code dir="auto">vonage_id</code>, associated with that application;</li>
+<li>an RCS-capable test phone number. If your agent is still in testing, the number must be added as a test device for that agent.</li>
 </ul>
+<p>If the Application ID and private key belong to a different application than the one connected to your RCS agent, the Messages API can reject the request with an authorization error.</p>
 <p>This exercise uses the real Messages API endpoint, not the Messages API Sandbox.</p> </div> <footer class="sl-flex astro-3yyafb3n"> <div class="meta sl-flex astro-3yyafb3n">   </div> <div class="pagination-links print:hidden astro-u2l5gyhi" dir="ltr"> <a href="../" rel="prev" class="astro-u2l5gyhi"> <svg aria-hidden="true" class="astro-u2l5gyhi astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg> <span class="astro-u2l5gyhi"> Previous <br class="astro-u2l5gyhi"> <span class="link-title astro-u2l5gyhi">Send an RCS Branded Message</span> </span> </a> <a href="../02-set-up-rcs-credentials/" rel="next" class="astro-u2l5gyhi"> <svg aria-hidden="true" class="astro-u2l5gyhi astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg> <span class="astro-u2l5gyhi"> Next <br class="astro-u2l5gyhi"> <span class="link-title astro-u2l5gyhi">Set Up RCS Credentials</span> </span> </a> </div>   </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>

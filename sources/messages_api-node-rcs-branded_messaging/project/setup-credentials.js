@@ -17,6 +17,14 @@ function normalizeRecipient(number) {
   return number.replace(/^\+/, "").replace(/^00/, "");
 }
 
+function getApplicationUrl() {
+  if (process.env.CODESPACE_NAME && process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN) {
+    return `https://${process.env.CODESPACE_NAME}-3000.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
+  }
+
+  return "http://localhost:3000";
+}
+
 async function main() {
   console.log("\nRCS branded messaging setup\n");
   console.log("Before running this script, add your Vonage private key to project/private.key.\n");
@@ -45,7 +53,8 @@ async function main() {
 
   await fs.writeFile(path.join(process.cwd(), ".env"), `${env}\n`);
 
-  console.log("\nSetup complete. Reload the RCS app in your browser tab.\n");
+  console.log("\nSetup complete. Reload the RCS app in your browser tab.");
+  console.log(`Application URL: ${getApplicationUrl()}\n`);
 }
 
 main()
