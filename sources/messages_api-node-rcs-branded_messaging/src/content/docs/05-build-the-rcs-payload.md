@@ -5,7 +5,7 @@ description: Create the Messages API payload for a basic RCS text message.
 
 A Messages API request sent through the SDK starts with the same core values: message type, channel, sender, recipient, and content. For this exercise, you also set `webhookUrl` so the status callback returns to this Codespace.
 
-In `project/server.js`, find `buildRcsTextPayload()`. Replace the `TODO` comment and the `throw new Error(...)` line inside the function with this code:
+In `project/server.js`, find `buildRcsTextPayload()`. Replace the `TODO` comment with this code:
 
 ```js
 return {

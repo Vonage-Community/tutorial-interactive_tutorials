@@ -15,6 +15,14 @@ The first terminal is already running the exercise app, so open a new terminal b
 npm run setup
 ```
 
+The final line of the setup output prints the application URL again, for example:
+
+```text
+Application URL: https://<your-codespace-name>-3000.app.github.dev
+```
+
+Use this URL to reopen or reload the RCS app after setup.
+
 The setup script asks for:
 
 - your **Vonage Application ID**;

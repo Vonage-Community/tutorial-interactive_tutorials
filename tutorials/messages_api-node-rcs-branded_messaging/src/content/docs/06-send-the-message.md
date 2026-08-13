@@ -5,7 +5,7 @@ description: Send the RCS text message with the Vonage Server SDK.
 
 Now send the text message with the SDK client you initialized earlier. The SDK signs the request for you.
 
-In `project/server.js`, find `sendRcsText()`. Replace the `TODO` comment and the `throw new Error(...)` line inside the function with this code:
+In `project/server.js`, find `sendRcsText()`. Replace the `TODO` comment with this code:
 
 ```js
 const vonage = initializeMessagesClient(config);
