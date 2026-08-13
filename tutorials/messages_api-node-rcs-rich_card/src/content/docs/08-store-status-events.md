@@ -5,7 +5,7 @@ description: Store the status webhook events sent by the Messages API.
 
 After the message is accepted, Vonage sends status events to the `webhookUrl` in your request. These events show how the rich card moves through the delivery flow.
 
-In `project/server.js`, find `recordStatusEvent()`. Replace the `TODO` comment and the `throw new Error(...)` line inside the function with this code:
+In `project/server.js`, find `recordStatusEvent()`. Replace the `TODO` comment with this code:
 
 ```js
 const event = normalizeStatusEvent(rawEvent);

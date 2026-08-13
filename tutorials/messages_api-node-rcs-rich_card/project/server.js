@@ -139,7 +139,19 @@ function normalizeInboundEvent(rawEvent) {
   return {
     messageUuid: rawEvent.message_uuid || rawEvent.messageUuid || "unknown",
     messageType: rawEvent.message_type || rawEvent.messageType || "unknown",
-    postbackData: reply.id || reply.payload || button.payload || button.id || rawEvent.id || "unknown",
+    postbackData:
+      reply.postbackData
+      || reply.postback_data
+      || reply.id
+      || reply.payload
+      || button.postbackData
+      || button.postback_data
+      || button.payload
+      || button.id
+      || rawEvent.postbackData
+      || rawEvent.postback_data
+      || rawEvent.id
+      || "unknown",
     title: reply.title || button.title || rawEvent.text || "unknown",
     channel: rawEvent.channel || "unknown",
     from: rawEvent.from || "unknown",
