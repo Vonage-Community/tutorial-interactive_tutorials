@@ -3,19 +3,9 @@ title: Set Up RCS Credentials
 description: Add the Vonage Application and RCS sender details used by the exercise.
 ---
 
-The application needs your Vonage Application credentials before it can sign Messages API requests. Use the Application ID and private key from the Vonage Application connected to your RCS agent. You will add the private key in the editor first, then run the setup command in a new terminal.
+The application needs your Vonage Application credentials before it can send Messages API requests. Use the Application ID and private key from the Vonage Application connected to your RCS agent. You will add the private key in the editor first, then run the setup command in a new terminal.
 
-Open `project/private.key`. Replace the placeholder text with the complete private key from your Vonage Application, including these lines:
-
-```text
------BEGIN PRIVATE KEY-----
-```
-
-and:
-
-```text
------END PRIVATE KEY-----
-```
+Open `project/private.key`. It is an empty file. Paste the complete private key from your Vonage Application as the full file contents, including the `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----` lines exactly once.
 
 Save `project/private.key`.
 
@@ -33,6 +23,6 @@ The setup script asks for:
 
 The RCS Sender ID is the sender ID from your RCS onboarding or agent setup. Do not use a different application, and do not use the agent display name unless it is also the sender ID assigned to that agent.
 
-The script checks whether Node.js can read `project/private.key` and writes the remaining values to `project/.env`. The exercise uses `transaction` as the RCS message category.
+The script checks whether Node.js can read `project/private.key` and writes the remaining values to `project/.env`.
 
 Leave the application terminal running. The app reads the latest values from `.env` whenever you use it.

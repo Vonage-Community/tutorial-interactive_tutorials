@@ -3,7 +3,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const { URLSearchParams } = require("node:url");
-const { tokenGenerate } = require("@vonage/jwt");
+const { Vonage } = require("@vonage/server-sdk");
+const { Channels } = require("@vonage/messages");
 
 const PORT = 3000;
 const sentMessages = [];
@@ -48,8 +49,6 @@ function getConfig() {
     privateKeyPath,
     rcsSenderId: env.RCS_SENDER_ID || "",
     toNumber: env.RCS_TO_NUMBER || "",
-    rcsCategory: env.RCS_CATEGORY || "transaction",
-    messagesApiUrl: env.MESSAGES_API_URL || "https://api.nexmo.com/v1/messages",
     defaultText: env.DEFAULT_RCS_TEXT || "Hello from Vonage RCS"
   };
 }
@@ -86,22 +85,22 @@ function canReadPrivateKey(config) {
   }
 }
 
-function canGenerateMessagesJwt(config) {
+function canInitializeMessagesClient(config) {
   if (!hasCompleteConfig(config) || !canReadPrivateKey(config)) {
     return false;
   }
 
   try {
-    createMessagesJwt(config);
+    initializeMessagesClient(config);
     return true;
   } catch {
     return false;
   }
 }
 
-function createMessagesJwt(config) {
-  // TODO: Create the Messages API JWT
-  throw new Error("createMessagesJwt() is not complete yet.");
+function initializeMessagesClient(config) {
+  // TODO: Initialize the SDK client
+  throw new Error("initializeMessagesClient() is not complete yet.");
 }
 
 function buildRcsTextPayload(config, text, baseUrl) {
@@ -163,8 +162,8 @@ function getChecks(config) {
       passed: canReadPrivateKey(config)
     },
     {
-      label: "Messages API JWT can be generated",
-      passed: canGenerateMessagesJwt(config)
+      label: "Messages API SDK client can be initialized",
+      passed: canInitializeMessagesClient(config)
     },
     {
       label: "Messages API accepted an RCS request",

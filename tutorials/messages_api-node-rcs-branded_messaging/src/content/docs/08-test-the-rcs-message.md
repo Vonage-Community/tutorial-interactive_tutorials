@@ -9,8 +9,8 @@ In the message form, keep the default text or enter a short test message. Select
 
 The page should show:
 
-- the `message_uuid` returned by the Messages API;
-- the `webhook_url` used for this message;
+- the message UUID returned by the Messages API;
+- the status webhook URL used for this message;
 - at least one status event after Vonage sends the callback.
 
 Status callbacks may arrive a few seconds after the API accepts the message. If no event appears, confirm that port `3000` is public and that the recipient number is RCS-capable or added as a test device for your agent.

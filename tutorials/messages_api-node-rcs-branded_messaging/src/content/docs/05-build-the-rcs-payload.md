@@ -3,23 +3,19 @@ title: Build the RCS Payload
 description: Create the Messages API payload for a basic RCS text message.
 ---
 
-An RCS text message uses the standard Messages API send flow. The important RCS-specific values are the `rcs` channel and the RCS Sender ID in `from`.
+A Messages API request sent through the SDK starts with the same core values: message type, channel, sender, recipient, and content. For this exercise, you also set `webhookUrl` so the status callback returns to this Codespace.
 
 In `project/server.js`, find `buildRcsTextPayload()`. Replace the `TODO` comment and the `throw new Error(...)` line inside the function with this code:
 
 ```js
 return {
-  from: config.rcsSenderId,
-  to: config.toNumber,
-  channel: "rcs",
-  message_type: "text",
+  messageType: "text",
+  channel: Channels.RCS,
   text,
-  client_ref: `rcs-${crypto.randomUUID()}`,
-  webhook_url: `${baseUrl}/webhooks/status`,
-  rcs: {
-    category: config.rcsCategory
-  }
+  to: config.toNumber,
+  from: config.rcsSenderId,
+  webhookUrl: `${baseUrl}/webhooks/status`
 };
 ```
 
-The `webhook_url` points back to this Codespace for this message only, so you do not need to change the Status URL in the Vonage Dashboard for this exercise.
+The SDK sends this as a Messages API RCS text request. It converts camelCase fields such as `messageType` and `webhookUrl` to the API field names in the outgoing request.

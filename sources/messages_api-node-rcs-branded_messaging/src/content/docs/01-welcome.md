@@ -5,7 +5,7 @@ description: Send a basic RCS text message with the Vonage Messages API in a Git
 
 In this exercise, you will send a basic **RCS text message** through the Vonage **Messages API** and receive the related **status webhook** events in a small Node.js app.
 
-Your Codespace contains a starter project in `project/`. You will add the JWT, request payload, send request, and status webhook logic step by step.
+Your Codespace contains a starter project in `project/`. You will initialize the Vonage Server SDK client, build the RCS text payload, send the request, and store the status webhook events step by step.
 
 Before you begin, make sure you have:
 

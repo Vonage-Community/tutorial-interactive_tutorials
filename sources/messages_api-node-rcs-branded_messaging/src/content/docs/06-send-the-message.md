@@ -1,53 +1,28 @@
 ---
 title: Send the Message
-description: Post the RCS payload to the Messages API.
+description: Send the RCS text message with the Vonage Server SDK.
 ---
 
-Now send the payload to the Messages API with the JWT you created in the previous step.
+Now send the text message with the SDK client you initialized earlier. The SDK signs the request for you.
 
 In `project/server.js`, find `sendRcsText()`. Replace the `TODO` comment and the `throw new Error(...)` line inside the function with this code:
 
 ```js
-const jwt = createMessagesJwt(config);
+const vonage = initializeMessagesClient(config);
 const payload = buildRcsTextPayload(config, text, baseUrl);
-
-const response = await fetch(config.messagesApiUrl, {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${jwt}`,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(payload)
-});
-
-const rawBody = await response.text();
-let responseBody = {};
-
-try {
-  responseBody = rawBody ? JSON.parse(rawBody) : {};
-} catch {
-  responseBody = { raw: rawBody };
-}
-
-if (!response.ok) {
-  throw new Error(
-    `Messages API returned ${response.status}: ${JSON.stringify(responseBody)}`
-  );
-}
-
-const messageUuid = responseBody.message_uuid;
+const response = await vonage.messages.send(payload);
+const messageUuid = response.messageUUID || response.message_uuid;
 
 if (!messageUuid) {
-  throw new Error("Messages API response did not include message_uuid.");
+  throw new Error("Messages API response did not include a message UUID.");
 }
 
 const sentMessage = {
   messageUuid,
-  clientRef: payload.client_ref,
   from: payload.from,
   to: payload.to,
   text: payload.text,
-  webhookUrl: payload.webhook_url,
+  webhookUrl: payload.webhookUrl,
   sentAt: new Date().toISOString()
 };
 
@@ -57,4 +32,4 @@ sentMessages.splice(10);
 return sentMessage;
 ```
 
-The response confirms that Vonage accepted the request and returns the `message_uuid` used to match later status events.
+The response confirms that Vonage accepted the request and returns the message UUID used to match later status events.

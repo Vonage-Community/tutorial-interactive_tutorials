@@ -3,7 +3,7 @@ title: Log Status Events
 description: Store the status webhook events sent by the Messages API.
 ---
 
-After the message is accepted, Vonage sends status events to the `webhook_url` in your request. These events show how the message moves through the delivery flow.
+After the message is accepted, Vonage sends status events to the `webhookUrl` in your request. These events show how the message moves through the delivery flow.
 
 In `project/server.js`, find `recordStatusEvent()`. Replace the `TODO` comment and the `throw new Error(...)` line inside the function with this code:
 

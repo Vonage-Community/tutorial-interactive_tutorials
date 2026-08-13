@@ -27,7 +27,7 @@ function getApplicationUrl() {
 
 async function main() {
   console.log("\nRCS branded messaging setup\n");
-  console.log("Before running this script, add your Vonage private key to project/private.key.\n");
+  console.log("Before running this script, paste your full Vonage private key into project/private.key.\n");
 
   const applicationId = await ask("Vonage Application ID");
   const rcsSenderId = await ask("RCS Sender ID");
@@ -46,8 +46,6 @@ async function main() {
     "VONAGE_PRIVATE_KEY_PATH=./private.key",
     `RCS_SENDER_ID=${rcsSenderId}`,
     `RCS_TO_NUMBER=${toNumber}`,
-    "RCS_CATEGORY=transaction",
-    "MESSAGES_API_URL=https://api.nexmo.com/v1/messages",
     "DEFAULT_RCS_TEXT=Hello from Vonage RCS"
   ].join("\n");
 
