@@ -1,0 +1,21 @@
+{
+  "files": [],
+  "openFiles": [],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "",
+  "starterFiles": [
+    "project/package.json",
+    "project/server.js",
+    "project/setup-credentials.js",
+    "project/assets/vonage-logo.png",
+    "project/private.key",
+    "project/.env.example",
+    "project/.gitignore"
+  ],
+  "capabilities": [],
+  "version": "0.0.1",
+  "filename": "messages_api-node-rcs-rich_card"
+}
