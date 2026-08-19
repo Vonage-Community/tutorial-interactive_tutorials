@@ -8,10 +8,15 @@ The Vonage Server SDK handles authentication for Messages API requests. Your cod
 In `project/server.js`, find `initializeMessagesClient()`. Replace the `TODO` comment with this code:
 
 ```js
-return new Vonage({
-  applicationId: config.applicationId,
-  privateKey: config.privateKey
-});
+return new Vonage(
+  {
+    applicationId: config.applicationId,
+    privateKey: config.privateKey
+  },
+  {
+    apiHost: config.messagesApiHost
+  }
+);
 ```
 
-The rest of the exercise uses this client to send the RCS text message.
+The rest of the exercise uses this client to send the RCS text message through the production Messages API endpoint.

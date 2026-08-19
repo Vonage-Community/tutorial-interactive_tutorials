@@ -30,7 +30,7 @@ async function main() {
   console.log("Before running this script, paste your full Vonage private key into project/private.key.\n");
 
   const applicationId = await ask("Vonage Application ID");
-  const rcsSenderId = await ask("RCS Sender ID");
+  const rcsSenderId = await ask("RCS Sender ID (vonage_id, not the display name)");
   const toNumber = normalizeRecipient(await ask("RCS recipient phone number"));
   const privateKeyPath = path.join(process.cwd(), "private.key");
   const privateKey = await fs.readFile(privateKeyPath, "utf8");
@@ -46,6 +46,7 @@ async function main() {
     "VONAGE_PRIVATE_KEY_PATH=./private.key",
     `RCS_SENDER_ID=${rcsSenderId}`,
     `RCS_TO_NUMBER=${toNumber}`,
+    "MESSAGES_API_HOST=https://api.nexmo.com",
     "DEFAULT_RCS_TEXT=Hello from Vonage RCS"
   ].join("\n");
 

@@ -14,6 +14,6 @@ Before you begin, make sure you have:
 - the RCS agent Sender ID, also called the `vonage_id`, associated with that application;
 - an RCS-capable test phone number. If your agent is still in testing, the number must be added as a test device for that agent.
 
-If the Application ID and private key belong to a different application than the one connected to your RCS agent, the Messages API can reject the request with an authorization error.
+If the Application ID and private key belong to a different application than the one connected to your RCS agent, or if you use the agent display name instead of the Sender ID, the Messages API can reject the request.
 
 This exercise uses the real Messages API endpoint, not the Messages API Sandbox.

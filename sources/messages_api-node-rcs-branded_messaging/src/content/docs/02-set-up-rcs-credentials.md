@@ -29,7 +29,7 @@ The setup script asks for:
 - your **RCS Sender ID**, also called the `vonage_id`;
 - the RCS-capable recipient phone number.
 
-The RCS Sender ID is the sender ID from your RCS onboarding or agent setup. Do not use a different application, and do not use the agent display name unless it is also the sender ID assigned to that agent.
+The RCS Sender ID is assigned during RCS onboarding or agent setup. Use the Sender ID connected to the same Vonage Application as your Application ID and private key. Do not use the agent display name unless it is also the Sender ID assigned to that agent.
 
 The script checks whether Node.js can read `project/private.key` and writes the remaining values to `project/.env`.
 

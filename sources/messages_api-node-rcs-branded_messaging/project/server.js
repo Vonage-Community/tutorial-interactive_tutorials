@@ -29,10 +29,17 @@ function readEnv() {
       }
 
       const key = line.slice(0, separatorIndex).trim();
-      const value = line.slice(separatorIndex + 1).trim();
+      const value = line.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, "");
       env[key] = value;
       return env;
     }, {});
+}
+
+function normalizeMessagesApiHost(value) {
+  return (value || "https://api.nexmo.com")
+    .trim()
+    .replace(/\/v1\/messages\/?$/, "")
+    .replace(/\/$/, "");
 }
 
 function getConfig() {
@@ -49,6 +56,7 @@ function getConfig() {
     privateKeyPath,
     rcsSenderId: env.RCS_SENDER_ID || "",
     toNumber: env.RCS_TO_NUMBER || "",
+    messagesApiHost: normalizeMessagesApiHost(env.MESSAGES_API_HOST || env.MESSAGES_API_URL),
     defaultText: env.DEFAULT_RCS_TEXT || "Hello from Vonage RCS"
   };
 }
@@ -178,6 +186,35 @@ function getChecks(config) {
       passed: Boolean(getMatchingStatusEvent())
     }
   ];
+}
+
+async function readErrorBody(error) {
+  if (!error.response || typeof error.response.text !== "function") {
+    return "";
+  }
+
+  try {
+    const response = typeof error.response.clone === "function"
+      ? error.response.clone()
+      : error.response;
+    return await response.text();
+  } catch {
+    return "";
+  }
+}
+
+async function formatError(error) {
+  const status = error.response?.status;
+  const body = await readErrorBody(error);
+
+  if (status) {
+    const prefix = status === 401
+      ? "Messages API returned 401 Unauthorized. Check that the Application ID and private key belong to the Vonage Application connected to this RCS Sender ID."
+      : `Messages API returned ${status}.`;
+    return body ? `${prefix}\n\n${body}` : prefix;
+  }
+
+  return error.stack || error.message || String(error);
 }
 
 function escapeHtml(value) {
@@ -383,6 +420,7 @@ function renderPage(req) {
           <p><strong>Application:</strong> ${escapeHtml(config.applicationId || "Not configured")}</p>
           <p><strong>RCS Sender ID:</strong> ${escapeHtml(config.rcsSenderId || "Not configured")}</p>
           <p><strong>Recipient:</strong> ${escapeHtml(config.toNumber || "Not configured")}</p>
+          <p><strong>Messages API host:</strong> ${escapeHtml(config.messagesApiHost)}</p>
           <p><strong>Status webhook:</strong><br><code>${escapeHtml(`${baseUrl}/webhooks/status`)}</code></p>
         </section>
       </div>
@@ -538,8 +576,8 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
     res.end("Not found");
   } catch (error) {
-    lastError = error.stack || error.message;
-    console.error(error);
+    lastError = await formatError(error);
+    console.error(lastError);
 
     if (!res.headersSent) {
       if (req.method === "POST") {
