@@ -26,7 +26,7 @@ Don't forget to stop your Codespace once you are done. Just to <a href="https://
 
 ## Leave us feedback
 
-We would love to know how the workshop went for you. Let us know on the <a href="https://feedback-poc-test.netlify.app/?session=chf-durham" target="_blank">workshop feedback page</a>. Thanks.
+We would love to know how the workshop went for you. Let us know on the <a href="https://feedback-poc-test.netlify.app/?session=chf-dc" target="_blank">workshop feedback page</a>. Thanks.
 
 ## What's Next?
 
