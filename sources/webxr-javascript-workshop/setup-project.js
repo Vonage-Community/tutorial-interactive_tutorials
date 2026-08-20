@@ -107,7 +107,7 @@ function setApiKey(data) {
   } else {
     process.env.VONAGE_API_KEY = data.toString().replace(/\n/g, '');
     step = 'SET_API_SECRET';
-    console.log('Enter you API secret:');
+    console.log('Enter your API secret:');
   }
   return true;
 }
@@ -117,7 +117,7 @@ function setApiSecret(data) {
     data.toString().replace(/\n/g, '').length === 0 ||
     data.toString().replace(/\n/g, '') === ' '
   ) {
-    console.log('(Can not be blank.) Enter you API secret:');
+    console.log('(Can not be blank.) Enter your API secret:');
   } else {
     process.env.VONAGE_API_SECRET = data.toString().replace(/\n/g, '');
     step = 'SET_APP_NAME';
