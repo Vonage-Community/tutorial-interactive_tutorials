@@ -1,0 +1,8 @@
+---
+// Override Footer to add step navigation
+import Default from '@astrojs/starlight/components/Footer.astro';
+import StepNavigation from './StepNavigation.astro';
+---
+
+<Default {...Astro.props} />
+<StepNavigation />
