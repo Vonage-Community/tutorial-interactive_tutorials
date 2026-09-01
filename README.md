@@ -111,25 +111,3 @@ Or simply paste the contents of `AGENTS.md` into your tool's system prompt / con
 #### Reference example
 
 `src/content/docs/02-step-template.md` is an annotated example of a complete, well-formed tutorial step. Use it as a starting point or reference when writing manually.
-
-### Create the Tutorial Config
-
-The final part of creating a tutorial is to create a configuration file. This allows for the Vonage Cloud Runtime Workspace to be created for you and set up with the correct panels and files you need. There is a small app in the astro development toolbar to help you generate this file. 
-
-![Vonage Astro Toolbar](.github/images/toolbar.png)
-
-This will create a `tutorial-config.json` file. For example:
-
-```json
-{
-  "files": [
-    "send-sms.js" // The files needed for the tutorial
-  ],
-  "panels": [ 
-    "terminal" // The panels needed. Options are "terminal" and "browser"
-  ],
-  "version": "1.0.0" // The version of the tutorial
-}
-```
-
-> Make sure that you update the version of the tutorial in subsequent updates to the tutorial using [semver](https://semver.org) or your publishing step will fail. 
