@@ -61,6 +61,7 @@ app.post('/webhooks/asr', async (req, res) => {
 
     res.json(getConversationalNCCO(aiResponse));
   } catch (error) {
+    history.pop();
     console.error('OpenAI Error:', error);
     res.json(getConversationalNCCO('I encountered an error. Please try again.'));
   }

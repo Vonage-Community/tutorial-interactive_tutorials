@@ -5,6 +5,8 @@ description: Call your Vonage number and test the first AI response.
 
 # Test Basic Bot
 
+> **Privacy**: Your speech is sent to OpenAI for processing. Do not include personal or sensitive information during test calls.
+
 With your server running and your Vonage application configured, call your Vonage virtual number from your phone.
 
 You should hear:
