@@ -1,0 +1,24 @@
+{
+  "files": [],
+  "openFiles": [
+    "project/public/script.js",
+    "project/public/basic.html"
+  ],
+  "panels": [
+    "terminal",
+    "browser"
+  ],
+  "repository": "https://github.com/Vonage-Community/sample-video-node-learning_server.git",
+  "starterFiles": [
+    "project/routes/index.js",
+    "project/public/script.js",
+    "project/public/basic.html",
+    "project/public/index.html"
+  ],
+  "capabilities": [],
+  "version": "0.0.1",
+  "filename": "video-web-components-javascript-workshop",
+  "customInstallCmd": "",
+  "customSetupCmd": "",
+  "customStartCmd": ""
+}

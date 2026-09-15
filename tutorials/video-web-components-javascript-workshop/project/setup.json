@@ -1,0 +1,10 @@
+{
+    "data": [
+        {
+            "type": "PHONE_NUMBER",
+            "title": "SIP Conference Number",
+            "description": "A Vonage Number that will be used for SIP connectivity",
+            "name": "CONFERENCE_NUMBER"
+        }
+    ]
+}

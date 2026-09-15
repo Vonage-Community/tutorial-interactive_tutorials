@@ -1,0 +1,36 @@
+{
+  "name": "Learning Vonage Video NodeJS",
+  "description": "An Vonage Video sample app for handling Vonage server-side functionality on a NodeJS server",
+  "keywords": [
+    "WebRTC",
+    "Vonage",
+    "OpenTok",
+    "video",
+    "chat",
+    "communications"
+  ],
+  "website": "https://developer.vonage.com",
+  "repository": "https://github.com/Vonage-Community/sample-video-node-learning_server",
+  "env": {
+    "VONAGE_APP_ID": {
+      "description": "Vonage Application Id: Login to the Vonage Dashboard (https://dashboard.nexmo.com/applications) to get this value.",
+      "required": true
+    },
+    "VONAGE_PRIVATE_KEY64": {
+      "description": "Your Vonage Private Key as a base64-encoded value ( Linux: cat private.key | base64 -w 0 \n Mac: cat private.key | base64 -b 0 ): Login to the Vonage Dashboard (https://dashboard.nexmo.com/applications) to get this value",
+      "required": true
+    },
+    "API_KEY": {
+      "description": "Your Vonage API Key. Required to use SIP Connectivity.",
+      "required": false
+    },
+    "API_SECRET": {
+      "description": "Your Vonage API Secret. Required to use SIP Connectivity.",
+      "required": false
+    },
+    "CONFERENCE_NUMBER": {
+      "description": "The phone number linked to your Vonage Application. Required for SIP Connectivity.",
+      "required": false
+    }
+  }
+}

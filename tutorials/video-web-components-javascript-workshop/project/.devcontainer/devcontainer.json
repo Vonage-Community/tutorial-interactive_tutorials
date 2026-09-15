@@ -1,0 +1,32 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node
+{
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "hostRequirements": {
+    "cpus": 2
+  },
+  "waitFor": "onCreateCommand",
+  "updateContentCommand": "npm install",
+  "postCreateCommand": "npm install",
+  "postAttachCommand": "gh codespace ports visibility 3000:public -c $CODESPACE_NAME && node setup.js && npm start",
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "index.js"
+      ]
+    }
+  },
+  "portsAttributes": {
+    "3000":{
+      "label": "Vonage Node Learning Server",
+      "onAutoForward": "openPreview",
+      "protocol": "http"
+    }
+  },
+  "forwardPorts": [
+    3000
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  }
+}
