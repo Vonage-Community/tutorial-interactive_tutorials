@@ -13,18 +13,18 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-const appId = process.env.API_APPLICATION_ID;
+const appId = process.env.VONAGE_APPLICATION_ID;
 let privateKey;
 
-if (process.env.PRIVATE_KEY) {
+if (process.env.VONAGE_PRIVATE_KEY) {
   try {
-      privateKey = fs.readFileSync(process.env.PRIVATE_KEY, 'utf8');
+      privateKey = fs.readFileSync(process.env.VONAGE_PRIVATE_KEY, 'utf8');
   } catch (error) {
-      // PRIVATE_KEY entered as a single line string
-      privateKey = process.env.PRIVATE_KEY.replace(/\\n/g, '\n');
+      // VONAGE_PRIVATE_KEY entered as a single line string
+      privateKey = process.env.VONAGE_PRIVATE_KEY.replace(/\\n/g, '\n');
   }
-} else if (process.env.PRIVATE_KEY64){
-  privateKey = Buffer.from(process.env.PRIVATE_KEY64, 'base64');
+} else if (process.env.VONAGE_PRIVATE_KEY64){
+  privateKey = Buffer.from(process.env.VONAGE_PRIVATE_KEY64, 'base64');
 }
 
 if (!appId || !privateKey) {

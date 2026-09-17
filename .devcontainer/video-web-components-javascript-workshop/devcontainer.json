@@ -62,8 +62,9 @@
         },
         "codespaces": {
             "openFiles": [
-                "project/public/script.js",
-                "project/public/basic.html"
+                "project/public/basic.html",
+                "project/public/styles.css",
+                "project/public/basic.js"
             ]
         }
     }

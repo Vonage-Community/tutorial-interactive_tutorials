@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Basic Video Call with Screenshare" />
+    <title>Basic Video Call with Screenshare</title>
+
+    <link rel="stylesheet" href="/styles.css" />
+
+    <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
+
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@vonage/video-publisher@latest/video-publisher.js/+esm"></script>
+
+    <!-- Load Web Components-->
+
+    <script src="/screenshare.js" defer></script>
+  </head>
+  <body>
+    <a href="/">back</a>
+    <header>
+      <h1>Basic Video Call with Screenshare</h1>
+    </header>
+    <main id="video-chat-container">
+      <section id="publisher-container">
+        <fieldset>
+          <legend>Publisher</legend>
+          <video-publisher></video-publisher>
+        </fieldset>
+        <button id="video-toggle">toggle Video</button>
+        <button id="audio-toggle">toggle Audio</button>
+        <br /><br />
+        <!-- Place screen-share here -->
+        <screen-share></screen-share>
+        <!-- <screen-share start-text="start" stop-text="stop"></screen-share> -->
+      </section>
+      <section id="video-subscriber-container">
+        <div id="screen"></div>
+        <div id="camera"></div>
+      </section>
+    </main>
+  </body>
+</html>

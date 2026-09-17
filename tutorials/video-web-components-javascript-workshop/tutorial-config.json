@@ -1,8 +1,9 @@
 {
   "files": [],
   "openFiles": [
-    "project/public/script.js",
-    "project/public/basic.html"
+    "project/public/basic.html",
+    "project/public/styles.css",
+    "project/public/basic.js"
   ],
   "panels": [
     "terminal",
@@ -11,12 +12,25 @@
   "repository": "https://github.com/Vonage-Community/sample-video-node-learning_server.git",
   "starterFiles": [
     "project/routes/index.js",
-    "project/public/script.js",
     "project/public/basic.html",
-    "project/public/index.html"
+    "project/public/index.html",
+    "project/public/basic.js",
+    "project/public/live-chat.html",
+    "project/public/live-chat.js",
+    "project/public/screenshare.html",
+    "project/public/screenshare.js",
+    "project/public/select-inputs.html",
+    "project/public/select-inputs.js",
+    "project/public/styles.css",
+    "project/public/whiteboard.html",
+    "project/public/whiteboard.js",
+    "project/public/live-poll/index.html",
+    "project/public/live-poll/live-poll-control.html",
+    "project/public/live-poll/live-poll-control.js",
+    "project/public/live-poll/live-poll.html"
   ],
   "capabilities": [],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "filename": "video-web-components-javascript-workshop",
   "customInstallCmd": "",
   "customSetupCmd": "",

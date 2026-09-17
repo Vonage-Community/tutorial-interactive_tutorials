@@ -32,8 +32,6 @@ input.on('data', data => {
             return setApiKey(inputStr);
         case 'SET_API_SECRET':
             return setApiSecret(inputStr);
-        case 'SET_FAL_API_KEY':
-            return setFalApiKey(inputStr);
         case 'SET_APP_NAME':
             return setAppName(inputStr);
         default:
@@ -55,16 +53,6 @@ function setApiSecret(data) {
         console.log('(Can not be blank.) Enter your Vonage API secret:');
     } else {
         process.env.VONAGE_API_SECRET = data;
-        step = 'SET_FAL_API_KEY';
-        console.log('Enter your fal API Key:');
-    }
-}
-
-function setFalApiKey(data) {
-    if (!data) {
-        console.log('(Can not be blank.) Enter your fal API key:');
-    } else {
-        process.env.FAL_KEY = data;
         step = 'SET_APP_NAME';
         console.log('Enter a name for your Application (e.g., Hackathon-Video-App):');
     }
@@ -97,7 +85,7 @@ function createApp(appName) {
                 webhooks: {
                     archive_status: {
                         address: `https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev/api/archive/status`,
-                        http_method: "POST"
+                        active: true
                     }
                 }
             }
@@ -143,7 +131,6 @@ VONAGE_APPLICATION_NAME="${process.env.VONAGE_APPLICATION_NAME}"
 VONAGE_APPLICATION_ID="${process.env.VONAGE_APPLICATION_ID}"
 VONAGE_PRIVATE_KEY="${formattedPrivateKey}"
 VONAGE_PRIVATE_KEY64="${process.env.VONAGE_PRIVATE_KEY64}"
-FAL_KEY="${process.env.FAL_KEY}"
 CODESPACE_URL="https://${process.env.CODESPACE_NAME}-${PORT}.app.github.dev"
 `;
 

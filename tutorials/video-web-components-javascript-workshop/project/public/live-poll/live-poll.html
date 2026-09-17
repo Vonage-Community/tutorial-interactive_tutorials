@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Basic Video Call" />
+    <title>Basic Video Call with Live Poll</title>
+
+    <link rel="stylesheet" href="/styles.css" />
+
+    <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
+
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@vonage/video-publisher@latest/video-publisher.js/+esm"></script>
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@vonage/video-subscribers@latest/video-subscribers.js/+esm"></script>
+
+    <!-- Load Web Component -->
+
+    <script src="live-poll.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <a href="./">back</a>
+        <h1>Basic Video Call with Live Poll</h1>
+    </header>
+    <main id="video-chat-container">
+        <div id="videos-container">
+            <section id="publisher-container">
+                <fieldset>
+                    <legend>Publisher</legend>
+                    <video-publisher></video-publisher>
+                </fieldset>
+                <button id="video-toggle">toggle Video</button>
+                <button id="audio-toggle">toggle Audio</button>
+            </section>
+            <section id="subscribers-container">
+                <fieldset>
+                    <legend>Subscribers</legend>
+                    <video-subscribers></video-subscribers>
+                </fieldset>
+            </section>
+        </div>
+        <aside>
+          <!-- Place live-poll here -->
+          
+        </aside>
+    </main>
+</body>
+
+</html>
