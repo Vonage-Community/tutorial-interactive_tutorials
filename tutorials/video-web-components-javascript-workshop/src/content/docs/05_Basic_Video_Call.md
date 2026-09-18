@@ -3,7 +3,7 @@ title: Basic Video Call
 description: Basic Video Call
 ---
 
-We will be creating a basic video call app where you will be able to:
+We will start by creating a basic video call app where you will be able to:
 
 - send your video into a call and turn on/off your camera and microphone (video-publisher)
 
@@ -22,7 +22,7 @@ Add this code to `basic.html` under `<!-- Load Web Components -->`:
   src="https://cdn.jsdelivr.net/npm/@vonage/video-subscribers@latest/video-subscribers.js/+esm"></script>
 ```
 
-Next we need to add the `video-publisher` custom element to our application under `<!-- Place video-publisher here -->`
+Next, we need to add the `video-publisher` custom element to our application under `<!-- Place video-publisher here -->`
 
 ```html
 <video-publisher></video-publisher>

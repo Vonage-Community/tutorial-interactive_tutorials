@@ -3,7 +3,7 @@ title: Why Vonage Video API Web Components?
 description: Why Vonage Video API Web Components?
 ---
 
-The <a href="https://github.com/Vonage-Community/web_components-video_api-javascript/" target="_blank">Vonage Video API Web Components</a> allow developers to quickly add common video call elements and functionality to their applications.
+The <a href="https://github.com/Vonage-Community/web_components-video_api-javascript/" target="_blank">Vonage Video API Web Components</a> allow developers to quickly add common video call elements and functionality to their applications using the <a href="https://developer.vonage.com/en/video/overview?source=video" target="_blank">Vonage Video API</a>.
 
 Currently, we have:
 
@@ -55,7 +55,7 @@ session.connect(token, (error) => {
 
 ```
 
-Here it is using the video-publisher Web Component:
+Here it is using the `video-publisher` Web Component:
 ```js
 const videoPublisherEl = document.querySelector('video-publisher');
 const session = OT.initSession(applicationId, sessionId);

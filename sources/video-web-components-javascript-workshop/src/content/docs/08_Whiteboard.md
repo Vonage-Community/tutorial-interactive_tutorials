@@ -3,9 +3,7 @@ title: Whiteboard
 description: Whiteboard
 ---
 
-The `white-board` Web Component was a requested feature. It's a great example of what can be created with the the Vonage Video's Signaling API.
-
-The `inputs-select` Web Component will make this happen.
+The `white-board` Web Component was a requested feature. It's a great example of what can be created with the the Vonage Video's <a href="https://developer.vonage.com/en/video/how-tos/signaling/index?source=video" target="_blank">Signaling API</a>.
 
 Let's load the Web Component in `whiteboard.html` under `<!-- Load Web Component -->`:
 
@@ -60,7 +58,7 @@ let serverURL="https://your-github-codespace65c9x65-3000.app.github.dev";
 > Note: There is no '/' at the end of the URL
 
 
-The way that the `white-board` Web Component works is that when button is clicked, it opens the dialog element that holds the . Add this code under `// Set session and token for white-board and add an event listener to open a modal`:
+The way that this sample application works is that when the button is clicked, it opens the dialog element that holds the `white-board` Web Component. Add this code under `// Set session and token for white-board and add an event listener to open a modal`:
 
 ```js
 whiteboardEl.session = session;

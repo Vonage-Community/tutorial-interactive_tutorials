@@ -5,20 +5,7 @@ description: What's next.
 
 ## You did it!
 
-You now have a WebXR application using XR Blocks and the Vonage Voice API that can receive phone calls.
-
-
-## Create your own XR Blocks application with AI
-
-XR Blocks has a Google Gemini Gem, that allows you to create a WebXR application using just plain text. Want to create something? <a href="https://xrblocks.github.io/gem" target="_blank">Give it a try.</a>
-
-## Export your application
-
-If you'd like to save the application you created to your personal GitHub acoount, open a new Terminal window (press the + button) and run this command:
-
-```bash
-chmod +x export.sh && ./export.sh
-```
+We've learned how to integrate the Vonage Video API Web Components in web applications.
 
 ## Stop your Codespace
 
@@ -30,8 +17,7 @@ We would love to know how the workshop went for you. Let us know on the <a href=
 
 ## What's Next?
 
-- Can you create a WebXR application that makes phone calls? How about a voice chat in a WebXR environment?
-- Learn more about the Vonage Voice API in our <a href="https://developer.vonage.com/en/voice/voice-api/overview" target="_blank">developer documentation</a>
-- Connect with CreateHER Fest on <a href="https://createherfest.fyi/linkedin" target="_blank">LinkedIn</a>, <a href="https://createherfest.fyi/ig" target="_blank">Instagram</a>, <a href="https://createherfest.fyi/x" target="_blank">Twitter / X</a>, <a href="https://createherfest.fyi/newsy" target="_blank">Newsletter</a>, <a href="https://createherfest.fyi/discord" target="_blank">Discord</a> and <a href="https://createherfest.fyi/youtube" target="_blank">Youtube</a>
+- How will you use the Vonage Video API Web Components in your hackathon project?
+- Are you using a JavaScript framework for your project? We have examples for Angular, Astro, React, Svelte and Vue in the <a href="https://github.com/Vonage-Community/web_components-video_api-javascript/tree/main/examples" target="_blank">GitHub repo</a>.
+- Learn more about what else Vonage offers in our <a href="https://developer.vonage.com" target="_blank">developer documentation</a>
 - Connect with Vonage on <a href="https://x.com/vonagedev" target="_blank">Twitter / X</a>, <a href="https://bsky.app/profile/developer.vonage.com" target="_blank">Bluesky</a> and <a href="https://www.linkedin.com/company/vonage-dev" target="_blank">LinkedIn</a>
-- Join our <a href="https://vonage.dev/slack" target="_blank">Developer Community Slack channel</a> to connect with others building with Vonage

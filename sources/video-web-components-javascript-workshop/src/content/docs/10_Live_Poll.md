@@ -144,7 +144,7 @@ Make sure you have the `live poll control` and `live poll` applications open.
 
 In the `live poll control` application, try creating a poll with some options and then click start.
 
-The poll should show up in the `live poll` application. How do you like the styling. Let's change it.
+The poll should show up in the `live poll` application. How do you like the styling? Let's change it.
 
 In the `styles.css` under `/* live-poll style */` add this styling:
 

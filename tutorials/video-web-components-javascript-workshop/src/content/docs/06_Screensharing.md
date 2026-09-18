@@ -83,7 +83,7 @@ screenShareEl.session = session;
 screenShareEl.token = token;
 ```
 
-As mentioned before, `video-subcriber` allow for a more fine grained control of where the other streams with appear in our application. In the case of screensharing, we want the screen to show up much larger than a user's regular camera. The following code will create a `video-subscriber` element, check to see the type of stream that is coming in and append it to the correct container (either `camera` or `screen`). Place this under `// Create video-subscriber element, set properties, session and stream and depending on type, append to appropriate container` :
+As mentioned before, `video-subcriber` allows for a more fine grained control of where the other streams will appear in our application. In the case of screensharing, we want the screen to show up much larger than a user's regular camera. The following code will create a `video-subscriber` element, check to see the type of stream that is coming in and append it to the correct container (either `camera` or `screen`). Place this under `// Create video-subscriber element, set properties, session and stream and depending on type, append to appropriate container` :
 
 ```js
 const videoSubscriberEl = document.createElement('video-subscriber');
@@ -102,7 +102,7 @@ Let's share a screen! Refresh the page and open the application in another tab.
 
 > Note: You will need headphones or mute your laptop to prevent feedback.
 
-Where you able to share your screen?
+Were you able to share your screen?
 
 Did the preview of what you shared show under the button?
 

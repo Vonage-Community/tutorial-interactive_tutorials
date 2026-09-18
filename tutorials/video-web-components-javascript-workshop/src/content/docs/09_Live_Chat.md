@@ -5,7 +5,7 @@ description: Live Chat
 
 Another good use of the Vonage Video Signaling API is to add live chat functionality to your application.
 
-The `live-chat` Web Component was created to be a reusable element to prevent having to recreate the logic for every application.
+The `live-chat` Web Component was created to be a reusable element to prevent having to recreate the logic for every application you want to have a chat.
 
 In `live-chat.html`, let's load the Web Component under `<!-- Load Web Component -->`:
 

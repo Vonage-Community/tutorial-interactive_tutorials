@@ -30,7 +30,7 @@
     "project/public/live-poll/live-poll.html"
   ],
   "capabilities": [],
-  "version": "0.0.3",
+  "version": "0.0.4",
   "filename": "video-web-components-javascript-workshop",
   "customInstallCmd": "",
   "customSetupCmd": "",
