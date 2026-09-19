@@ -1,0 +1,144 @@
+---
+import { getCollection } from 'astro:content';
+
+// Get all docs entries
+const allDocs = await getCollection('docs');
+const sortedDocs = allDocs.sort((a, b) => {
+  // Sort by step number if available, otherwise by slug
+  const aStep = a.data.step || (a.slug === 'index' ? 0 : 999);
+  const bStep = b.data.step || (b.slug === 'index' ? 0 : 999);
+  if (aStep !== bStep) return aStep - bStep;
+  return a.slug.localeCompare(b.slug);
+});
+
+// Find current page index
+const currentPath = Astro.url.pathname.replace(/^\//, '').replace(/\/$/, '') || 'index';
+const currentIndex = sortedDocs.findIndex((doc) => {
+  const docSlug = doc.slug === 'index' ? 'index' : doc.slug;
+  return docSlug === currentPath || `/${docSlug}/` === Astro.url.pathname;
+});
+
+const prevDoc = currentIndex > 0 ? sortedDocs[currentIndex - 1] : null;
+const nextDoc = currentIndex >= 0 && currentIndex < sortedDocs.length - 1 ? sortedDocs[currentIndex + 1] : null;
+---
+
+{(prevDoc || nextDoc) && (
+  <nav class="step-navigation" aria-label="Step navigation">
+    {prevDoc ? (
+      <a href={`/${prevDoc.slug === 'index' ? '' : prevDoc.slug}/`} class="step-nav-button step-nav-prev">
+        <span class="step-nav-arrow">←</span>
+        <div class="step-nav-content">
+          <span class="step-nav-label">Previous</span>
+          <span class="step-nav-title">{prevDoc.data.title}</span>
+        </div>
+      </a>
+    ) : (
+      <div class="step-nav-button step-nav-placeholder"></div>
+    )}
+    {nextDoc ? (
+      <a href={`/${nextDoc.slug === 'index' ? '' : nextDoc.slug}/`} class="step-nav-button step-nav-next">
+        <div class="step-nav-content">
+          <span class="step-nav-label">Next</span>
+          <span class="step-nav-title">{nextDoc.data.title}</span>
+        </div>
+        <span class="step-nav-arrow">→</span>
+      </a>
+    ) : (
+      <div class="step-nav-button step-nav-placeholder"></div>
+    )}
+  </nav>
+)}
+
+<style>
+  .step-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 4rem 0 2rem;
+  }
+
+  .step-nav-button {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: white !important;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #1e293b;
+    transition: all 0.2s;
+    flex: 1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .step-nav-button:hover {
+    background: white !important;
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .step-nav-placeholder {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .step-nav-prev {
+    justify-content: flex-start;
+  }
+
+  .step-nav-next {
+    justify-content: flex-end;
+  }
+
+  .step-nav-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .step-nav-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .step-nav-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .step-nav-button:hover .step-nav-title {
+    color: #3b82f6;
+  }
+
+  .step-nav-arrow {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #64748b;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+
+  .step-nav-button:hover .step-nav-arrow {
+    color: #3b82f6;
+  }
+
+  @media (max-width: 768px) {
+    .step-navigation {
+      flex-direction: column;
+    }
+
+    .step-nav-button {
+      width: 100%;
+    }
+
+    .step-nav-next {
+      justify-content: flex-start;
+    }
+  }
+</style>
