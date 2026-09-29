@@ -63,7 +63,7 @@ const videoPublisherEl = document.querySelector('video-publisher');
 
 Under `// Get a reference to the video-subscribers element` place:
 ```js
-const videoSubscribersEl = document.querySelecto('video-subscribers');
+const videoSubscribersEl = document.querySelector('video-subscribers');
 ```
 
 In order to get the credentials needed for the Web Components to do their jobs, we will need a server. Luckily, when the Codespace was setup, we also spun up a server that we can use. Remember that `APPLICATION READY` URL you opened in a tab? Set that to the `serverURL` variable under `// Set server URL`.
