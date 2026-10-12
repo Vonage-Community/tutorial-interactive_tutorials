@@ -24,17 +24,27 @@ async function main() {
   console.log("\nSMS delivery status setup\n");
   console.log("Before running this script, paste your full Vonage private key into project/private.key.\n");
 
-  const applicationId = await ask("Vonage Application ID");
-  const fromNumber = normalizePhoneNumber(await ask("Linked Vonage SMS number"));
-  const toNumber = normalizePhoneNumber(await ask("SMS recipient phone number"));
   const privateKeyPath = path.join(process.cwd(), "private.key");
-  const privateKey = await fs.readFile(privateKeyPath, "utf8");
+  let privateKey;
+
+  try {
+    privateKey = await fs.readFile(privateKeyPath, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      throw new Error("Open project/private.key, paste your complete Vonage private key, and save the file before running setup.");
+    }
+    throw error;
+  }
 
   try {
     crypto.createPrivateKey(privateKey);
   } catch {
     throw new Error("The private key in project/private.key could not be read. Include the BEGIN and END lines exactly once.");
   }
+
+  const applicationId = await ask("Vonage Application ID");
+  const fromNumber = normalizePhoneNumber(await ask("Linked Vonage SMS number"));
+  const toNumber = normalizePhoneNumber(await ask("SMS recipient phone number"));
 
   if (!applicationId || !fromNumber || !toNumber) {
     throw new Error("Application ID, sender number, and recipient number are required.");
