@@ -13,7 +13,7 @@ return {
   channel: Channels.SMS,
   text,
   to: config.toNumber,
-  from: config.fromNumber
+  from: config.senderId
 };
 ```
 

@@ -35,7 +35,7 @@ function getConfig() {
   return {
     applicationId: env.VONAGE_APPLICATION_ID || "",
     privateKey: fs.existsSync(resolvedPrivateKeyPath) ? fs.readFileSync(resolvedPrivateKeyPath, "utf8") : "",
-    fromNumber: env.SMS_FROM_NUMBER || "",
+    senderId: env.SMS_SENDER_ID || "",
     toNumber: env.SMS_TO_NUMBER || "",
     messagesApiHost: (env.MESSAGES_API_HOST || "https://api.nexmo.com").replace(/\/$/, ""),
     defaultText: env.DEFAULT_SMS_TEXT || "Track this SMS with a status callback"
@@ -52,7 +52,7 @@ function getBaseUrl(req) {
 }
 
 function hasCompleteConfig(config) {
-  return Boolean(config.applicationId && config.privateKey && config.fromNumber && config.toNumber);
+  return Boolean(config.applicationId && config.privateKey && config.senderId && config.toNumber);
 }
 
 function canReadPrivateKey(config) {

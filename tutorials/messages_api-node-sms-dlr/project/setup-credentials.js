@@ -13,6 +13,11 @@ function normalizePhoneNumber(number) {
   return number.replace(/^\+/, "").replace(/^00/, "").replace(/[\s()-]/g, "");
 }
 
+function normalizeSenderId(senderId) {
+  const value = senderId.trim();
+  return /^(?:\+|00|\d)/.test(value) ? normalizePhoneNumber(value) : value;
+}
+
 function getApplicationUrl() {
   if (process.env.CODESPACE_NAME && process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN) {
     return `https://${process.env.CODESPACE_NAME}-3000.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
@@ -43,17 +48,20 @@ async function main() {
   }
 
   const applicationId = await ask("Vonage Application ID");
-  const fromNumber = normalizePhoneNumber(await ask("Linked Vonage SMS number"));
-  const toNumber = normalizePhoneNumber(await ask("SMS recipient phone number"));
+  const senderId = normalizeSenderId(await ask("SMS Sender ID (brand name or SMS-capable number)"));
+  const toNumber = normalizePhoneNumber(await ask("SMS recipient phone number (country code and number)"));
 
-  if (!applicationId || !fromNumber || !toNumber) {
-    throw new Error("Application ID, sender number, and recipient number are required.");
+  if (!applicationId || !senderId || !toNumber) {
+    throw new Error("Application ID, SMS Sender ID, and recipient number are required.");
+  }
+  if (!/^\d{7,15}$/.test(toNumber)) {
+    throw new Error("Enter the recipient number in E.164 format using 7 to 15 digits, including the country code.");
   }
 
   const env = [
     `VONAGE_APPLICATION_ID=${applicationId}`,
     "VONAGE_PRIVATE_KEY_PATH=./private.key",
-    `SMS_FROM_NUMBER=${fromNumber}`,
+    `SMS_SENDER_ID=${senderId}`,
     `SMS_TO_NUMBER=${toNumber}`,
     "MESSAGES_API_HOST=https://api.nexmo.com",
     "DEFAULT_SMS_TEXT=Track this SMS with a status callback"
