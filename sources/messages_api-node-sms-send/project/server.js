@@ -34,7 +34,7 @@ function getConfig() {
   return {
     applicationId: env.VONAGE_APPLICATION_ID || "",
     privateKey: fs.existsSync(resolvedPrivateKeyPath) ? fs.readFileSync(resolvedPrivateKeyPath, "utf8") : "",
-    fromNumber: env.SMS_FROM_NUMBER || "",
+    senderId: env.SMS_SENDER_ID || "",
     toNumber: env.SMS_TO_NUMBER || "",
     messagesApiHost: (env.MESSAGES_API_HOST || "https://api.nexmo.com").replace(/\/$/, ""),
     defaultText: env.DEFAULT_SMS_TEXT || "Hello from the Vonage Messages API"
@@ -42,7 +42,7 @@ function getConfig() {
 }
 
 function hasCompleteConfig(config) {
-  return Boolean(config.applicationId && config.privateKey && config.fromNumber && config.toNumber);
+  return Boolean(config.applicationId && config.privateKey && config.senderId && config.toNumber);
 }
 
 function canReadPrivateKey(config) {
@@ -147,7 +147,7 @@ function renderPage() {
       </ul></section>
       <section class="panel"><h2>SMS configuration</h2>
         <p><strong>Application:</strong> ${escapeHtml(config.applicationId || "Not configured")}</p>
-        <p><strong>From:</strong> ${escapeHtml(config.fromNumber || "Not configured")}</p>
+        <p><strong>SMS Sender ID:</strong> ${escapeHtml(config.senderId || "Not configured")}</p>
         <p><strong>To:</strong> ${escapeHtml(config.toNumber || "Not configured")}</p>
       </section>
     </div>

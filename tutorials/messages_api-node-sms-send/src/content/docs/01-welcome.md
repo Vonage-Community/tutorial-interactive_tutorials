@@ -11,7 +11,7 @@ Before you begin, make sure you have:
 
 - a Vonage Application with the **Messages** capability enabled;
 - the Application ID and private key for that application;
-- an SMS-capable Vonage virtual number linked to the application;
+- an SMS Sender ID allowed for the country where you are sending the message;
 - a destination phone number that can receive the test message.
 
 If your Vonage account is in trial mode, the destination number must be registered as a verified test number in the Vonage Dashboard.

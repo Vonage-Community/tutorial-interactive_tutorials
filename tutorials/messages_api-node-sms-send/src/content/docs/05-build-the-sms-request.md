@@ -13,8 +13,8 @@ return {
   channel: Channels.SMS,
   text,
   to: config.toNumber,
-  from: config.fromNumber
+  from: config.senderId
 };
 ```
 
-The sender is the Vonage virtual number linked to your Messages application, and both phone numbers use E.164 format without a leading `+`.
+The Sender ID can be an alphanumeric name or an SMS-capable number, depending on the rules for the destination country. The recipient number uses E.164 format without a leading `+`.
