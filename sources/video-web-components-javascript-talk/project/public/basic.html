@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Basic Video Call" />
+    <title>Basic Video Call</title>
+
+    <link rel="stylesheet" href="/styles.css" />
+
+    <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
+
+    <!-- Load Web Components -->
+
+    <script src="/basic.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <a href="/">back</a>
+      <h1>Basic Video Call</h1>
+    </header>
+    <main id="video-chat-container">
+      <section id="publisher-container">
+        <fieldset>
+          <legend>Publisher</legend>
+          <!-- Place video-publisher here -->
+        </fieldset>
+        <button id="video-toggle">toggle Video</button>
+        <button id="audio-toggle">toggle Audio</button>
+      </section>
+      <section id="subscribers-container">
+        <fieldset>
+          <legend>Subscribers</legend>
+          <!-- Place video-subscribers here -->
+        </fieldset>
+      </section>
+    </main>
+  </body>
+</html>
