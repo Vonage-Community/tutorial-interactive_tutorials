@@ -8,7 +8,7 @@
 const livePollEl = document.querySelector('live-poll');
 
 // Set server URL
-let serverURL;
+let serverURL = `${window.location.origin}`;
 let applicationId = 'YOUR_APPLICATION_ID';
 let sessionId = 'YOUR_SESSION_ID';
 let token = 'YOUR_TOKEN';

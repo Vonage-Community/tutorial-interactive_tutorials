@@ -6,8 +6,16 @@
     <base href="/">
     <!-- Load Vonage Video Client SDK -->
     <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js"></script>
   </head>
   <body>
     <app-root>Loading...</app-root>
+    <script>
+      // Dynamically generate QR code to match current hosting port/domain
+      const claimUrl = `${window.location.origin}`;
+      // document.getElementById('claim-url-link').href = claimUrl;
+      QRCode.toCanvas(document.getElementById('qr-canvas'), claimUrl, { width: 500, margin: 2 });
+    </script>
   </body>
+
 </html>

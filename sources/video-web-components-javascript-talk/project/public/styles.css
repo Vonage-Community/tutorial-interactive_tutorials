@@ -75,6 +75,16 @@ dialog {
 }
 
 /* video-publisher and video-subscribers style */
+video-publisher {
+  display: block;
+  aspect-ratio: 16/9;
+}
+
+video-subscribers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  place-items: center;
+}
 
 /* video-subscriber and screen-share style */
 

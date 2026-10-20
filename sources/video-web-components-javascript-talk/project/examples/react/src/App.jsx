@@ -11,7 +11,7 @@ function App() {
   const subscribers = useRef(null);
 
   // If you have a Vonage Learning Server deployed, you can set your URL here.
-  let serverURL;
+  let serverURL = window.location.origin.replace(/-(\d+)\.app\.github\.dev\$/, `-3000.app.github.dev`);
   
   // OR you can hardcode the values here. (In production, you make a request to your backend to get these values.)
   let applicationId = 'YOUR_APPLICATION_ID';
@@ -31,6 +31,7 @@ function App() {
       resolution: '1920x1080',
       videoContentHint: 'detail',
       width: '100%',
+      publishAudio:false
     };
     subscribers.current.session = session;
     subscribers.current.token = token;    

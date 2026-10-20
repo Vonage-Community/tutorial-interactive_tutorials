@@ -23,6 +23,9 @@
       src="https://cdn.jsdelivr.net/npm/@vonage/video-subscribers@latest/video-subscribers.js/+esm"
     ></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js"></script>
+
+
     <script src="/script.js" defer></script>
   </head>
   <body>
@@ -30,6 +33,7 @@
       <a href="/">back</a>
       <h1>Basic Video Call</h1>
     </header>
+    <canvas id="qr-canvas"></canvas>
     <main id="video-chat-container">
       <section id="publisher-container">
         <fieldset>
@@ -46,5 +50,11 @@
         </fieldset>
       </section>
     </main>
+    <script>
+      // Dynamically generate QR code to match current hosting port/domain
+      const claimUrl = `${window.location.origin}/live-poll/live-poll.html`;
+      // document.getElementById('claim-url-link').href = claimUrl;
+      QRCode.toCanvas(document.getElementById('qr-canvas'), claimUrl, { width: 500, margin: 2 });
+    </script>
   </body>
 </html>

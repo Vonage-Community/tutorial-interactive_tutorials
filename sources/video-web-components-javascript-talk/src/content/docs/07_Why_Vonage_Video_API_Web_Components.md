@@ -6,6 +6,7 @@ template: splash
 
 quickly add common video call elements and functionality to your applications
 
+![QR code for Vonage Video API Web Components](./video-web-components-github-qr-code.png)
 
 - **video-publisher** : Your video feed into the video call.
 
@@ -68,3 +69,5 @@ videoPublisherEl.properties = {
   resolution: '1280x720'
 };
 ```
+
+The Web Components are created using an open source framework call `lit`.

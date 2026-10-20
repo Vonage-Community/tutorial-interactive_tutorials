@@ -3,7 +3,7 @@
   import '@vonage/video-publisher/video-publisher.js';
   import '@vonage/video-subscribers/video-subscribers.js';
 
-  let serverURL;
+  let serverURL = window.location.origin.replace(/-(\d+)\.app\.github\.dev\$/, `-3000.app.github.dev`);
   let applicationId = 'YOUR_APPLICATION_ID';
   let sessionId = 'YOUR_SESSION_ID';
   let token = 'YOUR_TOKEN';
@@ -24,6 +24,7 @@
         resolution: '1920x1080',
         videoContentHint: 'detail',
         width: '100%',
+        publishAudio:false
       };
     } else {
       console.log('Publisher Web Component reference is not available yet.');

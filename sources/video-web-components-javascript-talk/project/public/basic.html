@@ -12,19 +12,28 @@
     <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
 
     <!-- Load Web Components -->
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@vonage/video-publisher@latest/video-publisher.js/+esm"></script>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@vonage/video-subscribers@latest/video-subscribers.js/+esm"></script>
 
     <script src="/basic.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js"></script>
   </head>
   <body>
     <header>
       <a href="/">back</a>
       <h1>Basic Video Call</h1>
     </header>
+    <canvas id="qr-canvas"></canvas>
     <main id="video-chat-container">
       <section id="publisher-container">
         <fieldset>
           <legend>Publisher</legend>
           <!-- Place video-publisher here -->
+          <video-publisher></video-publisher>
         </fieldset>
         <button id="video-toggle">toggle Video</button>
         <button id="audio-toggle">toggle Audio</button>
@@ -33,8 +42,15 @@
         <fieldset>
           <legend>Subscribers</legend>
           <!-- Place video-subscribers here -->
+          <video-subscribers></video-subscribers>
         </fieldset>
       </section>
     </main>
+    <script>
+      // Dynamically generate QR code to match current hosting port/domain
+      const claimUrl = `${window.location.origin}/live-poll/live-poll.html`;
+      // document.getElementById('claim-url-link').href = claimUrl;
+      QRCode.toCanvas(document.getElementById('qr-canvas'), claimUrl, { width: 500, margin: 2 });
+    </script>
   </body>
 </html>

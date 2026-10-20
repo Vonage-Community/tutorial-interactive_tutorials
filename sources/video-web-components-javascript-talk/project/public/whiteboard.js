@@ -12,7 +12,7 @@ const whiteboardButton = document.querySelector('#whiteboard-button');
 const whiteboardDialog = document.querySelector('#whiteboard-dialog');
 
 // Set server URL
-let serverURL;
+let serverURL = `${window.location.origin}`;
 let applicationId = 'YOUR_APPLICATION_ID';
 let sessionId = 'YOUR_SESSION_ID';
 let token = 'YOUR_TOKEN';
@@ -40,10 +40,13 @@ function initializeSession() {
   // });
 
   // Set session and token for white-board and add an event listener to open a modal
-  const whiteboardEl = document.querySelector('white-board');
-  const whiteboardButton = document.querySelector('#whiteboard-button');
-  const whiteboardDialog = document.querySelector('#whiteboard-dialog');
-
+  whiteboardEl.session = session;
+  whiteboardEl.token = token;
+  
+  whiteboardButton.addEventListener('click', () => {
+    whiteboardDialog.showModal();
+  });
+  
   session.on('streamCreated', function (event) {
     console.log('streamCreated!', event.stream.videoType);
     const videoSubscriberEl = document.createElement('video-subscriber');

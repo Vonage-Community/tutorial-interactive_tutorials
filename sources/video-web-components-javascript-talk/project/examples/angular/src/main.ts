@@ -58,7 +58,7 @@ import '@vonage/video-subscribers/video-subscribers.js';
 
 export class App implements OnInit, AfterViewInit {
   name = 'Angular';
-  serverURL: string|undefined;
+  serverURL = window.location.origin.replace(/-(\d+)\.app\.github\.dev\$/, `-3000.app.github.dev`);
   applicationId = 'YOUR_APPLICATION_ID';
   sessionId = 'YOUR_SESSION_ID';
   token = 'YOUR_TOKEN';
@@ -71,6 +71,7 @@ export class App implements OnInit, AfterViewInit {
     resolution: '1920x1080',
     videoContentHint: 'detail',
     width: '100%',
+    publishAudio:false
   };
 
   @ViewChild('publisher') publisherComponent!: ElementRef;

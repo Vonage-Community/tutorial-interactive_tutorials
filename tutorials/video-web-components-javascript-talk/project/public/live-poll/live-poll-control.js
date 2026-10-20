@@ -8,7 +8,7 @@
 const livePollControlEl = document.querySelector('live-poll-control');
 
 
-let serverURL = "https://sturdy-doodle-xvpvvv65c9x65-3000.app.github.dev";
+let serverURL = `${window.location.origin}`;
 let applicationId = 'YOUR_APPLICATION_ID';
 let sessionId = 'YOUR_SESSION_ID';
 let token = 'YOUR_TOKEN';

@@ -7,10 +7,19 @@
     <title>Vite + React</title>
     <!-- Load Vonage Video Client SDK -->
     <script src="https://video.standard.vonage.com/v2/js/opentok.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js"></script>
+
   </head>
   <body>
+    <canvas id="qr-canvas"></canvas>
     <div id="root"></div>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Dynamically generate QR code to match current hosting port/domain
+      const claimUrl = `${window.location.origin}/live-poll/live-poll.html`;
+      // document.getElementById('claim-url-link').href = claimUrl;
+      QRCode.toCanvas(document.getElementById('qr-canvas'), claimUrl, { width: 500, margin: 2 });
+    </script>
   </body>
 </html>

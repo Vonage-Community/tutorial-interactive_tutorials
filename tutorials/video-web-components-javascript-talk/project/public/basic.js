@@ -1,13 +1,15 @@
 // Get a reference to the video-publisher element
+const videoPublisherEl = document.querySelector('video-publisher');
 
 const audioToggle = document.querySelector('#audio-toggle');
 const videoToggle = document.querySelector('#video-toggle');
 
 // Get a reference to the video-subscribers element
+const videoSubscribersEl = document.querySelector('video-subscribers');
 
 
 // Set server URL
-let serverURL;
+let serverURL = `${window.location.origin}`;
 let applicationId = 'YOUR_APPLICATION_ID';
 let sessionId = 'YOUR_SESSION_ID';
 let token = 'YOUR_TOKEN';
@@ -15,10 +17,31 @@ let token = 'YOUR_TOKEN';
 function initializeSession() {
   const session = OT.initSession(applicationId, sessionId);
   // Set session and token (and optionally properties) for video-publisher
+  videoPublisherEl.session = session;
+  videoPublisherEl.token = token;
+  videoPublisherEl.properties = {
+    fitMode: 'cover',
+    height: '100%',
+    resolution: '1920x1080',
+    videoContentHint: 'detail',
+    width: '100%',
+    publishAudio:false
+  };
 
   // Add toggling audio and video functionality
+  audioToggle.addEventListener('click', () => {
+    console.log('audioToggle!');
+    videoPublisherEl.toggleAudio();
+  });
+  
+  videoToggle.addEventListener('click', () => {
+    console.log('videoToggle!');
+    videoPublisherEl.toggleVideo();
+  });
 
   // Set session and token for video-subscribers
+  videoSubscribersEl.session = session;
+  videoSubscribersEl.token = token;
 
 }
 

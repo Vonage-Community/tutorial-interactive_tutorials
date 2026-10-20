@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Basic Video Call" />
-    <title>Basic Video Call with Live Chat</title>
+    <title>Live Chat</title>
 
     <link rel="stylesheet" href="/styles.css" />
 
@@ -20,17 +20,22 @@
     <!-- Load Web Component -->
     <script type="module" src="https://cdn.jsdelivr.net/npm/@vonage/live-chat@latest/live-chat.js/+esm"></script>
   
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js"></script>
+
+
     <script src="/live-chat.js" defer></script>
 </head>
 
 <body>
     <header>
         <a href="/">back</a>
-        <h1>Basic Video Call with Live Chat</h1>
+        <h1>Live Chat</h1>
     </header>
     <main id="video-chat-container">
-        <!-- <div id="videos-container">
-            <section id="publisher-container">
+        <div id="videos-container">
+            <canvas id="qr-canvas"></canvas>
+            <!-- <section id="publisher-container">
                 <fieldset>
                     <legend>Publisher</legend>
                     <video-publisher></video-publisher>
@@ -43,8 +48,8 @@
                     <legend>Subscribers</legend>
                     <video-subscribers></video-subscribers>
                 </fieldset>
-            </section>
-        </div> -->
+            </section> -->
+        </div>
         <aside>
             <fieldset>
                 <legend>Chat</legend>
@@ -53,6 +58,13 @@
             </fieldset>
         </aside>
     </main>
+    <script>
+        // Dynamically generate QR code to match current hosting port/domain
+        const claimUrl = `${window.location.origin}/live-chat.html`;
+        // document.getElementById('claim-url-link').href = claimUrl;
+        QRCode.toCanvas(document.getElementById('qr-canvas'), claimUrl, { width: 500, margin: 2 });
+    </script>
+
 </body>
 
 </html>

@@ -18,7 +18,7 @@ const whiteboardDialog = document.querySelector('#whiteboard-dialog');
 
 const inputsSelectEl = document.querySelector('inputs-select');
 
-let serverURL;
+let serverURL = window.location.origin.replace(/-(\d+)\.app\.github\.dev\$/, `-3000.app.github.dev`);
 let applicationId = 'YOUR_APPLICATION_ID';
 let sessionId = 'YOUR_SESSION_ID';
 let token = 'YOUR_TOKEN';
@@ -35,6 +35,7 @@ function initializeSession() {
       resolution: '1920x1080',
       videoContentHint: 'detail',
       width: '100%',
+      publishAudio:false
     };
 
     audioToggle.addEventListener('click', () => {
