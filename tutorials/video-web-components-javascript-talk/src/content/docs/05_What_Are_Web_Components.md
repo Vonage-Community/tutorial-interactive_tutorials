@@ -4,7 +4,7 @@ description: What are Web Components?
 template: splash
 ---
 
-<h2>Reusable custom elements.</h2>
+<h2>Your own HTML tags.</h2>
 
 <h3 align="center">Custom Elements</h3>
 <div align="center">name & function</div>
