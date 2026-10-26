@@ -87,6 +87,21 @@ video-subscribers {
 }
 
 /* video-subscriber and screen-share style */
+video-subscriber {
+  display: block;
+  aspect-ratio: 16/9;
+}
+
+#camera video-subscriber {
+  max-width: 300px;
+}
+
+screen-share::part(button) {
+  font-size: 20px;
+  color: white;
+  background-color: black;
+  border-radius: 5px;
+}
 
 /* inputs-select style */
 

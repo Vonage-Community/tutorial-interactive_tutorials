@@ -534,6 +534,21 @@ router.post('/audio-connector/disconnect', async (req, res) => {
   }
 });
 
+router.post('/login', async (req, res) => {
+  // console.log("req.body: ", req.body);
+  const { password } = req.body;
+  // console.log(password);
+  // console.log(process.env.PASSWORD);
+  if (password === process.env.PASSWORD) {
+    console.log('password matched');
+    res.sendStatus(204);
+  } else {
+    console.log('password not matched');
+    res.sendStatus(500);
+  }
+})
+
+
 router.get('/_/health', async function (req, res) {
   res.status(200).send({status: 'OK'});
 })

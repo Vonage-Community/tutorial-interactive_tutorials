@@ -19,7 +19,7 @@
 
     <!-- Load Web Component -->
     <script type="module"
-    src="https://cdn.jsdelivr.net/npm/@vonage/live-poll-control@latest/live-poll-control.js/+esm"></script>
+        src="https://cdn.jsdelivr.net/npm/@vonage/live-poll-control@latest/live-poll-control.js/+esm"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcode@latest/build/qrcode.min.js"></script>
 
@@ -31,7 +31,12 @@
         <a href="./">back</a>
         <h1>Live Poll (Control)</h1>
     </header>
-    <main id="video-chat-container">
+    <section id="passwordSection">
+        login
+        <input id="passwordInput" type="password" />
+        <button id="passwordBtn">enter</button>
+    </section>
+    <main id="video-chat-container" style="display:none">
         <div id="videos-container">
             <canvas id="qr-canvas"></canvas>
             <!-- <section id="publisher-container">
@@ -53,7 +58,7 @@
             <fieldset>
                 <legend>Live Poll Admin</legend>
                 <!-- Place live-poll-control here -->
-                <live-poll-control></live-poll-control>                
+                <live-poll-control></live-poll-control>
             </fieldset>
         </aside>
     </main>
