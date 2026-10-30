@@ -5,7 +5,7 @@ description: Call your Vonage number and test the first AI response.
 
 # Test Basic Bot
 
-> **Privacy**: Your speech is sent to OpenAI for processing. Do not include personal or sensitive information during test calls.
+> **Privacy**: Your speech is sent to the configured OpenAI-compatible API for processing. Do not include personal or sensitive information during test calls.
 
 With your server running and your Vonage application configured, call your Vonage virtual number from your phone.
 
@@ -21,7 +21,7 @@ Ask a short question, such as:
 Why is the sky blue?
 ```
 
-The bot captures your speech, sends the transcription to OpenAI, and reads the response back to you.
+The bot captures your speech, sends the transcription to the configured API, and reads the response back to you.
 
 If the call does not connect or you hear an error, check that:
 
@@ -29,4 +29,4 @@ If the call does not connect or you hear an error, check that:
 - port `3000` is still public;
 - the Answer URL and Event URL match your current Codespace URL;
 - your Vonage number is linked to the Voice Application;
-- `OPENAI_API_KEY` is set in `project/.env`.
+- `OPENAI_API_KEY` is set in `project/.env` and matches the provider selected by `OPENAI_BASE_URL`.

@@ -26,7 +26,7 @@ app.post('/webhooks/asr', async (req, res) => {
   try {
     const openai = getOpenAIClient();
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: OPENAI_MODEL,
       messages: history,
       tools,
     });

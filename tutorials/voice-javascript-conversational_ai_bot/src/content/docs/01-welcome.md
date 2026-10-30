@@ -1,6 +1,6 @@
 ---
 title: Welcome
-description: Build a conversational AI voice bot with the Vonage Voice API, ASR, OpenAI, and Node.js in a GitHub Codespace.
+description: Build a conversational AI voice bot with the Vonage Voice API, ASR, an OpenAI-compatible API, and Node.js in a GitHub Codespace.
 ---
 
 # Build a Conversational AI Voice Bot
@@ -13,7 +13,7 @@ You need:
 
 - a Vonage account with a Voice-capable virtual number;
 - a Vonage Voice Application linked to that number;
-- an OpenAI API key;
+- an OpenAI or Groq API key;
 - a phone you can use to call your Vonage number.
 
 Start with the first part below. When you finish it, the guide will tell you when to switch back to the learning path.

@@ -1,11 +1,11 @@
 ---
 title: Add Transfer Tool
-description: Define the OpenAI tool used to detect when the caller asks for a person.
+description: Define the tool used to detect when the caller asks for a person.
 ---
 
 # Add Transfer Tool
 
-OpenAI tool calling lets the model return a structured signal instead of normal text when it detects a transfer request.
+Tool calling in the configured OpenAI-compatible API lets the model return a structured signal instead of normal text when it detects a transfer request.
 
 Add this code directly after the transfer number constants:
 
