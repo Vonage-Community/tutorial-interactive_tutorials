@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@vonage/server-sdk": "^3.27.0",
-    "@flue/runtime": "1.0.0-beta.9",
+    "@flue/runtime": "2.0.0",
     "@flue/sdk": "1.0.0-beta.9",
     "dotenv": "^17.2.3"
   },
