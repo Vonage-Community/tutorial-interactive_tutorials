@@ -22,49 +22,72 @@ Create the constructor for the Class:
 Function to create a panel for the Exit Button:
 `// ⌄⌄⌄ Create Exit Button panel ⌄⌄⌄`
 ```js
-  createExitPanel() {
-    // SAFETY: If a panel already exists, don't create another one.
-    if (this.panel) return;
+createExitPanel() {
+  // SAFETY: If a panel already exists, don't create another one.
+  if (this.panel) return;
 
-    console.log("Creating Exit Button...");
-    
-    // 1. Create the Panel
-    this.panel = new xb.SpatialPanel({
-      width: 0.5,
-      height: 0.5, 
-      backgroundColor: '#2b2b2baa'
-    });
+  console.log('Creating Exit Button...');
 
-    this.panel.position.set(
-      0,
-      xb.user.height,
-      2.0
-    );
+  // 1. Status Text (uses Yoga pixel units for fontSize instead of 0.0-1.0 ratios)
+  this.statusText = new xb.UIText({
+    text: this.exitPanelText,
+    style: {
+      fontSize: 32,
+      fontWeight: 'bold',
+      color: '#ffffff',
+      textAlign: 'center',
+    },
+  });
 
-    this.panel.rotation.set(0, Math.PI, 0);
-    this.add(this.panel);
+  // 2. Explicitly wired UIButton with the required log message
+  this.exitButton = new xb.UIButton({
+    label: 'Exit',
+    onClick: () => {
+      console.log('ExitButton triggered: Shutting down XR session.');
+      
+      const renderer = xb.core?.renderer;
+      const session = renderer?.xr?.getSession?.();
+      
+      if (session) {
+        session.end();
+      } else {
+        // Fallback behavior if testing in the desktop simulator without an active XR session
+        console.log('No active XR session found. Resetting or closing demo...');
+      }
+    },
+  });
 
-    const grid = this.panel.addGrid();
-
-    // 2. Status Text
-    this.statusText = grid.addRow({ weight: 1 }).addText({
-      text: this.exitPanelText,
-      fontColor: '#ffffff',
-      fontSize: .4,
-    });
-
-    // Orbiter
-    const orbiter = grid.addOrbiter();
-    orbiter.addExitButton();
-    this.panel.updateLayouts();
+  if (this.exitButton.xb) {
+    this.exitButton.xb.pointerEvents = true;
+    this.exitButton.xb.interactionEnabled = true;
   }
+
+  // 3. Create the world-space UICard (replaces SpatialPanel + Grid)
+  this.panel = new xb.UICard({
+    theme: 'grayGlass',
+    manipulation: true,
+    edge: true,
+    style: {
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 24,
+    },
+    children: [this.statusText, this.exitButton],
+  });
+
+  this.panel.position.set(0, xb.user.height - 0.5, 1.0);
+  this.panel.rotation.set(0, Math.PI, 0);
+
+  this.add(this.panel);
+}
 ```
 
 Initialize Class when loaded into the page:
 `// ⌄⌄⌄ Initialize ⌄⌄⌄`
 ```js
-  init() {
-    console.log("Exit Button init!");
-    this.createExitPanel();
-  }
+init() {
+  console.log("Exit Button init!");
+  this.createExitPanel();
+}
 ```

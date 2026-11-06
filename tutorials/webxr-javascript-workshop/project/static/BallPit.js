@@ -32,15 +32,8 @@ export class BallPit extends xb.Script {
     this.velocity = new THREE.Vector3();
   }
 
-  init() {
-    xb.add(this);
-  }
-
   update() {
     super.update();
-    for (const controller of xb.core.input.controllers) {
-      this.controllerUpdate(controller);
-    }
   }
 
   // Adds hemisphere light for ambient lighting and directional light.
@@ -64,10 +57,32 @@ export class BallPit extends xb.Script {
   }
 
   onPointerDown(event) {
+    console.log('onPointerDown: ', event);
+    // 1. Guard: If the click originated on a UI DOM element or canvas overlay, ignore it
+    if (event.target && (event.target.tagName === 'BUTTON' || event.target.closest('.uikit') || event.target.closest('canvas') === false)) {
+      return;
+    }
     this.updatePointerPosition(event);
+
+    // 2. Guard: Raycast against the scene to check if we clicked a UICard / UIButton 3D object
     const cameras = xb.core.renderer.xr.getCamera().cameras;
     if (cameras.length == 0) return;
     const camera = cameras[0];
+
+    this.raycaster.setFromCamera(this.pointer, camera);
+    const intersects = this.raycaster.intersectObjects(xb.core.scene.children, true);
+    
+    for (const hit of intersects) {
+      let obj = hit.object;
+      while (obj) {
+        // If ray hits any UI component, cancel ball spawning so the UI click goes through
+        if (obj.isUICard || obj.isUIElement || obj.isUIButton || obj.constructor?.name?.includes('UI')) {
+          return;
+        }
+        obj = obj.parent;
+      }
+    }
+
     // Spawn a ball slightly in front of the camera.
     const position = new THREE.Vector3(0.0, 0.0, -0.2)
       .applyQuaternion(camera.quaternion)
@@ -85,7 +100,31 @@ export class BallPit extends xb.Script {
     this.ballShooter.spawnBallAt(position, this.velocity);
   }
 
-  controllerUpdate(controller) {
+
+  onSelectStart(event) {
+    // Prevent shooting balls if we clicked on a UI element
+    if (event.target && event.target !== this) return;
+    
+    const controller = event.source.controller;
+    if (!controller) return;
+
+    const newPosition = new THREE.Vector3(0.0, 0.0, -0.08)
+      .applyQuaternion(controller.quaternion)
+      .add(controller.position);
+
+    this.velocity.set(0, 0, -5.0);
+    this.velocity.applyQuaternion(controller.quaternion);
+
+    this.ballShooter.spawnBallAt(newPosition, this.velocity);
+  }
+
+  onSelecting(event) {
+    // Prevent shooting balls if we are holding down a click on a UI element
+    if (event.target && event.target !== this) return;
+
+    const controller = event.source.controller;
+    if (!controller) return;
+
     const now = performance.now();
     if (!this.lastBallCreatedTimeForController.has(controller)) {
       this.lastBallCreatedTimeForController.set(controller, -99);
@@ -108,4 +147,5 @@ export class BallPit extends xb.Script {
       this.lastBallCreatedTimeForController.set(controller, now);
     }
   }
+    
 }

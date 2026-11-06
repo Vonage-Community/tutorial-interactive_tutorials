@@ -5,13 +5,13 @@ description: Create XR Blocks UI to answer phone calls
 
 Now, we'll be creating the UI.
 
-To recieve phone calls via the Vonage Voice API using the XR Blocks library's <a href="https://xrblocks.github.io/docs/api/classes/SpatialPanel/" target="_blank">SpatialPanel Class</a>.
+To recieve phone calls via the Vonage Voice API using the XR Blocks library's <a href="https://xrblocks.github.io/docs/manual/UI/" target="_blank">Spatial UI</a>.
 
 To show the 3D Avatar for the caller, we will use the <a href="https://xrblocks.github.io/docs/manual/Lipsync/" target="_blank">Lipsync (Addon)</a>.
 
 The Vonage Voice Client SDK's <a href="https://developer.vonage.com/en/vonage-client-sdk/in-app-voice/guides/say-call" target="_blank">Text to Speech</a> will be used to send the quick replies and typed messages into the call.
 
-The virtual keyboard that allows us to type those messages will come from the <a href="https://xrblocks.github.io/docs/manual/UI/#virtual-keyboard-addon" target="_blank">Virtual Keyboard (Addon)</a>.
+The virtual keyboard that allows us to type those messages will come from the <a href="https://xrblocks.github.io/docs/manual/UI/#scrolling-and-editable-text" target="_blank">Virtual Keyboard (Addon)</a>.
 
 The following code will be placed in the `static/VonageAudioCall.js` file.
 
@@ -36,21 +36,26 @@ constructor() {
   this.token = '';
   this.client = new vonageClientSDK.VonageClient();
   this.callId = null;
-  // Keep a reference to the panel so we can destroy it later
+  this.userName = 'XR_User_1';
+
+  // Call UI references
   this.panel = null;
   this.statusText = null;
-  this.userName = "XR_User_1";
-  this.grid = null;
   this.controlRow = null;
+
+  // Avatar & Lipsync references
   this.puppetHead = null;
   this.face = null;
   this.mouth = null;
   this._camWorld = new THREE.Vector3();
   this._headWorld = new THREE.Vector3();
+
+  // Reply UI & Keyboard references
   this.replyPanel = null;
   this.typedTextView = null;
   this._currentTypedText = '';
   this.keyboard = null;
+  this.keyboardCard = null;
 }
 ```
 
@@ -61,15 +66,16 @@ _createAvatar(stream) {
   // Safety: don't create a second avatar if one already exists
   if (this.puppetHead) return;
 
-  console.log("Creating lipsync avatar...");
+  console.log('Creating lipsync avatar...');
 
-  const faceR = 0.1;
+  const faceR = 0.1; // 0.1 m radius — matches xb.StylizedFace's default expectations
+  const userHeight = xb.user?.height ?? 1.6;
 
   const head = new THREE.Group();
   // Position: in front of the user, roughly at face height
-  head.position.set(0, xb.user.height, -1.2);
+  head.position.set(0, userHeight, -1.2);
 
-  // --- Sphere face mesh ---
+  // Sphere face mesh
   const faceGeom = new THREE.SphereGeometry(faceR, 32, 24);
   const faceMat = new THREE.MeshStandardMaterial({
     color: 0xf2d4b3,
@@ -79,9 +85,11 @@ _createAvatar(stream) {
   const faceMesh = new THREE.Mesh(faceGeom, faceMat);
   head.add(faceMesh);
 
+  // StylizedFace renders dynamic blinking eyes and mouth decals on the -Z face
   this.face = new xb.StylizedFace({ showEyes: true });
   head.add(this.face);
 
+  // LipsyncMouth analyses the remote WebRTC MediaStream and drives StylizedFace
   this.mouth = new LipsyncMouth(stream, { target: this.face });
   head.add(this.mouth);
 
@@ -97,18 +105,19 @@ This function will remove the 3D Avatar when the call is over:
 _removeAvatar() {
   if (!this.puppetHead) return;
 
-  console.log("Removing lipsync avatar...");
+  console.log('Removing lipsync avatar...');
 
   if (this.mouth) {
-    // Detach from the head group before nulling the reference
+    // Clean up Web Audio analyser resources if exposed by the addon
+    // dispose() frees the underlying canvas/texture to avoid memory leaks
+    this.mouth.dispose?.();
     this.mouth.parent?.remove(this.mouth);
     this.mouth = null;
   }
 
   if (this.face) {
     this.face.parent?.remove(this.face);
-    // dispose() frees the underlying canvas/texture to avoid memory leaks
-    this.face.dispose();
+    this.face.dispose?.();
     this.face = null;
   }
 
@@ -125,26 +134,50 @@ _createCallPanel(callerName) {
   // SAFETY: If a panel already exists, don't create another one.
   if (this.panel) return;
 
-  console.log("Creating Call UI...");
+  console.log('Creating Call UI...');
 
-  // 1. Create the Panel
-  this.panel = new xb.SpatialPanel({ backgroundColor: '#2b2b2baa' });
-  this.panel.position.set(
-    0,
-    xb.user.height - 0.5,
-    -xb.user.objectDistance
-  );
+  const userHeight = xb.user?.height ?? 1.6;
+  const objDist = xb.user?.objectDistance ?? 1.2;
 
-  this.add(this.panel);
-
-  this.grid = this.panel.addGrid();
-
-  // 2. Status Text
-  this.statusText = this.grid.addRow({ weight: 0.7 }).addText({
+  this.statusText = new xb.UIText({
     text: `Incoming call from ${callerName}...`,
-    fontColor: '#ffffff',
-    fontSize: 0.08,
+    style: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      color: '#ffffff',
+      textAlign: 'center',
+    },
   });
+
+  this.controlRow = new xb.UIPanel({
+    style: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 16,
+      width: '100%',
+    },
+  });
+
+  this.panel = new xb.UICard({
+    size: { width: 0.48, height: 'auto' },
+    theme: 'grayGlass',
+    manipulation: true,
+    edge: { scale: true },
+    style: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 24,
+      gap: 20,
+      backgroundColor: 'rgba(43, 43, 43, 0.85)',
+      borderRadius: 24,
+    },
+    children: [this.statusText, this.controlRow],
+  });
+
+  this.panel.position.set(0, userHeight - 0.35, -objDist);
+  this.add(this.panel);
 
   this.updateControlRow('INCOMING');
 }
@@ -155,49 +188,57 @@ Function to update the call control section:
 
 ```js
 updateControlRow(state) {
-  if (!this.grid) return;
+  if (!this.controlRow) return;
 
-  // 1. Remove the existing row if it exists
-  if (this.controlRow) {
-    this.grid.remove(this.controlRow);
-    this.controlRow = null;
-    this.grid.resetLayout();
+  // Clear existing buttons from the flex row
+  while (this.controlRow.children.length > 0) {
+    this.controlRow.remove(this.controlRow.children[0]);
   }
-
-  // 2. Create a fresh row. It will naturally append below the Status Text.
-  // We give it the full remaining weight (0.3 relative to the panel, or flexible)
-  this.controlRow = this.grid.addRow({ weight: 0.3 });
 
   if (state === 'INCOMING') {
-    // --- ANSWER BUTTON ---
-    const answerBtn = this.controlRow.addCol({ weight: 0.5 }).addIconButton({
-      text: 'call',
-      fontSize: 0.5,
-      backgroundColor: '#00ff00'
+    const answerBtn = new xb.UIButton({
+      label: 'Answer',
+      icon: 'call',
+      style: {
+        backgroundColor: '#1b873f',
+        color: '#ffffff',
+      },
+      onClick: (e) => {
+        e?.stopPropagation?.(); // event.stopPropagation()` to stop bubbling
+        this._onAnswer();
+      },
     });
-    answerBtn.onTriggered = () => this._onAnswer();
 
-    // --- REJECT BUTTON ---
-    const rejectBtn = this.controlRow.addCol({ weight: 0.5 }).addIconButton({
-      text: 'call_end',
-      fontSize: 0.5,
-      backgroundColor: '#ff0000'
+    const rejectBtn = new xb.UIButton({
+      label: 'Decline',
+      icon: 'call_end',
+      style: {
+        backgroundColor: '#c92a2a',
+        color: '#ffffff',
+      },
+      onClick: (e) => {
+        e?.stopPropagation?.();
+        this._onReject();
+      },
     });
-    rejectBtn.onTriggered = () => this._onReject();
 
+    this.controlRow.add(answerBtn, rejectBtn);
   } else if (state === 'CONNECTED') {
-    // --- HANGUP BUTTON ---
-    // This is a fresh row, so layouts will calculate correctly
-    const hangupBtn = this.controlRow.addCol({ weight: 1 }).addIconButton({
-      text: 'call_end',
-      fontSize: 0.5,
-      backgroundColor: '#ff0000'
+    const hangupBtn = new xb.UIButton({
+      label: 'Hang Up',
+      icon: 'call_end',
+      style: {
+        backgroundColor: '#c92a2a',
+        color: '#ffffff',
+      },
+      onClick: (e) => {
+        e?.stopPropagation?.();
+        this._onHangup();
+      },
     });
-    hangupBtn.onTriggered = () => this._onHangup();
-  }
 
-  // 3. Force layout update
-  this.panel.updateLayouts();
+    this.controlRow.add(hangupBtn);
+  }
 }
 ```
 
@@ -207,10 +248,9 @@ This function will remove the panel once the call is over:
 ```js
 _removeCallPanel() {
   if (this.panel) {
-    console.log("Destroying Call UI...");
+    console.log('Destroying Call UI...');
     this.remove(this.panel);
     this.panel = null;
-    this.grid = null;
     this.statusText = null;
     this.controlRow = null;
   }
@@ -225,27 +265,56 @@ Here's the code to show the Keyboard:
 
 ```js
 _showKeyboard() {
-  if (this.keyboard) return;
+  if (this.keyboardCard) return;
 
-  this.keyboard = new Keyboard();
-  // Position it below and aligned with the reply panel
-  this.keyboard.position.set(
-    0,
-    xb.user.height - 1.35,
-    -xb.user.objectDistance + 1
-  );
-  this.add(this.keyboard);
+  const userHeight = xb.user?.height ?? 1.6;
+  const objDist = xb.user?.objectDistance ?? 1.2;
 
-  // Update the display on every keystroke
+  this.keyboard = new Keyboard({
+    value: this._currentTypedText ?? '',
+    onValueChange: (value) => {
+      this._currentTypedText = value;
+      if (this.typedTextView) {
+        console.log("Typed text changed: ", value);
+        this.typedTextView.text = value.length > 0 ? value : 'Tap to type...';
+      }
+    },
+    onSubmit: (value) => {
+      this._sendTypedText();
+    },
+  });
+
+  // Wrap the Keyboard UIElement inside a world-space UICard root
+  this.keyboardCard = new xb.UICard({
+    size: { width: 0.75, height: 'auto' },
+    theme: 'grayGlass',
+    manipulation: true,
+    edge: { scale: true },
+    style: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 12,
+      backgroundColor: 'rgba(20, 20, 35, 0.92)',
+      borderRadius: 20,
+    },
+    children: [this.keyboard],
+  });
+
+  // Position and tilt the UICard root in 3D space
+  this.keyboardCard.position.set(0.25, userHeight - 0.68, -objDist + 0.25);
+  this.keyboardCard.rotation.x = -0.35;
+  this.add(this.keyboardCard);
+
   this.keyboard.onTextChanged = (text) => {
     this._currentTypedText = text;
     if (this.typedTextView) {
-      this.typedTextView.text = text.length > 0 ? text : 'Tap  to type...';
+      console.log("Typed text changed: ", text);
+      this.typedTextView.text = text.length > 0 ? text : 'Tap to type...';
     }
   };
 
-  // Enter key sends immediately — same as tapping the Send button
-  this.keyboard.onEnterPressed = (text) => {
+  this.keyboard.onEnterPressed = () => {
     this._sendTypedText();
   };
 }
@@ -256,8 +325,9 @@ If we want to hide the Keyboard, here's the code:
 
 ```js
 _hideKeyboard() {
-  if (!this.keyboard) return;
-  this.remove(this.keyboard);
+  if (!this.keyboardCard) return;
+  this.remove(this.keyboardCard);
+  this.keyboardCard = null;
   this.keyboard = null;
 }
 ```
@@ -267,7 +337,7 @@ To toggle between showing and hidding the keyboard, we have this code:
 
 ```js
 _toggleKeyboard() {
-  this.keyboard ? this._hideKeyboard() : this._showKeyboard();
+  this.keyboardCard ? this._hideKeyboard() : this._showKeyboard();
 }
 ```
 
@@ -284,12 +354,13 @@ _sendQuickReply(message) {
   // Give the user immediate visual feedback in the status bar
   if (this.statusText) this.statusText.text = 'Sending...';
 
-  this.client.say(this.callId, message)
+  this.client
+    .say(this.callId, message)
     .then(() => {
       console.log('Quick reply sent successfully.');
       if (this.statusText) this.statusText.text = `Sent: "${message}"`;
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('say() error:', err);
       if (this.statusText) this.statusText.text = 'Failed to send message.';
     });
@@ -302,23 +373,23 @@ In the case we want to carry on the conversation but maybe can't speak (ie in a 
 ```js
 _sendTypedText() {
   const text = this._currentTypedText.trim();
-  if (!text) return;
-  if (!this.callId) return;
+  if (!text || !this.callId) return;
 
   console.log(`Sending typed text: "${text}"`);
   if (this.statusText) this.statusText.text = 'Sending...';
 
-  this.client.say(this.callId, text)
+  this.client
+    .say(this.callId, text)
     .then(() => {
       console.log('Typed text sent successfully.');
       if (this.statusText) this.statusText.text = `Sent: "${text}"`;
 
       // Clear the keyboard buffer and reset the display
-      if (this.keyboard) this.keyboard.setText('');
+      if (this.keyboard) this.keyboard.setValue('');
       this._currentTypedText = '';
-      if (this.typedTextView) this.typedTextView.text = 'Tap  to type...';
+      if (this.typedTextView) this.typedTextView.text = 'Tap to type...';
     })
-    .catch(err => {
+    .catch((err) => {
       console.error('say() error:', err);
       if (this.statusText) this.statusText.text = 'Failed to send message.';
     });
@@ -332,75 +403,150 @@ Here we will create the Reply panel that will hold all the way we can send a tex
 _createReplyPanel() {
   if (this.replyPanel) return;
 
-  this.replyPanel = new xb.SpatialPanel({
-    backgroundColor: '#1a1a2ecc',
-    width: .75,
-    height: 0.9,
-  });
-  // Offset to the right so it sits beside the main call panel
-  this.replyPanel.position.set(
-    0.8,
-    xb.user.height - 0.5,
-    -xb.user.objectDistance
-  );
-  this.add(this.replyPanel);
+  const userHeight = xb.user?.height ?? 1.6;
+  const objDist = xb.user?.objectDistance ?? 1.2;
 
-  const grid = this.replyPanel.addGrid();
-
-  grid.addRow({ weight: 0.06 }).addText({
+  // 1. Quick Replies Header
+  const quickRepliesHeader = new xb.UIText({
     text: 'Quick Replies',
-    fontColor: '#9b9bff',
-    fontSize: 0.055,
+    style: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#9b9bff',
+    },
   });
 
+  // 2. Quick Reply Button Rows (2x2 layout)
   const pairs = [
-    QUICK_REPLIES.slice(0, 2),   // [ Meeting, Talk Later ]
-    QUICK_REPLIES.slice(2, 4),   // [ OMW!, 5 Mins ]
+    QUICK_REPLIES.slice(0, 2),
+    QUICK_REPLIES.slice(2, 4),
   ];
 
-  pairs.forEach(pair => {
-    const row = grid.addRow({ weight: 0.20 });
-    pair.forEach(({ label, message }) => {
-      const btn = row.addCol({ weight: 0.5 }).addTextButton({
-        text: label,
-        fontSize: 0.35,
-        backgroundColor: '#2e2e50',
-        fontColor: '#ffffff',
-      });
-      btn.onTriggered = () => this._sendQuickReply(message);
+  const quickReplyRows = pairs.map((pair) => {
+    const buttons = pair.map(
+      ({ label, message }) =>
+        new xb.UIButton({
+          label,
+          style: {
+            backgroundColor: '#2e2e50',
+            color: '#ffffff',
+            flexGrow: 1,
+          },
+          onClick: (e) => {
+            e?.stopPropagation?.();
+            this._sendQuickReply(message);
+          },
+        })
+    );
+
+    return new xb.UIPanel({
+      style: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 12,
+        width: '100%',
+      },
+      children: buttons,
     });
   });
 
-  grid.addRow({ weight: 0.06 }).addText({
+  // 3. Talk via Text Header
+  const talkHeader = new xb.UIText({
     text: 'Talk via Text',
-    fontColor: '#9b9bff',
-    fontSize: 0.055,
+    style: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#9b9bff',
+      marginTop: 8,
+    },
   });
 
-  this.typedTextView = grid.addRow({ weight: 0.18 }).addText({
+  // 4. Typed Text Display Box
+  this.typedTextView = new xb.UIText({
     text: 'Tap to type...',
-    fontColor: '#ffffff',
-    fontSize: 0.065,
-    textAlign: 'left',
+    style: {
+      fontSize: 18,
+      color: '#ffffff',
+      textAlign: 'left',
+    },
   });
 
-  const actionRow = grid.addRow({ weight: 0.30 });
-
-  const kbBtn = actionRow.addCol({ weight: 0.5 }).addIconButton({
-    text: 'keyboard',
-    fontSize: 0.5,
-    backgroundColor: '#2e3a4a',
+  const textDisplayBox = new xb.UIPanel({
+    style: {
+      width: '100%',
+      padding: 14,
+      backgroundColor: 'rgba(0, 0, 0, 0.35)',
+      borderRadius: 12,
+    },
+    children: [this.typedTextView],
   });
-  kbBtn.onTriggered = () => this._toggleKeyboard();
 
-  const sendBtn = actionRow.addCol({ weight: 0.5 }).addIconButton({
-    text: 'send',
-    fontSize: 0.5,
-    backgroundColor: '#1a4a2a',
+  // 5. Keyboard Toggle + Send Action Row
+  const kbBtn = new xb.UIButton({
+    label: 'Keyboard',
+    icon: 'keyboard',
+    style: {
+      backgroundColor: '#2e3a4a',
+      color: '#ffffff',
+      flexGrow: 1,
+    },
+    onClick: (e) => {
+      e?.stopPropagation?.();
+      this._toggleKeyboard();
+    },
   });
-  sendBtn.onTriggered = () => this._sendTypedText();
 
-  this.replyPanel.updateLayouts();
+  const sendBtn = new xb.UIButton({
+    label: 'Send',
+    icon: 'send',
+    style: {
+      backgroundColor: '#1a4a2a',
+      color: '#ffffff',
+      flexGrow: 1,
+    },
+    onClick: (e) => {
+      e?.stopPropagation?.();
+      this._sendTypedText();
+    },
+  });
+
+  const actionRow = new xb.UIPanel({
+    style: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: 12,
+      width: '100%',
+    },
+    children: [kbBtn, sendBtn],
+  });
+
+  // 6. Assemble Reply UICard
+  this.replyPanel = new xb.UICard({
+    size: { width: 0.55, height: 'auto' },
+    theme: 'grayGlass',
+    manipulation: true,
+    edge: { scale: true },
+    style: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      padding: 24,
+      gap: 14,
+      backgroundColor: 'rgba(26, 26, 46, 0.88)',
+      borderRadius: 24,
+    },
+    children: [
+      quickRepliesHeader,
+      ...quickReplyRows,
+      talkHeader,
+      textDisplayBox,
+      actionRow,
+    ],
+  });
+
+  // Offset to the right of the main call panel and angled slightly inward
+  this.replyPanel.position.set(0.58, userHeight - 0.35, -objDist);
+  this.replyPanel.rotation.y = -0.2;
+  this.add(this.replyPanel);
 }
 ```
 
@@ -425,12 +571,12 @@ This function answers the call and updates the status and call control section:
 ```js
 _onAnswer() {
   console.log('Answering...');
-  this.client.answer(this.callId)
+  this.client
+    .answer(this.callId)
     .then(() => {
-      console.log("Success answering call.");
-      this.statusText.text = `Call answered.`;
+      console.log('Success answering call.');
+      if (this.statusText) this.statusText.text = 'Call answered.';
       this.updateControlRow('CONNECTED');
-
       // ⌄⌄⌄ Show reply panel alongside the call panel ⌄⌄⌄
       this._createReplyPanel();
 
@@ -439,18 +585,11 @@ _onAnswer() {
       if (audioElement && audioElement.srcObject) {
         // This is the active WebRTC MediaStream managed by Vonage
         const remoteStream = audioElement.srcObject;
-        console.log('remoteStream: ', remoteStream);
-
-        // Example: Grab individual audio tracks from the stream
-        const audioTracks = remoteStream.getAudioTracks();
-        console.log("Active Audio Tracks:", audioTracks);
-
-        // ⌄⌄⌄ Spin up the lipsync avatar driven by the remote stream ⌄⌄⌄
         this._createAvatar(remoteStream);
       }
     })
-    .catch(error => {
-      console.error("Error answering call: ", error);
+    .catch((error) => {
+      console.error('Error answering call: ', error);
     });
 }
 ```
@@ -461,13 +600,11 @@ This function will reject the incoming call and remove the panel:
 ```js
 _onReject() {
   console.log('Rejecting...');
-  this.client.reject(this.callId)
-    .then(() => {
-      console.log("Success rejecting call.");
-    })
-    .catch(error => {
-      console.error("Error rejecting call: ", error);
-    });
+  this.client
+    .reject(this.callId)
+    .then(() => console.log('Success rejecting call.'))
+    .catch((error) => console.error('Error rejecting call: ', error));
+
   this._removeCallPanel();
   this._removeAvatar();
 }
@@ -479,14 +616,11 @@ This function will hang up the ongoing call and remove the panel:
 ```js
 _onHangup() {
   console.log('Hanging up...');
-  this.client.hangup(this.callId)
-    .then(() => {
-      console.log("Success hanging up call.");
-    })
-    .catch(error => {
-      console.error("Error hanging up call: ", error);
-    });
-  // We manually destroy the panel here too, just in case the event lags
+  this.client
+    .hangup(this.callId)
+    .then(() => console.log('Success hanging up call.'))
+    .catch((error) => console.error('Error hanging up call: ', error));
+
   this._removeCallPanel();
   this._removeAvatar();
 }
@@ -498,9 +632,9 @@ Set up some listeners for the events that the Vonage Client SDK will emit and wh
 ```js
 setupVonageListeners() {
   // --- CREATE UI ON INVITE ---
-  this.client.on('callInvite', (callId, from, channelType) => {
+  this.client.on('callInvite', (callId, from) => {
     this.callId = callId;
-    const maskedNumber = from.replace(/\d(?=(?:\D*\d){4})/g, "*")
+    const maskedNumber = from.replace(/\d(?=(?:\D*\d){4})/g, '*');
     console.log(`Incoming call from ${maskedNumber}`);
 
     // Trigger the UI creation here
@@ -508,7 +642,7 @@ setupVonageListeners() {
   });
 
   this.client.on('legStatusUpdate', (callId, legId, status) => {
-    console.log("status: ", status);
+    console.log('status: ', status);
     if (this.statusText) {
       this.statusText.text = `Status: ${status}`;
     }
@@ -522,7 +656,7 @@ setupVonageListeners() {
     this._removeAvatar();
   });
 
-  this.client.on("callHangup", (callId, callQuality, reason) => {
+  this.client.on('callHangup', (callId, callQuality, reason) => {
     console.log(`Call hung up: ${reason}`);
     this.callId = null;
     this._removeCallPanel();
@@ -564,6 +698,34 @@ async connectToVonage(name) {
   } catch (error) {
     console.error("Connection failed:", error);
     if(this.statusText) this.statusText.text = "Connection Failed.";
+  }
+}
+async connectToVonage(name) {
+  try {
+    console.log(`Fetching token for ${name}...`);
+
+    // 1. Fetch the token (AWAIT the result)
+    const response = await fetch(`/token?name=${name}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    this.token = data.token;
+    console.log('Fetched token successfully.');
+
+    // 2. Create the Session (AWAIT the result)
+    const sessionId = await this.client.createSession(this.token);
+    console.log('Session created successfully. Session ID:', sessionId);
+
+    // 3. Update UI
+    // Update your XR Panel text to show we are ready
+    if (this.statusText) {
+      this.statusText.text = 'Connected. Waiting for calls...';
+    }
+  } catch (error) {
+    console.error('Connection failed:', error);
+    if (this.statusText) this.statusText.text = 'Connection Failed.';
   }
 }
 ```

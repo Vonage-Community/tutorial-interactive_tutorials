@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as xb from 'xrblocks';
-import { LipsyncMouth } from 'lipsync';
+import { LipsyncMouth } from 'xrblocks/addons/lipsync/index.js';
 import { Keyboard } from 'xrblocks/addons/virtualkeyboard/Keyboard.js';
 
 // ⌄⌄⌄ Set Quick Replies ⌄⌄⌄

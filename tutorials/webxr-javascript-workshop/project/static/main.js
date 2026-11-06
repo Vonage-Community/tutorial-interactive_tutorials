@@ -1,5 +1,3 @@
-import 'xrblocks/addons/simulator/SimulatorAddons.js';
-
 import RAPIER from '@dimforge/rapier3d-simd-compat';
 import * as xb from 'xrblocks';
 
@@ -16,6 +14,8 @@ const useSceneMesh = xb.getUrlParamBool('scenemesh', false);
 const sceneMeshDebug = xb.getUrlParamBool('scenemeshdebug', false);
 
 const options = new xb.Options();
+options.enableReticles();
+
 if (useSceneMesh) {
   options.world.enableMeshDetection();
   options.world.meshes.showDebugVisualizations = sceneMeshDebug;
@@ -24,12 +24,14 @@ if (useSceneMesh) {
   options.depth.depthMesh.colliderUpdateFps = depthMeshColliderUpdateFps;
   options.depth.matchDepthView = false;
 }
-options.xrButton = {
-  ...options.xrButton,
-  startText: '<i id="xrlogo"></i> LET THE FUN BEGIN',
-  endText: '<i id="xrlogo"></i> MISSION COMPLETE',
-};
+
+options.interaction.enabled = true;
+options.reticles.enabled = true;
+options.reticles.projectOnDepthMesh = true;
 options.physics.RAPIER = RAPIER;
+
+options.setAppTitle('XR Blocks Ballpit with Vonage Voice API');
+options.setAppDescription('Fill your room with bouncing physics balls and answer calls.');
 
 // Ask for Microphone Access
 async function getMicrophoneAccess() {
