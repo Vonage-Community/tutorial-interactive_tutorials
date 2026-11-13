@@ -1,11 +1,11 @@
 ---
 title: Add ASR Webhook
-description: Send the caller's speech transcription to OpenAI and return a spoken answer.
+description: Send the caller's speech transcription to an OpenAI-compatible API and return a spoken answer.
 ---
 
 # Add ASR Webhook
 
-After the caller stops speaking, Vonage sends the speech result to your ASR webhook. Your server reads the transcription, asks OpenAI for a short answer, and returns a new NCCO for Text-to-Speech.
+After the caller stops speaking, Vonage sends the speech result to your ASR webhook. Your server reads the transcription, asks the configured OpenAI-compatible API for a short answer, and returns a new NCCO for Text-to-Speech.
 
 In `project/index.js`, find:
 
@@ -31,7 +31,7 @@ app.post('/webhooks/asr', async (req, res) => {
   try {
     const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: OPENAI_MODEL,
       messages: [
         {
           role: 'system',

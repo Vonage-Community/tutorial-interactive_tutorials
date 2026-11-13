@@ -26,4 +26,4 @@ If the transfer does not happen, check that:
 - `VONAGE_NUMBER` and `HUMAN_AGENT_NUMBER` are set in `project/.env`;
 - both numbers use E.164 format without `+`;
 - `VONAGE_NUMBER` is linked to the Voice Application;
-- your OpenAI API key is valid and has available credit.
+- your configured API key is valid and has available credit.

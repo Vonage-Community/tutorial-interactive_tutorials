@@ -1,6 +1,6 @@
 ---
 title: Replace ASR Webhook
-description: Send the full conversation history to OpenAI on every turn.
+description: Send the full conversation history to an OpenAI-compatible API on every turn.
 ---
 
 # Replace ASR Webhook
@@ -26,7 +26,7 @@ app.post('/webhooks/asr', async (req, res) => {
   try {
     const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: OPENAI_MODEL,
       messages: history,
     });
 
