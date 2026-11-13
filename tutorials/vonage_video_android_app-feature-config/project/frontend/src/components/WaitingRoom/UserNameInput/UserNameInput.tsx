@@ -5,15 +5,15 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Card from '@ui/Card';
+import Card from '@ui/components/Card';
 import useUserContext from '@hooks/useUserContext';
+import useSessionKeyParam from '@hooks/useSessionKeyParam';
 import { UserType } from '@Context/user';
 import isValidUserName from '@utils/isValidUserName';
 import { setStorageItem, STORAGE_KEYS } from '@utils/storage';
 import Separator from '@components/Separator';
 import { CardProps } from '@mui/material';
 import { twMerge } from 'tailwind-merge';
-import { isValidRoomName } from '@common/assertions';
 
 export type UserNameInputProps = Omit<CardProps, 'sx'> & {
   username: string;
@@ -40,6 +40,7 @@ const UsernameInput = ({
   const { t } = useTranslation();
   const { setUser } = useUserContext();
   const navigate = useNavigate();
+  const { sessionKey } = useSessionKeyParam();
 
   const [isUserNameInvalid, setIsUserNameInvalid] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -64,10 +65,7 @@ const UsernameInput = ({
 
   const handleJoinClick = (event: MouseEvent) => {
     event.preventDefault();
-    if (validateForm() && roomName) {
-      if (!isValidRoomName(roomName)) {
-        return;
-      }
+    if (validateForm() && sessionKey) {
       setUser((prevUser: UserType) => ({
         ...prevUser,
         defaultSettings: {
@@ -79,7 +77,7 @@ const UsernameInput = ({
       // This takes the user to the meeting room and allows them to enter it
       // Otherwise if they entered the room directly, they are going to be redirected back to the waiting room
       // Setting hasAccess is required so that we are not redirected back to the waiting room
-      navigate(`/room/${roomName}`, {
+      void navigate(`/room/${sessionKey}`, {
         state: {
           hasAccess: true,
         },
@@ -93,7 +91,7 @@ const UsernameInput = ({
       className={twMerge('flex flex-col gap-4 lg:max-w-125', className)}
       {...cardProps}
     >
-      <Typography className="text-vera-secondary text-vera-heading-4!">
+      <Typography className="text-vera-text-secondary text-vera-heading-4!">
         {t('waitingRoom.user.input.title')}
       </Typography>
 
@@ -122,11 +120,11 @@ const UsernameInput = ({
 
       <Separator width="100%" />
 
-      <Typography className={'text-vera-secondary text-vera-heading-4!'}>
+      <Typography className={'text-vera-text-secondary text-vera-heading-4!'}>
         {t('waitingRoom.title')}
       </Typography>
 
-      <Typography className="text-vera-tertiary text-vera-heading-4!" noWrap>
+      <Typography className="text-vera-text-tertiary text-vera-heading-4!" noWrap>
         {roomName}
       </Typography>
 

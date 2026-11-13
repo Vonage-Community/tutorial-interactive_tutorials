@@ -7,6 +7,7 @@ import NetworkTest, {
 import OT from '@vonage/client-sdk-video';
 import CancelablePromise from 'easy-cancelable-promise/CancelablePromise';
 import attempt from '@common/execution/attempt';
+import isValidSessionKey from '@common/assertions/isValidSessionKey';
 import useMountEffect from '@web/hooks/useMountEffect';
 import { runtime$ } from '@core/stores';
 
@@ -126,7 +127,7 @@ const useNetworkTest = () => {
   }, []);
 
   const testQuality = useCallback(
-    (roomName: string, options: NetworkTestOptions = {}): CancelablePromise<QualityResults> => {
+    (sessionKey: string, options: NetworkTestOptions = {}): CancelablePromise<QualityResults> => {
       const isPending = testPromiseRef.current?.status === 'pending';
       if (isPending) return testPromiseRef.current!;
 
@@ -139,7 +140,12 @@ const useNetworkTest = () => {
       return (testPromiseRef.current = new CancelablePromise<QualityResults>(
         async (resolve, reject, { isCanceled, reportProgress, onCancel }) => {
           try {
-            const { applicationId, sessionId, token } = await videoClient.createSessionAndJoin();
+            const createSessionAndJoinPayload = isValidSessionKey(sessionKey)
+              ? { sessionKey }
+              : undefined;
+            const { applicationId, sessionId, token } = await videoClient.createSessionAndJoin(
+              createSessionAndJoinPayload
+            );
 
             if (isCanceled()) return;
 
@@ -164,12 +170,12 @@ const useNetworkTest = () => {
               }));
             });
 
-            // timeout after 30s
+            // timeout after 60s
 
             const qualityResults = await new Promise<QualityTestResults>((res, rej) => {
               const timeout = setTimeout(
-                () => rej(new Error('Network test timed out')),
-                options.timeout || 30000
+                () => rej(new Error(t('waitingRoom.precallNetworkTest.error.timeout'))),
+                options.timeout || 60000
               );
 
               networkTest
