@@ -32,7 +32,7 @@ Join or start a meeting in the Simulator and check that your changes are reflect
 
 3. Confirm the chat panel is no longer available if you set `allowChat` to `false`.
 
-4. Try any other flags you changed — for example `allowScreenShare`, `allowEmojis`, or `defaultLayoutMode` — and confirm the corresponding UI element or behavior changes accordingly.
+4. Try any other flags you changed — for example `allowScreenShare`, `allowEmojis`, or `allowCaptionTranslation` — and confirm the corresponding UI element or behavior changes accordingly.
 
 {% /steps %}
 
@@ -44,9 +44,9 @@ A typical configure-test cycle:
 
 1. Edit `VERA/Config/app-config.json`.
 
-2. Run `python3 ./Scripts/generate-app-config.py`.
+2. Run `./Scripts/builder.sh --update`.
 
-3. Run `tuist generate`.
+3. Let Xcode reload the regenerated project if prompted.
 
 4. Rebuild in Xcode with Cmd+R and verify in the Simulator.
 

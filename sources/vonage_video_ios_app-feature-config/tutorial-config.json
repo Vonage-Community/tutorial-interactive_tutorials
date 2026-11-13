@@ -7,7 +7,7 @@
   "capabilities": [],
   "version": "1.0.0",
   "filename": "vonage_video_ios_app-feature-config",
-  "customInstallCmd": "yarn",
+  "customInstallCmd": "npm i -g pnpm@12.11.2 && pnpm install",
   "customSetupCmd": "",
   "customStartCmd": ""
 }

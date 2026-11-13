@@ -1,18 +1,18 @@
 ---
 title: Vonage Video iOS App
-description: Learn how to configure feature flags in the Vonage Video iOS App using its JSON configuration file and generator script.
+description: Learn how to configure feature flags in the Vonage Video iOS App using its JSON configuration file and build script.
 template: splash
 hero:
   tagline: Feature Config
 ---
 
-The Vonage Video iOS App (`vonage-video-ios-app`) is a Swift application built with Tuist. It controls which features are enabled through a single JSON configuration file — **`VERA/Config/app-config.json`** — paired with a Python generator script that turns your edits into Swift source. This tutorial's Codespace has no Xcode or macOS, so all editing and building happens in a clone of the repo on your own Mac; the Codespace only runs the shared backend server the app connects to.
+The Vonage Video iOS App (`vonage-video-ios-app`) is a Swift application built with Tuist. It controls which features are enabled through a single JSON configuration file — **`VERA/Config/app-config.json`** — paired with `VERA/Scripts/builder.sh`, which turns your edits into Swift source and regenerates the Xcode workspace. This tutorial's Codespace has no Xcode or macOS, so all editing and building happens in a clone of the repo on your own Mac; the Codespace only runs the shared backend server the app connects to.
 
 In this tutorial you will:
 
 - Clone `vonage-video-ios-app` locally and run it in Xcode against the shared backend
 - Understand how feature flags are structured in `app-config.json`
-- Edit feature flags and regenerate the corresponding Swift configuration
+- Edit feature flags and regenerate the app with `./Scripts/builder.sh --update`
 - Rebuild and confirm your changes in the iOS Simulator
 
 ---

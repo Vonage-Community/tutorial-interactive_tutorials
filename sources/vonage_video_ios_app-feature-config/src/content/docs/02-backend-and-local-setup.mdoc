@@ -23,6 +23,7 @@ VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
 ...
 -----END PRIVATE KEY-----
 '
+AUTH_ENABLED='false'
 ```
 
 | Variable             | Where to find it                                                                                            |
@@ -39,7 +40,8 @@ Never commit `backend/.env` to source control. The repo's `.gitignore` already e
 Install dependencies, then start **only the backend** (you don't need the React frontend for this tutorial):
 
 ```sh
-yarn
+npm i -g pnpm@12.11.2
+pnpm install
 yarn dev backend
 ```
 
@@ -76,72 +78,52 @@ On your own Mac (not in this Codespace), clone the iOS app repository and instal
 ```sh
 git clone https://github.com/Vonage/vonage-video-ios-app.git
 cd vonage-video-ios-app
-brew install tuist
+brew install git-lfs python3 tuist swiftlint
+git lfs pull
 ```
 
 {% aside %}
-You'll need **Xcode 26+** installed from the Mac App Store, plus **SwiftLint** (`brew install swiftlint`), before you can build the project.
+You'll need **Xcode 27** before you can build the project. The app's minimum deployment target is **iOS 17.0**.
 {% /aside %}
 
 ## Point the Local App at the Backend
 
-From the `VERA/` directory of your local clone, export `BASE_API_URL` with the forwarded address you copied earlier, then run the environment generator script:
+From the `VERA/` directory of your local clone, export `BASE_API_URL` with the forwarded address you copied earlier:
 
 ```sh
 cd VERA
 export BASE_API_URL=https://<codespace-subdomain>-3345.app.github.dev
-./Scripts/generateEnvironmentConstants.sh
 ```
 
-The script writes the generated Swift constants to `VERAApp/VERA/App/Generated/EnvironmentConstants.swift`.
+## Build the App
 
-{% aside type="caution" %}
-If you run the script before exporting `BASE_API_URL`, it fails with:
-
-```
-❌ Error: BASE_API_URL environment variable is not set
-```
-
-Export `BASE_API_URL` as shown above, then re-run `./Scripts/generateEnvironmentConstants.sh` from `VERA/`.
-{% /aside %}
-
-## Generate the Signing Configuration
-
-Tuist also requires a generated signing configuration file before it can generate the Xcode project — even if you only plan to run on the Simulator. Still from `VERA/`, export the following environment variables, then run the signing config generator script:
+Still from `VERA/`, set your signing values and run the builder:
 
 ```sh
-export DEVELOPMENT_TEAM=AB0C12DE34   # Find in Apple Developer portal → Certificates, Identifiers & Profiles
-export MARKETING_VERSION=1.1
-export CURRENT_PROJECT_VERSION=1
-./Scripts/regenerateSigningConfig.sh
+export DEVELOPMENT_TEAM=AB0C12DE34    # Your Apple Developer Team ID; leave it out to run on the Simulator only
+export MARKETING_VERSION=1.0          # Your app version
+export CURRENT_PROJECT_VERSION=1      # Your build number
+./Scripts/builder.sh
 ```
 
-The script writes `Config/Signing.xcconfig`.
+The builder does the whole setup for you:
 
-| Variable                  | Where to find it                                                                                        |
-| -------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `DEVELOPMENT_TEAM`         | [Apple Developer Portal](https://developer.apple.com/account) → Certificates, Identifiers & Profiles → Membership → Team ID |
-| `MARKETING_VERSION`        | The app version number you want to build, e.g. `1.1`                                                     |
-| `CURRENT_PROJECT_VERSION`  | The build number, e.g. `1`                                                                                |
+- Checks the prerequisites and offers to install Homebrew, Python 3, and Tuist if they are missing.
+- Validates `Config/app-config.json` and `Config/theme.json`.
+- Resolves `baseApiUrl` and generates the environment constants and entitlements for your backend.
+- Generates `AppConfig.swift` and the theme assets.
+- Creates `Config/Signing.xcconfig` if it's missing.
+- Runs `tuist install` and `tuist generate`, then generates the SPM asset accessors.
+- Offers to build and launch the app on a Simulator or connected device, and to open `VERA.xcworkspace` in Xcode.
 
-{% aside type="caution" %}
-If you skip this step, `tuist generate` fails with:
-
-```
-Configuration file not found at path .../VERA/Config/Signing.xcconfig
-```
-
-Export the three variables above and re-run `./Scripts/regenerateSigningConfig.sh` from `VERA/`, then try `tuist generate` again.
-{% /aside %}
-
-## Generate the Xcode Project and Run It
-
-Still from `VERA/`, generate the Xcode project with Tuist and open it:
+After the first setup, if you change `Config/app-config.json` or `Config/theme.json`, run the builder with one of these flags instead:
 
 ```sh
-tuist generate
-open VERA.xcworkspace
+./Scripts/builder.sh --update            # Regenerate the code and the workspace
+./Scripts/builder.sh --clean-and-update  # Same, after running tuist clean (use it if the workspace is stale)
 ```
+
+If you didn't launch the app from the builder, open `VERA.xcworkspace` in Xcode and run it:
 
 {% steps %}
 
@@ -156,7 +138,7 @@ open VERA.xcworkspace
 The app should launch in the Simulator and be able to reach your Codespace's backend. If you see a network error on launch, double-check that port 3345 is still public and that `BASE_API_URL` matches the forwarded address exactly.
 
 {% aside type="tip" %}
-You already set `DEVELOPMENT_TEAM` when generating the signing configuration above, so the Simulator should just work. Running on a **physical device** instead requires selecting your device and a valid signing team in Xcode's **Signing & Capabilities** tab. This is optional — the Simulator is enough to complete this tutorial.
+Running on a **physical device** requires a valid Development Team in `Config/Signing.xcconfig` and that you are signed in to the team under **Xcode → Settings → Accounts**. The Simulator needs neither a team nor Xcode sign-in.
 {% /aside %}
 
 With the backend running and the app built and running locally, you're ready to start configuring feature flags.

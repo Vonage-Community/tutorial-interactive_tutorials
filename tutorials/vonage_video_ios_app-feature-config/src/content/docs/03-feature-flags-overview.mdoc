@@ -9,13 +9,12 @@ The iOS app's feature flags live in a single JSON file in your local clone: **`V
 {% filetree %}
 
 - VERA/
-  - App/
   - Config/
     - app-config.json   ← Feature flags live here
   - Scripts/
-  - Theme/
-    - semantics.json
   - VERAApp/
+    - VERA/
+      - App/
   - VERAConfiguration/
   - VERACommonUI/
 
@@ -23,10 +22,17 @@ The iOS app's feature flags live in a single JSON file in your local clone: **`V
 
 ## How It's Structured
 
-`app-config.json` is organized into four top-level sections, one per area of the app:
+`app-config.json` contains metadata, the backend URL, and five settings sections:
 
 ```json
 {
+  "metadata": {
+    "name": "vonage",
+    "version": "1.0.0",
+    "created": "2026-09-07",
+    "description": "Default Vonage Video app configuration."
+  },
+  "baseApiUrl": "${BASE_API_URL}",
   "videoSettings": {
     "allowBackgroundEffects": true,
     "allowCameraControl": true,
@@ -39,6 +45,12 @@ The iOS app's feature flags live in a single JSON file in your local clone: **`V
     "allowMicrophoneControl": true,
     "allowAudioDiagnostics": true
   },
+  "authSettings": {
+    "allowAuthentication": false,
+    "idProviders": [
+      "okta"
+    ]
+  },
   "waitingRoomSettings": {
     "allowDeviceSelection": true,
     "allowSettings": true
@@ -46,21 +58,26 @@ The iOS app's feature flags live in a single JSON file in your local clone: **`V
   "meetingRoomSettings": {
     "allowArchiving": true,
     "allowCaptions": true,
+    "allowCaptionTranslation": true,
     "allowChat": true,
     "allowDeviceSelection": true,
     "allowEmojis": true,
     "allowFeedback": true,
     "allowPictureInPicture": true,
+    "allowPostCallTranscription": true,
     "allowScreenShare": true,
     "allowSettings": true,
-    "defaultLayoutMode": "activespeaker",
+    "defaultLayoutMode": "activeSpeaker",
     "showParticipantList": true
   }
 }
 ```
 
+- **`metadata`** — identifies the configuration.
+- **`baseApiUrl`** — sets the backend URL.
 - **`videoSettings`** — controls camera behavior and video quality before and during a call.
 - **`audioSettings`** — controls microphone behavior and audio diagnostics.
+- **`authSettings`** — controls authentication and identity providers.
 - **`waitingRoomSettings`** — controls what participants can do while waiting to be admitted.
 - **`meetingRoomSettings`** — controls in-call features once a participant has joined the meeting room.
 
@@ -76,7 +93,5 @@ Here's a closer look at some of the most commonly changed flags:
 | `allowEmojis` | `meetingRoomSettings` | boolean | `true` | Enables or disables the emoji reaction picker |
 | `allowScreenShare` | `meetingRoomSettings` | boolean | `true` | Enables or disables the screen-share button |
 | `allowBackgroundEffects` | `videoSettings` | boolean | `true` | Enables or disables virtual background/blur effects |
-| `defaultResolution` | `videoSettings` | string | `"640x480"` | Sets the default camera capture resolution used when a call starts |
-| `defaultLayoutMode` | `meetingRoomSettings` | string | `"activespeaker"` | Sets the default video layout (e.g. active speaker vs. grid) when a meeting room loads |
 
 Next, you'll edit some of these flags and regenerate the corresponding Swift source in your local clone.

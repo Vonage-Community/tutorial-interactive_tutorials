@@ -22,47 +22,28 @@ Save the file once you've made your edit.
 
 ## Regenerate `AppConfig.swift`
 
-From the `VERA/` directory of your local clone, run the config generator script:
+From the `VERA/` directory of your local clone, run the builder:
 
 ```sh
-python3 ./Scripts/generate-app-config.py
+./Scripts/builder.sh --update
 ```
 
-The script reads `Config/app-config.json` and writes the generated Swift source to `VERAConfiguration/VERAConfiguration/AppConfig.swift`. On success, you'll see:
-
-```
-✅ Generated AppConfig.swift
-```
+The builder reads `Config/app-config.json`, writes the generated Swift source to `VERAConfiguration/VERAConfiguration/AppConfig.swift`, and regenerates the Xcode workspace.
 
 | Script | Run from | Reads | Writes |
 |---|---|---|---|
-| `generate-app-config.py` | `VERA/` | `Config/app-config.json` | `VERAConfiguration/VERAConfiguration/AppConfig.swift` |
+| `builder.sh --update` | `VERA/` | `Config/app-config.json` | `VERAConfiguration/VERAConfiguration/AppConfig.swift` and the Xcode workspace |
 
-## Regenerate the Xcode Project
-
-Feature flags are compiled into `AppConfig.swift`, so the Xcode project needs to be regenerated afterward:
+If the generated workspace is stale, run:
 
 ```sh
-tuist generate
+./Scripts/builder.sh --clean-and-update
 ```
-
-{% aside type="tip" %}
-If Xcode still shows stale values after regenerating, run `tuist clean` first to clear Tuist's cache, then generate again:
-
-```sh
-tuist clean
-tuist generate
-```
-{% /aside %}
 
 {% aside type="caution" %}
-If `app-config.json` has invalid JSON (a trailing comma, a missing quote, etc.), the generator script fails with something like:
+If `app-config.json` has invalid JSON or is missing a required key, the builder stops with `Failed to generate AppConfig.swift.`
 
-```
-❌ Error parsing JSON: Expecting ',' delimiter: line 12 column 3 (char 245)
-```
-
-Fix the JSON syntax in `VERA/Config/app-config.json` and re-run `python3 ./Scripts/generate-app-config.py` from `VERA/`.
+Fix `VERA/Config/app-config.json` and re-run `./Scripts/builder.sh --update` from `VERA/`.
 {% /aside %}
 
 Next, you'll rebuild the app in Xcode and confirm your changes.
