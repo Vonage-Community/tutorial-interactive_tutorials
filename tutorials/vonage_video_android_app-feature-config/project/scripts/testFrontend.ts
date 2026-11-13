@@ -15,15 +15,14 @@ const isFilePath = (str: string): boolean => {
 };
 
 /**
- * Helper to execute shell commands with visible output.
+ * Runs a command with env.sh loaded, with visible output. Uses bash, which env.sh needs to locate
+ * env.defaults.sh.
  */
-const runCommand = (command: string) => {
-  console.log(`\n🚀 Running: ${command}\n`);
-  execSync(command, { stdio: 'inherit' });
-};
-
 const runCommandWithVcrEnv = (command: string) => {
-  runCommand(`. ./vcrBuild.env.sh && ${command}`);
+  const commandWithEnv = `source ./env.sh && ${command}`;
+
+  console.log(`\n🚀 Running: ${commandWithEnv}\n`);
+  execSync(commandWithEnv, { stdio: 'inherit', shell: '/bin/bash' });
 };
 
 /**
@@ -48,7 +47,7 @@ const runSpecificTest = (testFilePath: string) => {
 
 /**
  * Runs tests in watch mode, re-running on file changes.
- * Sources vcrBuild.env.sh for environment variables.
+ * Sources env.sh for environment variables.
  * Optionally watches a specific test file.
  */
 const runWatch = (testFilePath?: string) => {

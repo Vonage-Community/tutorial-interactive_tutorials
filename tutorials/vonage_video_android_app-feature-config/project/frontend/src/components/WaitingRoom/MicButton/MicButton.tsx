@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import usePreviewPublisherContext from '@hooks/usePreviewPublisherContext';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-import VividIcon from '@ui/VividIcon';
+import VividIcon from '@ui/components/VividIcon';
 import { VIDEO_CONTAINER_BUTTON_SIZE_WR } from '@utils/constants';
 import VideoContainerButton from '../VideoContainerButton';
 import { env } from '../../../env';
@@ -70,7 +70,7 @@ const MicButton = (): ReactElement | false => {
                 <VividIcon
                   name="mic-mute-line"
                   customSize={-5}
-                  style={{ color: 'var(--vera-alert-text)', transform: 'scaleX(-1)' }}
+                  style={{ color: 'var(--vera-alert-text)' }}
                 />
               )
             }
