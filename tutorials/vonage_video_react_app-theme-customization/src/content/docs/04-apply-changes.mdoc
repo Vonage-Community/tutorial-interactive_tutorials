@@ -6,9 +6,7 @@ With your colors, typography, and shape tokens updated, this step shows you how 
 
 ## Apply the Changes
 
-If `yarn dev` is already running, your changes to `designTokens.json` are **picked up automatically** — no extra command needed. Just save the file and refresh the browser.
-
-If the dev server is not running, sync the tokens manually before starting it:
+Changes to `theme.json` are **not picked up automatically**. Stop the running development server, sync the tokens, and restart it:
 
 ```sh
 yarn sync:theme-tokens
@@ -23,13 +21,13 @@ Open the forwarded URL for port **5173** in your browser and check that your cha
 
 1. **Landing page** — confirm the background and primary button color match your `background` and `primary` tokens.
 
-2. **Waiting room** — check button hover states against your `primaryHover` token.
+2. **Waiting room** — check button hover states against your `primary-hover` token.
 
-3. **Meeting room** — verify the video area background matches `darkBackground`.
+3. **Meeting room** — verify the video area background matches `dark-background`.
 
 4. **Light / dark toggle** — switch modes (if enabled) and confirm both palettes look correct.
 
-5. **Text and labels** — scan the UI for `textPrimary`, `textSecondary`, and `textTertiary` usage.
+5. **Text and labels** — scan the UI for `text-primary`, `text-secondary`, and `text-tertiary` usage.
 
 {% /steps %}
 
@@ -39,11 +37,11 @@ A typical customize-test cycle:
 
 {% steps %}
 
-1. Edit `designTokens.json`.
+1. Edit `theme.json`.
 
-2. Save the file — changes are applied automatically if `yarn dev` is running.
+2. Save the file and stop the server with **Ctrl+C**.
 
-3. Refresh the browser and verify.
+3. Run `yarn sync:theme-tokens`, then `yarn dev`; refresh the browser and verify.
 
 {% /steps %}
 

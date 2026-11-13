@@ -2,13 +2,13 @@
 title: Design Tokens Overview
 ---
 
-All visual styles for the Vonage Video React App are driven by a single file at the project root: **`designTokens.json`**. This is the one place you need to go to control colors, typography, and shape.
+All visual styles for the Vonage Video React App are driven by a single file at the project root: **`theme.json`**. This is the one place you need to go to control colors, typography, and shape.
 
 ## Where It Lives
 
 {% filetree %}
 
-- designTokens.json ← All theme configuration goes here
+- theme.json ← All theme configuration goes here
 - backend/
 - frontend/
 - libs/
@@ -17,33 +17,41 @@ All visual styles for the Vonage Video React App are driven by a single file at 
 
 ## File Structure
 
-`designTokens.json` has three top-level sections:
+`theme.json` has four top-level sections:
 
 ```json
 {
-  "light": { },
-  "dark":  { },
-  "fontFamilyPlain": "...",
-  "headline": { },
-  "bodyBase": { },
-  "borderRadiusMedium": "..."
+  "metadata": { },
+  "colors": {
+    "light": { },
+    "dark": { }
+  },
+  "borderRadius": {
+    "medium": 8
+  },
+  "typography": {
+    "font-family": "Inter, sans-serif, system-ui, ui-sans-serif, Marker Felt, Trebuchet MS",
+    "desktop": { },
+    "mobile": { }
+  }
 }
 ```
 
-- **`light` / `dark`** — Separate color palettes for each mode. Both modes use the same set of semantic token keys.
-- **Typography tokens** — Sit at the top level (outside `light`/`dark`) and apply to both modes. Includes `fontFamilyPlain` and named scales like `headline`, `bodyBase`, `caption`.
-- **Shape tokens** — Also at the top level. Six `borderRadius*` values control the roundness of buttons, cards, and dialogs.
+- **`metadata`** — Identifies the theme document and schema version.
+- **`colors.light` / `colors.dark`** — Separate color palettes for each mode. Both modes use the same set of kebab-case semantic token keys.
+- **Typography tokens** — Sit under `typography` and apply to both modes. Includes `font-family` and separate `desktop` and `mobile` trees.
+- **Shape tokens** — Sit under `borderRadius`. Six numeric values control the roundness of buttons, cards, and dialogs.
 
 ### Key color tokens
 
 | Token           | Role                                  |
 | --------------- | ------------------------------------- |
 | `primary`       | Brand accent — buttons, active states |
-| `primaryHover`  | Hover state of the primary color      |
+| `primary-hover`  | Hover state of the primary color      |
 | `surface`       | Card and panel backgrounds            |
 | `background`    | Page background                       |
-| `textPrimary`   | Primary text color                    |
-| `textSecondary` | Secondary / subdued text              |
+| `text-primary`   | Primary text color                    |
+| `text-secondary` | Secondary / subdued text              |
 | `error`         | Destructive actions and error states  |
 | `success`       | Confirmation and success states       |
 
@@ -52,7 +60,7 @@ All visual styles for the Vonage Video React App are driven by a single file at 
 The file is already open in your editor. You can also open it from the terminal:
 
 ```sh
-code designTokens.json
+code theme.json
 ```
 
 Now let's start by customizing the color palette.

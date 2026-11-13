@@ -7,7 +7,7 @@
   "capabilities": [],
   "version": "1.0.0",
   "filename": "vonage_video_react_app-theme-customization",
-  "customInstallCmd": "yarn",
+  "customInstallCmd": "npm i -g pnpm@12.11.2 && pnpm install",
   "customSetupCmd": "",
-  "customStartCmd": "yarn"
+  "customStartCmd": "pnpm install"
 }

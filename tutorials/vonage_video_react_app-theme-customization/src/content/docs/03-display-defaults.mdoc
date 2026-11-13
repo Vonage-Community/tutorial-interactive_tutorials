@@ -2,20 +2,20 @@
 title: Customize Typography & Shape
 ---
 
-Typography and shape tokens sit at the top level of `designTokens.json` — they apply across both light and dark modes.
+Typography and shape tokens sit under `typography` and `borderRadius` in `theme.json` — they apply across both light and dark modes.
 
 ## Font Family
 
-`fontFamilyPlain` sets the font stack for the entire app. Replace it with any web-safe font or a font you load via CSS:
+`font-family` sets the font stack for the entire app. Replace it with any web-safe font or a font you load via CSS:
 
 ```json
-"fontFamilyPlain": "Inter, sans-serif, system-ui, ui-sans-serif"
+"font-family": "Inter, sans-serif, system-ui, ui-sans-serif"
 ```
 
 To use a Google Font, add it to the app's HTML `<head>` and reference it here:
 
 ```json
-"fontFamilyPlain": "Roboto, sans-serif"
+"font-family": "Roboto, sans-serif"
 ```
 
 {% aside type="tip" %}
@@ -24,63 +24,59 @@ The app does not automatically load external fonts. If you use a custom font, ma
 
 ## Typography Scale
 
-Each named scale entry has six properties:
+Each named scale entry appears under both `typography.desktop` and `typography.mobile` with three properties:
 
 | Property | Description |
 |----------|-------------|
-| `fontSize` | Desktop font size (rem) |
-| `lineHeight` | Desktop line height (rem) |
-| `fontWeight` | Desktop weight (`400`, `500`, `600`) |
-| `mobileFontSize` | Mobile font size (rem) |
-| `mobileLineHeight` | Mobile line height (rem) |
-| `mobileFontWeight` | Mobile font weight |
+| `font-size` | Font size in pixels, such as `14px` |
+| `line-height` | Line height in pixels, such as `20px` |
+| `font-weight` | Weight (`400`, `500`, `600`) |
 
 ### Available scales
 
-| Token | Default desktop size | Usage |
-|-------|---------------------|-------|
-| `headline` | `4.125rem` | Hero / page headlines |
-| `subtitle` | `3.25rem` | Section subtitles |
-| `heading1` | `2.5rem` | H1 |
-| `heading2` | `2rem` | H2 |
-| `heading3` | `1.625rem` | H3 |
-| `heading4` | `1.25rem` | H4 |
-| `bodyExtended` | `1rem` | Long-form body text |
-| `bodyExtendedSemibold` | `1rem / 600` | Emphasized body text |
-| `bodyBase` | `0.875rem` | Standard UI text |
-| `bodyBaseSemibold` | `0.875rem / 600` | Labels, buttons |
-| `caption` | `0.75rem` | Captions, helper text |
-| `captionSemibold` | `0.75rem / 600` | Emphasized captions |
+| Token | Default desktop / mobile size | Usage |
+|-------|-------------------------------|-------|
+| `headline` | `66px` / `32px` | Hero / page headlines |
+| `subtitle` | `52px` / `30px` | Section subtitles |
+| `heading-1` | `40px` / `28px` | H1 |
+| `heading-2` | `32px` / `24px` | H2 |
+| `heading-3` | `26px` / `20px` | H3 |
+| `heading-4` | `20px` / `18px` | H4 |
+| `body-extended` | `16px` / `16px` | Long-form body text |
+| `body-extended-semibold` | `16px` / `16px` | Emphasized body text |
+| `body-base` | `14px` / `14px` | Standard UI text |
+| `body-base-semibold` | `14px` / `14px` | Labels, buttons |
+| `caption` | `12px` / `12px` | Captions, helper text |
+| `caption-semibold` | `12px` / `12px` | Emphasized captions |
 
 ### Example: compact body text
 
+Apply the entry inside both the `desktop` and `mobile` trees:
+
 ```json
-"bodyBase": {
-  "fontSize": "0.8125rem",
-  "lineHeight": "1.125rem",
-  "fontWeight": "400",
-  "mobileFontSize": "0.8125rem",
-  "mobileLineHeight": "1.125rem",
-  "mobileFontWeight": "400"
+"body-base": {
+  "font-size": "13px",
+  "line-height": "18px",
+  "font-weight": 400
 }
 ```
 
 ## Border Radius
 
-Six radius tokens control the roundness of buttons, cards, dialogs, and other UI elements:
+Six numeric radius tokens under `borderRadius` control the roundness of buttons, cards, dialogs, and other UI elements:
 
 | Token | Default | Typical usage |
 |-------|---------|---------------|
-| `borderRadiusNone` | `0px` | Sharp corners |
-| `borderRadiusExtraSmall` | `2px` | Badges, chips |
-| `borderRadiusSmall` | `4px` | Inputs, small buttons |
-| `borderRadiusMedium` | `8px` | Buttons, cards |
-| `borderRadiusLarge` | `12px` | Panels, modals |
-| `borderRadiusExtraLarge` | `24px` | Pills, large dialogs |
+| `none` | `0` | Sharp corners |
+| `extra-small` | `2` | Badges, chips |
+| `small` | `4` | Inputs, small buttons |
+| `medium` | `8` | Buttons, cards |
+| `large` | `12` | Panels, modals |
+| `extra-large` | `24` | Pills, large dialogs |
 
 ```json
-"borderRadiusMedium": "12px",
-"borderRadiusLarge": "16px"
+"medium": 12,
+"large": 16
 ```
 
 You have updated the typography and shape. In the next step, you will sync the tokens and verify your changes in the browser.
