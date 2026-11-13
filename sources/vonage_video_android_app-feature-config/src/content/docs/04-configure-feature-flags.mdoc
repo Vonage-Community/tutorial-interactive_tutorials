@@ -2,11 +2,11 @@
 title: Configure & Regenerate Feature Flags
 ---
 
-Now that you know how `config/app-config.json` is structured, it's time to edit it in your local clone and regenerate the Kotlin configuration that the app actually reads.
+Now that you know how `app-config.json` is structured, it's time to edit it in your local clone and regenerate the Kotlin configuration that the app actually reads.
 
 ## Edit a Flag
 
-In your local clone of `vonage-video-android-app`, open `config/app-config.json` and change one or more flags in `meetingRoomSettings`. For example, turn off screen sharing and switch the default layout to a grid:
+In your local clone of `vonage-video-android-app`, open `app-config.json` and change one or more flags in `meetingRoomSettings`. For example, turn off screen sharing and switch the default layout to a grid:
 
 ```json
 {
@@ -25,13 +25,13 @@ Leave `"baseApiUrl": "${BASE_API_URL}"` untouched — it's substituted automatic
 
 ## Regenerate the Build Configuration
 
-From the root of your local clone, run the config generator Gradle task:
+Gradle sync and `preBuild` run the config generator automatically. To run it explicitly from the root of your local clone:
 
 ```sh
 ./gradlew generateVonageConfig
 ```
 
-This reads `config/app-config.json` and regenerates:
+This reads `app-config.json` and regenerates:
 
 - `app/build/generated/source/jsonConfig/com/vonage/android/config/AppConfig.kt` — runtime Kotlin constants
 - `gradle/generated-config.properties` — build properties used for product flavor selection
