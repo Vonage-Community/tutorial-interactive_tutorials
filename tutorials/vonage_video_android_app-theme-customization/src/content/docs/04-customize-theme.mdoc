@@ -2,46 +2,46 @@
 title: Customize & Regenerate Theme
 ---
 
-Now that you know how `config/theme.json` is structured, it's time to edit it in your local clone and regenerate the Compose theme resources the app actually reads.
+Now that you know how `theme.json` is structured, it's time to edit it in your local clone and regenerate the Compose theme resources the app actually reads.
 
 ## Edit a Token
 
-In your local clone of `vonage-video-android-app`, open `config/theme.json` and change one or more tokens under `colors`, `borderRadius`, or `typography`. For example, update the primary brand color for both light and dark mode, and increase the medium border radius:
+In your local clone of `vonage-video-android-app`, open `theme.json` and change one or more tokens under `colors`, `borderRadius`, or `typography.mobile`. For example, update the primary brand color for both light and dark mode, and increase the medium border radius:
 
 ```json
 {
-  "themes": {
-    "vonage": {
-      "colors": {
-        "light": { "primary": "#1D6FE6", "on-primary": "#FFFFFF" },
-        "dark":  { "primary": "#5FA0FF", "on-primary": "#000000" }
-      },
-      "borderRadius": {
-        "medium": 10
-      }
-    }
+  "colors": {
+    "light": { "primary": "#1D6FE6", "on-primary": "#FFFFFF" },
+    "dark":  { "primary": "#5FA0FF", "on-primary": "#000000" }
+  },
+  "borderRadius": {
+    "medium": 10
   }
 }
 ```
 
-Save the file once you've made your edit.
+Edit these values in place, keep every existing color role, and save the file.
+
+{% aside %}
+Only `typography.mobile` affects Android; `font-family` is ignored.
+{% /aside %}
 
 ## Regenerate the Theme Resources
 
-From the root of your local clone, run the same config generator Gradle task used for feature flags — it also regenerates the theme:
+From the root of your local clone, manually run the theme generator Gradle task:
 
 ```sh
 ./gradlew generateTheme
 ```
 
-The `ThemeGeneratorPlugin` reads `config/theme.json` and (re)generates the Compose theme resources into:
+The `ThemeGeneratorPlugin` reads `theme.json` and regenerates `Color.kt`, `Shape.kt`, `Typography.kt`, and `Theme.kt` in:
 
 ```
 vonage-video-ui-compose/src/main/java/com/vonage/android/compose/theme/
 ```
 
 {% aside type="caution" %}
-Do **not** edit the generated theme files under `vonage-video-ui-compose/.../theme/` directly — they are overwritten on every build. Always make your changes in `config/theme.json` instead.
+Do **not** edit those four generated files directly — the theme task overwrites them. Always make your changes in `theme.json` instead.
 {% /aside %}
 
 ## Rebuild the App

@@ -34,7 +34,7 @@ Check that your changes are reflected across the app:
 
 4. **Light / dark mode** — switch the emulator or device's system theme (**Settings → Display → Dark theme**) and confirm both palettes look correct.
 
-5. **Text and labels** — scan the UI for `text-primary` and other text token usage, and confirm typography sizes match your `desktop`/`mobile` scale edits.
+5. **Text and labels** — scan the UI for `text-primary` and other text token usage, and confirm typography sizes match your `mobile` scale edits. The `desktop` scale and `font-family` do not affect Android.
 
 {% /steps %}
 
@@ -44,7 +44,7 @@ A typical customize-test cycle:
 
 {% steps %}
 
-1. Edit `config/theme.json`.
+1. Edit `theme.json`.
 
 2. Run `./gradlew generateTheme`.
 
@@ -53,5 +53,7 @@ A typical customize-test cycle:
 4. Verify on the emulator or device.
 
 {% /steps %}
+
+A normal build does not regenerate the theme, so rerun `generateTheme` after every `theme.json` change.
 
 Your theme is live. Head to the final step for further resources.

@@ -23,6 +23,7 @@ VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
 ...
 -----END PRIVATE KEY-----
 '
+AUTH_ENABLED='false'
 ```
 
 | Variable             | Where to find it                                                                                            |
@@ -36,10 +37,11 @@ Never commit `backend/.env` to source control. The repo's `.gitignore` already e
 
 ## Start the Backend
 
-Install dependencies, then start **only the backend** (you don't need the React frontend for this tutorial):
+Install dependencies with pnpm, then start **only the backend** (you don't need the React frontend for this tutorial):
 
 ```sh
-yarn
+npm i -g pnpm@12.11.2
+pnpm install
 yarn dev backend
 ```
 
@@ -79,7 +81,7 @@ cd vonage-video-android-app
 ```
 
 {% aside %}
-You'll need **Android Studio Ladybug (2024.2.1) or newer** and **JDK 17+** installed before you can build the project. The project uses the Gradle wrapper, so you don't need a separate Gradle install.
+You'll need **Android Studio Quail 4 (2026.1.4) or newer** and **JDK 17+** installed before you can build the project. The project uses the Gradle wrapper, so you don't need a separate Gradle install.
 {% /aside %}
 
 ## Point the Local App at the Backend
@@ -92,7 +94,7 @@ BASE_API_URL=https://<codespace-subdomain>-3345.app.github.dev
 ```
 
 {% aside type="tip" %}
-`local.properties` is git-ignored, so this is safe to set per-machine. You can alternatively export `BASE_API_URL` as an environment variable (useful for CI), or edit the `"baseApiUrl"` placeholder directly in `config/app-config.json` — see the next steps for that file's structure.
+`local.properties` is git-ignored, so this is safe to set per-machine. Do not include a trailing slash in `BASE_API_URL`. You can alternatively export `BASE_API_URL` as an environment variable (useful for CI), or edit the `"baseApiUrl"` placeholder directly in `app-config.json` — see the next steps for that file's structure.
 {% /aside %}
 
 {% aside type="caution" %}
@@ -101,11 +103,13 @@ If you run the app on the **Android Emulator** with a backend on your own machin
 
 ## Generate the Build Configuration and Run It
 
-From the root of your local clone, regenerate the build configuration so the app picks up `BASE_API_URL`:
+This step is optional because Gradle sync and `preBuild` run `generateVonageConfig` automatically. To regenerate the build configuration explicitly from the root of your local clone:
 
 ```sh
 ./gradlew generateVonageConfig
 ```
+
+This task does not regenerate the theme; theme generation is a separate manual step covered later.
 
 {% steps %}
 

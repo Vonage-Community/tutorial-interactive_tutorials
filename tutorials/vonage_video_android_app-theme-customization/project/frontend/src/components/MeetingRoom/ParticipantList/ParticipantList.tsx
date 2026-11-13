@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSessionContext from '@hooks/useSessionContext';
 import useUserContext from '@hooks/useUserContext';
@@ -14,7 +14,7 @@ import Tooltip from '@mui/material/Tooltip';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import VividIcon from '@ui/VividIcon';
+import VividIcon from '@ui/components/VividIcon';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
@@ -69,13 +69,22 @@ const ParticipantList = ({ handleClose, isOpen }: ParticipantListProps): ReactEl
     };
   }, [subscriberWrappers, query, name]);
 
+  const copiedResetTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (copiedResetTimerRef.current) clearTimeout(copiedResetTimerRef.current);
+    };
+  }, []);
+
   const copyUrl = () => {
     void navigator.clipboard.writeText(roomShareUrl);
 
     setIsCopied(true);
 
     // reset the icon back after a brief timeout
-    setTimeout(() => {
+    if (copiedResetTimerRef.current) clearTimeout(copiedResetTimerRef.current);
+    copiedResetTimerRef.current = setTimeout(() => {
       setIsCopied(false);
     }, 3000);
   };

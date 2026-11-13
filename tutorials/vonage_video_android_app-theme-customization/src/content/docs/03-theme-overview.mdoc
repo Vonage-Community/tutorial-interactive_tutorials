@@ -2,15 +2,14 @@
 title: Theme Configuration Overview
 ---
 
-The Android app's visual theme lives in a single JSON file in your local clone: **`config/theme.json`**. This is the file you'll edit to customize colors, corner rounding, and typography without touching any Kotlin or Compose source code.
+The Android app's visual theme lives in a single JSON file in your local clone: **`theme.json`** at the repository root. This is the file you'll edit to customize colors, corner rounding, and typography without touching any Kotlin or Compose source code.
 
 ## Where It Lives
 
 {% filetree %}
 
-- config/
-  - app-config.json
-  - theme.json   ← Theme tokens live here
+- app-config.json
+- theme.json   ← Theme tokens live here
 - app/
 - vonage-video-ui-compose/
 - ...
@@ -19,32 +18,35 @@ The Android app's visual theme lives in a single JSON file in your local clone: 
 
 ## How It's Structured
 
-`theme.json` nests every token under `themes.vonage`, split into three groups: `colors`, `borderRadius`, and `typography`:
+`theme.json` is flat and contains `metadata`, `colors`, `borderRadius`, and `typography` with no `themes.vonage` wrapper:
 
 ```json
 {
-  "themes": {
-    "vonage": {
-      "colors": {
-        "light": { "primary": "#9941FF", "background": "#F5F0FD", "...": "..." },
-        "dark":  { "primary": "#B377FF", "background": "#1C1C1E", "...": "..." }
-      },
-      "borderRadius": {
-        "none": 0, "extra-small": 2, "small": 4, "medium": 8, "large": 12, "extra-large": 24
-      },
-      "typography": {
-        "font-family": "Inter",
-        "desktop": { "headline": { "font-size": "66px", "line-height": "88px", "font-weight": 500 }, "...": "..." },
-        "mobile":  { "headline": { "font-size": "32px", "line-height": "40px", "font-weight": 500 }, "...": "..." }
-      }
-    }
+  "metadata": {
+    "name": "vonage",
+    "version": "1.0.0",
+    "created": "2026-09-04",
+    "description": "Default Vonage Video app theme."
+  },
+  "colors": {
+    "light": { "primary": "#9941FF", "background": "#F5F0FD", "...": "..." },
+    "dark":  { "primary": "#B377FF", "background": "#1C1C1E", "...": "..." }
+  },
+  "borderRadius": {
+    "none": 0, "extra-small": 2, "small": 4, "medium": 8, "large": 12, "extra-large": 24
+  },
+  "typography": {
+    "font-family": "Inter",
+    "desktop": { "headline": { "font-size": "66px", "line-height": "88px", "font-weight": 500 }, "...": "..." },
+    "mobile":  { "headline": { "font-size": "32px", "line-height": "40px", "font-weight": 500 }, "...": "..." }
   }
 }
 ```
 
+- **`metadata`** — Describes the theme document.
 - **`colors.light` / `colors.dark`** — Separate color palettes for each mode. Both modes use the same set of semantic token keys, including `on-*` pairs (e.g. `on-primary`) for text/icon color placed on top of that token.
 - **`borderRadius`** — Six named tokens controlling the corner rounding of buttons, cards, and dialogs.
-- **`typography`** — `desktop` and `mobile` type scales. Both scales use the same named tokens, just with different point sizes.
+- **`typography`** — `desktop` and `mobile` type scales. Android only applies `mobile` and ignores `font-family`.
 
 ## Color Token Reference
 
@@ -63,6 +65,10 @@ Here's the subset of color tokens you'll work with most often:
 | `success` | `#1C8731` | `#4CD964` | Confirmations |
 | `border` | `#E6E6E6` | `#3A3A3C` | Dividers and borders |
 | `disabled` | `#E6E6E6` | `#3A3A3C` | Disabled control backgrounds |
+
+{% aside type="caution" %}
+Keep every color role in both palettes; theme generation fails if a required role is missing.
+{% /aside %}
 
 ## Border Radius Tokens
 
