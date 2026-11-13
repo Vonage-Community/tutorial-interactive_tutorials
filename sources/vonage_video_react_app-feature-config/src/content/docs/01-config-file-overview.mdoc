@@ -2,13 +2,13 @@
 title: The Config File
 ---
 
-All frontend settings for the Vonage Video React App live in a single file at the project root: **`vcrBuild.env.sh`**. This is the one place you need to go to control features, display defaults, and other frontend behaviour.
+All shared frontend settings for the Vonage Video React App live in a single file at the project root: **`app-config.json`**. This is the one place you need to go to control features, display defaults, and other shared frontend behaviour. It uses nested, camelCase JSON.
 
 ## Where It Lives
 
 {% filetree %}
 
-- vcrBuild.env.sh   ← All frontend configuration goes here
+- app-config.json   ← All shared frontend configuration goes here
 - backend/
   - .env            ← Backend credentials (separate)
 - frontend/
@@ -17,32 +17,34 @@ All frontend settings for the Vonage Video React App live in a single file at th
 {% /filetree %}
 
 {% aside %}
-Backend credentials (`VONAGE_APP_ID`, `VONAGE_PRIVATE_KEY`) live in `backend/.env`. This tutorial covers only **frontend** configuration in `vcrBuild.env.sh`.
+Backend credentials (`VONAGE_APP_ID`, `VONAGE_PRIVATE_KEY`) live in `backend/.env`. Local frontend values such as the Codespaces `API_URL` live in `frontend/.env`; this tutorial covers shared frontend configuration in `app-config.json`.
 {% /aside %}
 
 ## How It Works
 
-`vcrBuild.env.sh` is a shell script that exports environment variables. It is loaded automatically every time you run the app or trigger a build — you never need to source it manually.
+`app-config.json` contains nested, camelCase JSON. Run `yarn sync:env` after each edit to generate `env.sh`, which is loaded automatically every time you run the app or trigger a build. Do not edit `env.sh` manually.
 
-```bash
-# vcrBuild.env.sh
-export ALLOW_CHAT=true
-export ALLOW_ARCHIVING=true
-export DEFAULT_LAYOUT_MODE='active-speaker'
+```json
+{
+  "meetingRoomSettings": {
+    "allowChat": true,
+    "defaultLayoutMode": "activeSpeaker"
+  }
+}
 ```
 
 ## Opening the File
 
-Open `vcrBuild.env.sh` in your editor:
+Open `app-config.json` in your editor:
 
 ```sh
-code vcrBuild.env.sh
+code app-config.json
 ```
 
 The defaults work out of the box — all major features are enabled and the resolution is set to 1280×720. You only need to edit the file when you want to change a specific behaviour.
 
 {% aside type="caution" %}
-After editing `vcrBuild.env.sh` you must restart the app (`yarn dev`) or trigger a new build for the changes to take effect.
+After editing `app-config.json` you must run `yarn sync:env` and restart the app (`yarn dev`) for the changes to take effect.
 {% /aside %}
 
 Now let's look at the feature flags you can control.

@@ -1,12 +1,12 @@
 ---
 title: Vonage Video React App
-description: Learn how to control the features and display settings of the Vonage Video React App using a single configuration file.
+description: Learn how to control the features and display settings of the Vonage Video React App using its shared configuration.
 template: splash
 hero:
   tagline: Feature Config
 ---
 
-The Vonage Video React App ships with a broad set of features — archiving, chat, screen sharing, emoji reactions, captions, and more. Every one of them can be turned on or off without touching any source code, using a single shell configuration file: **`vcrBuild.env.sh`**.
+The Vonage Video React App ships with a broad set of features — archiving, chat, screen sharing, emoji reactions, captions, and more. Shared features can be turned on or off without touching any source code, using **`app-config.json`** and `yarn sync:env`.
 
 In this tutorial you will:
 
@@ -22,7 +22,7 @@ In this tutorial you will:
 | #   | Page                        | What you'll do                                                |
 | --- | --------------------------- | ------------------------------------------------------------- |
 | 01  | Backend credentials         | Create `backend/.env` with your Vonage App ID and private key |
-| 02  | Configuration file overview | Explore `vcrBuild.env.sh` and understand its structure        |
+| 02  | Configuration file overview | Explore `app-config.json` and understand its structure        |
 | 03  | Feature flags               | Enable and disable individual features                        |
 | 04  | Display settings            | Adjust video resolution and default room layout               |
-| 05  | Apply and verify            | Rebuild the app and confirm your changes in the browser       |
+| 05  | Apply and verify            | Generate `env.sh`, restart the app, and confirm your changes  |

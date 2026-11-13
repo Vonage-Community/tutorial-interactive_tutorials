@@ -26,6 +26,7 @@ VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
 ...
 -----END PRIVATE KEY-----
 '
+AUTH_ENABLED='false'
 ```
 
 | Variable             | Where to find it                                                                                            |
@@ -45,10 +46,10 @@ The frontend needs to know the public URL of the backend. In the **Ports** tab, 
 https://stunning-rotary-phone-wrx67xjvj6w93v4j5-3345.app.github.dev
 ```
 
-Create `frontend/.env` with that URL:
+Copy `frontend/.env.example` to `frontend/.env`, then set `API_URL` to that URL:
 
 ```sh
-# frontend/.env
+cp frontend/.env.example frontend/.env
 API_URL=https://<your-codespace-subdomain>-3345.app.github.dev
 ```
 
@@ -63,11 +64,12 @@ Never commit `frontend/.env` to source control. The repo's `.gitignore` already 
 Install all dependencies, then start the development server:
 
 ```sh
-yarn
+npm i -g pnpm@12.11.2
+pnpm install
 yarn dev
 ```
 
-`yarn dev` starts both the backend server (port **3345**) and the frontend Vite dev server (port **5173**).
+`yarn dev` starts the backend server (port **3345**), the frontend Vite dev server (port **5173**), and the local OIDC provider (port **3346**).
 
 ## Make the Ports Public
 

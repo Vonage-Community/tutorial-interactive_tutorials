@@ -1,4 +1,5 @@
 const customWordList = [
+  'ciphertext',
   'Opentok',
   'Vonage',
   'screensharing',
@@ -16,6 +17,7 @@ const customWordList = [
   'Hydrateable',
   'firefoxUserPrefs',
   'gollum',
+  'kibana',
   'PWDEBUG',
   'unstub',
   'vonageAPIURL',
@@ -27,6 +29,11 @@ const customWordList = [
   'hsts',
   'clickjacking',
   'COEP',
+  'SXGA',
+  'QVGA',
+  'webcredentials',
+  'PKCE',
+  'enterpictureinpicture',
 ];
 
 export default customWordList;

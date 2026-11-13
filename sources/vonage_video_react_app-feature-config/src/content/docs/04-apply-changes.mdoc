@@ -6,31 +6,32 @@ With your feature flags and display defaults configured, this step shows you how
 
 ## Save and Restart
 
-After editing `vcrBuild.env.sh`, save the file and restart the development server:
+After editing `app-config.json`, save the file, generate `env.sh`, and restart the development server:
 
 ```sh
+yarn sync:env
 yarn dev
 ```
 
 This reloads both the backend server (port **3345**) and the frontend Vite dev server (port **5173**) with the updated configuration.
 
 {% aside type="caution" %}
-Simply saving the file is not enough — the dev server must be restarted to pick up the new environment variable values.
+Simply saving the file is not enough — run `yarn sync:env`, then restart the dev server to pick up the new environment variable values.
 {% /aside %}
 
 ## Verify in the Browser
 
-Open [http://localhost:5173](http://localhost:5173) and check that your changes are reflected:
+Open the forwarded URL for port **5173** and check that your changes are reflected:
 
 {% steps %}
 
-1. Navigate to the **waiting room** — confirm device selectors appear or are hidden based on `WAITING_ROOM_ALLOW_DEVICE_SELECTION`.
+1. Navigate to the **waiting room** — confirm device selectors appear or are hidden based on `waitingRoomSettings.allowDeviceSelection`.
 
-2. Join a meeting room — confirm the initial layout matches `DEFAULT_LAYOUT_MODE`.
+2. Join a meeting room — confirm the initial layout matches `meetingRoomSettings.defaultLayoutMode`.
 
-3. Check the toolbar — verify that toggles for chat, screen share, emojis, and archiving match your flag settings.
+3. Check the toolbar — verify that toggles for chat, screen share, emojis, and archiving match your `meetingRoomSettings` values.
 
-4. Open **Advanced Settings** — confirm the resolution options and bitrate range reflect your `DEFAULT_RESOLUTION` and bitrate values.
+4. Open **Advanced Settings** — confirm the resolution reflects `videoSettings.defaultResolution`. The bitrate and frame-rate options remain fixed defaults.
 
 {% /steps %}
 
@@ -38,9 +39,9 @@ Open [http://localhost:5173](http://localhost:5173) and check that your changes 
 
 Some settings only take effect when a participant **rejoins** the room (not on live reload):
 
-- `DEFAULT_LAYOUT_MODE`
-- `ALLOW_AUDIO_ON_JOIN`
-- `ALLOW_VIDEO_ON_JOIN`
+- `meetingRoomSettings.defaultLayoutMode`
+- `audioSettings.allowAudioOnJoin`
+- `videoSettings.allowVideoOnJoin`
 
 If you changed any of these, leave the room and re-enter to see the updated behaviour.
 
@@ -50,11 +51,11 @@ A typical configure-test cycle:
 
 {% steps %}
 
-1. Edit `vcrBuild.env.sh`.
+1. Edit `app-config.json`.
 
 2. Stop the server with **Ctrl+C**.
 
-3. Run `yarn dev` to restart.
+3. Run `yarn sync:env`, then `yarn dev` to restart.
 
 4. Open the app and verify.
 
