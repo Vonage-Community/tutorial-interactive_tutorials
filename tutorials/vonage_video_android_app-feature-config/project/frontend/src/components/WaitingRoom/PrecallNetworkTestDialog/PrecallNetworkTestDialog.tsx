@@ -4,12 +4,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import DialogContent from '@mui/material/DialogContent';
-import VividIcon from '@ui/VividIcon';
+import VividIcon from '@ui/components/VividIcon';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import useSessionKeyParam from '@hooks/useSessionKeyParam';
-import useDecodedSessionKey from '@hooks/useDecodedSessionKey';
 import tryCatch from '@common/execution/tryCatch';
 import PrecallNetworkTestQualityRow from './PrecallNetworkTestQualityRow';
 import DialogActionsRow from './DialogActionsRow';
@@ -34,8 +33,7 @@ const PrecallNetworkTestDialog = ({
   setIsPrecallNetworkTestOpen,
 }: PrecallNetworkTestDialogProps): ReactElement => {
   const { t } = useTranslation();
-  const { sessionKey, sessionKeyStatus } = useSessionKeyParam();
-  const { roomName } = useDecodedSessionKey({ sessionKey, sessionKeyStatus });
+  const { sessionKey } = useSessionKeyParam();
 
   const { state, testQuality, stopTest, clearResults } = useNetworkTest();
 
@@ -56,7 +54,7 @@ const PrecallNetworkTestDialog = ({
 
   const handleStartTest = useCallback(async () => {
     const { error } = await tryCatch(() =>
-      testQuality(roomName).onProgress((_, stats) => {
+      testQuality(sessionKey).onProgress((_, stats) => {
         console.log('Quality test stats update:', stats);
       })
     );
@@ -64,7 +62,7 @@ const PrecallNetworkTestDialog = ({
     if (error) {
       console.error('Network test failed:', error);
     }
-  }, [testQuality, roomName]);
+  }, [testQuality, sessionKey]);
 
   const handleRetry = useCallback(() => {
     setHasUserStoppedTest(false);

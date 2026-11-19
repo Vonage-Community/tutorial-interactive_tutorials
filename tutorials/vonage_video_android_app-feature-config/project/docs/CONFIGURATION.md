@@ -1,0 +1,271 @@
+# Configuration
+
+This document covers the environment variables, feature flags, theming, and Storybook usage for the Vonage Video API Reference App.
+
+## Environment Configuration
+
+The app has two parts — a **backend** server and a **frontend** UI. The backend is configured through `backend/.env`. Frontend settings are defined in [`app-config.json`](../app-config.json) and compiled into [`env.sh`](../env.sh) via `yarn sync:env`. Project defaults that are not in `app-config.json` (web-only frontend values and backend auth settings) live in the hand-maintained [`env.defaults.sh`](../env.defaults.sh), which `env.sh` sources.
+
+For initial setup instructions (creating `.env` files, obtaining credentials), see [Getting Started](./GETTING_STARTED.md).
+
+---
+
+### Backend (`backend/.env`)
+
+Open `backend/.env` and configure the following variables.
+
+#### Video service provider
+
+Exactly one provider block must be configured.
+
+**Vonage Video API (default)**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VIDEO_SERVICE_PROVIDER` | ✅ | Must be `vonage` |
+| `VONAGE_APP_ID` | ✅ | Your Vonage application ID from the [dashboard](https://dashboard.vonage.com/applications) |
+| `VONAGE_PRIVATE_KEY` | ✅ | Contents of the private key file downloaded when creating the application |
+
+```ini
+VIDEO_SERVICE_PROVIDER='vonage'
+VONAGE_APP_ID='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+VONAGE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----'
+```
+
+**OpenTok (TokBox) SDK**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VIDEO_SERVICE_PROVIDER` | ✅ | Must be `opentok` |
+| `OT_API_KEY` | ✅ | Your OpenTok API key |
+| `OT_API_SECRET` | ✅ | Your OpenTok API secret |
+
+```ini
+VIDEO_SERVICE_PROVIDER='opentok'
+OT_API_KEY='your-api-key'
+OT_API_SECRET='your-api-secret'
+```
+
+#### Session keys
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LEGACY_SESSION_KEYS_ENABLED` | `'true'` | While `SESSION_KEY_SECRET` is set, accepts sessionKeys signed with `VONAGE_APP_ID` (`OT_API_KEY` for OpenTok), the key used when `SESSION_KEY_SECRET` is empty, and re-signs them with `SESSION_KEY_SECRET` in the same video session. This applies to signed-in users, or to everyone when `AUTH_ENABLED` is not `'true'`. Anonymous callers always need a key signed with `SESSION_KEY_SECRET`. Set to `'false'` to reject these keys for everyone |
+
+#### Allowed web origins (CORS)
+
+`CORS_ALLOWED_ORIGINS` (required) lists the web origins allowed to call the backend from a browser with credentials, set per environment. Entries are comma-separated exact origins (`https://app.example.com`), optionally with one `*` in the first host label (`https://app-*.example.com`). `*` alone allows any origin and is meant for local development only: with `AUTH_ENABLED='true'` and an `https` `OIDC_WEB_REDIRECT_URI`, the server refuses to start with `*`.
+
+| Environment | Value |
+|---|---|
+| Local (`backend/.env.example`) | `*` |
+| CI (`run-tests.yml`) and backend unit tests | `*` |
+| VCR main deploy (`vcr-gha.yml`) | `https://<APP_HOST>`, filled by the deploy workflow |
+| VCR per-PR deploy | The PR instance URL, set by the workflow |
+
+Include the origin the app is served from when it differs from the backend's, and every site that embeds `<vera-room>`. Native mobile apps don't send an `Origin` header and aren't affected. With auth on, requests from an origin outside this list are also rejected with `403`.
+
+#### Live Captions Translation (optional, private beta)
+
+[Live Captions Translation](https://developer.vonage.com/en/opentok/guides/live-caption-translation) must be enabled for your Vonage project. Both variables are unset by default, so the Start Captions request is unchanged.
+
+| Variable | Accepted values | Description |
+|----------|-----------------|-------------|
+| `CAPTIONS_TRANSLATION_LEVEL` | `FINALS_ONLY` \| `CONFIDENT_PARTIALS` \| `WINDOWED_PARTIALS` \| `ALL_PARTIALS` | How often captions are translated. Higher levels translate more partial captions and cost more. |
+| `CAPTIONS_TARGET_LANGUAGE_CODE` | BCP-47 code, e.g. `es-ES` | Session-level translation language for every participant. A language picked in the Captions settings tab overrides it, and choosing "Original" there reverts to this language instead of the spoken one. |
+
+#### Vonage Cloud Runtime (VCR)
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VCR_PORT` | ⚠️ VCR only | Port exposed by VCR (typically `3345`). **Do not set this locally** — its presence switches the app to VCR storage. |
+
+#### Jira feedback integration (optional)
+
+Enables the in-call issue reporting tool to file tickets directly into Jira.
+
+| Variable | Description |
+|----------|-------------|
+| `JIRA_URL` | Base URL of your Jira instance |
+| `JIRA_API_URL` | Jira REST API base URL |
+| `JIRA_TOKEN` | API token for authentication |
+| `JIRA_PROJECT_KEY` | Target project key |
+| `JIRA_COMPONENT_ID` | Default component ID for filed issues |
+| `JIRA_iOS_COMPONENT_ID` | Component ID for iOS issues |
+| `JIRA_ANDROID_COMPONENT_ID` | Component ID for Android issues |
+| `JIRA_EPIC_LINK` | Epic link field value |
+| `JIRA_EPIC_URL` | URL to the target epic |
+
+#### OIDC token authentication (optional)
+
+See [Authentication](./AUTHENTICATION.md) for the full authentication guide including all env var details.
+
+### Frontend (`app-config.json` → `env.sh`)
+
+Frontend settings control the browser application. They define which features are visible, which defaults are applied when a participant joins, and how the app connects to the backend.
+
+The source of truth is [`app-config.json`](../app-config.json), a unified, platform-agnostic config shared across the Vonage Video web, iOS, and Android apps. The build tooling (dev/build/test) reads [`env.sh`](../env.sh), which is **generated** from `app-config.json`. Do not edit `env.sh` by hand — it is overwritten on every sync.
+
+To change a setting:
+
+1. Edit the relevant value in [`app-config.json`](../app-config.json).
+2. Regenerate `env.sh`:
+
+   ```bash
+   yarn sync:env
+   ```
+
+3. Restart the app or trigger a new build.
+
+`app-config.json` uses grouped, nested keys instead of flat variable names. For example:
+
+```json
+{
+  "meetingRoomSettings": {
+    "allowChat": false,
+    "defaultLayoutMode": "activeSpeaker"
+  },
+  "localizationSettings": {
+    "supportedLanguages": ["en", "es"]
+  }
+}
+```
+
+The generator maps each key to its `env.sh` variable, joins lists with `|`, and serializes types into shell format. The tables below use the `env.sh` variable names.
+
+> **Note:** Changes are applied at build time. After `yarn sync:env`, restart `yarn dev` locally or create a new build/deployment for them to take effect.
+
+#### Things to know about the mapping
+
+- **Layout mode value.** The shared schema uses `activeSpeaker` for `meetingRoomSettings.defaultLayoutMode`; the generator translates it to the web app's `active-speaker` in `env.sh`. Set `activeSpeaker` or `grid` in `app-config.json`.
+- **Web-only settings.** A few frontend variables are not part of the shared cross-platform schema (the schema only allows boolean feature toggles as extra keys), so they do not live in `app-config.json`. They live in the hand-maintained [`env.defaults.sh`](../env.defaults.sh), which `env.sh` sources: `PUBLISHER_MAX_RESOLUTION`, `NOTIFICATION_DURATION_MS`, `MIN_CUSTOM_VIDEO_BITRATE_BPS`, `MAX_CUSTOM_VIDEO_BITRATE_BPS`, and `SUPPORTED_FRAME_RATES`.
+- **Network settings.** `API_URL`, `TUNNEL_DOMAIN`, and `VONAGE_VIDEO_HOST` are **not** generated from `app-config.json` by `yarn sync:env`. They are runtime/environment values, so set them via [`frontend/.env`](../frontend/.env.example) (which layers over `env.sh`) or by exporting them in your shell before running the app. See the [Network](#network) table below.
+
+#### Value types
+
+| Type | Description | Example |
+|------|-------------|---------|
+| `boolean` | Enables or disables a feature or behavior. | `true`, `false` |
+| `number` | Numeric value. The description explains the expected unit. | `5000`, `10000000` |
+| `string` | Single text value, usually selected from a fixed set. | `grid` |
+| `string-list` | Pipe-separated list of values. | `en\|es\|it` |
+
+---
+
+#### Network
+
+These are runtime/environment values and are **not** generated from `app-config.json`. Set them in [`frontend/.env`](../frontend/.env.example) or export them in your shell before running the app.
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `API_URL` | `string` | `http://localhost:3345` locally, `window.location.origin` in production | Valid URL | URL of the backend API server |
+| `TUNNEL_DOMAIN` | `string` | Not set | Domain name | Public tunnel domain used when testing across devices. See [Getting Started](./GETTING_STARTED.md) |
+
+---
+
+#### Internationalisation
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `I18N_FALLBACK_LANGUAGE` | `string` | `en` | `en` \| `en-US` \| `es` \| `es-MX` \| `it` | Language used when the user's locale is not supported |
+| `I18N_SUPPORTED_LANGUAGES` | `string-list` | `en` | Pipe-separated list, for example `en\|es\|it` | Languages offered in the UI |
+
+---
+
+#### Join experience
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `BYPASS_WAITING_ROOM` | `boolean` | `false` | `true` \| `false` | Skip the waiting room and join directly |
+| `ALLOW_AUDIO_ON_JOIN` | `boolean` | `true` | `true` \| `false` | Start with microphone enabled when joining |
+| `ALLOW_VIDEO_ON_JOIN` | `boolean` | `true` | `true` \| `false` | Start with camera enabled when joining |
+| `DEFAULT_LAYOUT_MODE` | `string` | `active-speaker` | `active-speaker` \| `grid` | Default in-room layout when a participant joins |
+
+> **Note:** `DEFAULT_LAYOUT_MODE`, `ALLOW_AUDIO_ON_JOIN`, and `ALLOW_VIDEO_ON_JOIN` require the participant to rejoin the room to apply updated values.
+
+---
+
+#### Audio and video controls
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `ALLOW_CAMERA_CONTROL` | `boolean` | `true` | `true` \| `false` | Show the camera on/off toggle |
+| `ALLOW_MICROPHONE_CONTROL` | `boolean` | `true` | `true` \| `false` | Show the microphone on/off toggle |
+| `ALLOW_BACKGROUND_EFFECTS` | `boolean` | `true` | `true` \| `false` | Enable virtual background and blur effects |
+| `ALLOW_ADVANCED_NOISE_SUPPRESSION` | `boolean` | `true` | `true` \| `false` | Enable the advanced noise-suppression toggle |
+| `WAITING_ROOM_ALLOW_ADVANCED_SETTINGS` | `boolean` | `true` | `true` \| `false` | Show the Advanced Settings panel in the waiting room |
+
+---
+
+#### Device selection
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `WAITING_ROOM_ALLOW_DEVICE_SELECTION` | `boolean` | `true` | `true` \| `false` | Show device selectors in the waiting room |
+| `MEETING_ROOM_ALLOW_DEVICE_SELECTION` | `boolean` | `true` | `true` \| `false` | Show device selectors inside the meeting room |
+
+---
+
+#### In-call collaboration
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `ALLOW_CAPTIONS` | `boolean` | `true` | `true` \| `false` | Enable live captions |
+| `ALLOW_CAPTION_TRANSLATION` | `boolean` | `false` | `true` \| `false` | Show the Captions settings tab to translate received captions (requires `ALLOW_CAPTIONS`) |
+| `ALLOW_CHAT` | `boolean` | `true` | `true` \| `false` | Enable the in-call group chat |
+| `ALLOW_EMOJIS` | `boolean` | `true` | `true` \| `false` | Enable emoji reactions |
+| `ALLOW_MINI_MODE` | `boolean` | `true` | `true` \| `false` | Enable Meet-style Mini Mode (Document Picture-in-Picture, desktop Chromium 116+ and Firefox 151+). Opening it automatically on tab switch needs HTTPS, so it does not happen on `http://localhost` |
+| `ALLOW_SCREEN_SHARE` | `boolean` | `true` | `true` \| `false` | Enable screen sharing |
+
+---
+
+#### Archiving
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `ALLOW_ARCHIVING` | `boolean` | `true` | `true` \| `false` | Enable meeting recording |
+| `ARCHIVES_REFRESH_INTERVAL_MS` | `number` | `5000` | Positive integer, in milliseconds | Interval for refreshing archived meeting recordings |
+
+---
+
+#### Meeting room UI
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `SHOW_PARTICIPANT_LIST` | `boolean` | `true` | `true` \| `false` | Show the participant list panel |
+| `ENABLE_REPORT_ISSUE` | `boolean` | `false` | `true` \| `false` | Show the in-call issue reporting tool |
+| `MEETING_ROOM_ALLOW_ADVANCED_SETTINGS` | `boolean` | `true` | `true` \| `false` | Show the Advanced Settings panel inside the meeting room |
+| `SHOW_VIDEO_STATS` | `boolean` | `false` | `true` \| `false` | Show overlay video stats on the waiting room |
+| `NOTIFICATION_DURATION_MS` | `number` | `4000` | Positive integer, in milliseconds | Duration in-app notifications are displayed before auto-dismissing |
+| `AVOID_FETCHING_APP_CONFIG` | `boolean` | `true` | `true` \| `false` | Skip fetching remote app configuration on startup |
+
+---
+
+#### Video quality defaults
+
+| Variable | Type | Default | Accepted values | Description |
+|----------|------|---------|-----------------|-------------|
+| `DEFAULT_RESOLUTION` | `string` | `1280x720` | `1920x1080` \| `1280x960` \| `1280x720` \| `640x480` \| `640x360` \| `320x240` \| `320x180` | Format: `widthxheight` in pixels |
+| `PUBLISHER_MAX_RESOLUTION` | `string` | `1920x1080` | `1920x1080` \| `1280x960` \| `1280x720` \| `640x480` \| `640x360` \| `320x240` \| `320x180` | Maximum resolution the publisher is allowed to use |
+| `MIN_CUSTOM_VIDEO_BITRATE_BPS` | `number` | `5000` | Positive integer, in bps | Minimum selectable custom video bitrate in the Advanced Settings dialog |
+| `MAX_CUSTOM_VIDEO_BITRATE_BPS` | `number` | `10000000` | Positive integer, in bps | Maximum selectable custom video bitrate in the Advanced Settings dialog |
+| `SUPPORTED_FRAME_RATES` | `string-list` | `30\|15\|7\|1` | Pipe-separated positive integers, in fps | Frame rate options shown in the Advanced Settings video tab |
+
+---
+
+## UI Customization
+
+The app theme is configured through the root `theme.json` file.
+
+### Customize your theme
+
+1. Edit `theme.json` at the project root with your palette/theme values.
+2. Sync theme artifacts:
+
+```bash
+yarn sync:theme-tokens
+```
+
+This command always regenerates `theme.example.json`, syncs `libs/ui/src/theme/helpers/designTokens/designTokens.json` from root `theme.json` when present, creates root `theme.json` from defaults when missing, rebuilds the Tailwind plugin, and formats the generated plugin file.

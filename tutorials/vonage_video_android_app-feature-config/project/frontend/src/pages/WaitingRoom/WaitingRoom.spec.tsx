@@ -98,6 +98,11 @@ describe('WaitingRoom', () => {
       applyVideoFilter: vi.fn(),
       clearVideoFilter: vi.fn(),
       getAudioSource: () => defaultAudioDevice,
+      getVideoSource: () => ({
+        deviceId: 'mock-video',
+        type: 'camera',
+        track: { clone: () => ({ stop: vi.fn() }) } as unknown as MediaStreamTrack,
+      }),
       videoWidth: () => 1280,
       videoHeight: () => 720,
       destroy: vi.fn(),
@@ -179,6 +184,32 @@ describe('WaitingRoom', () => {
     });
   });
 
+  it('should render even when the preview video track is not ready yet', async () => {
+    expect.assertions(1);
+
+    env.partialUpdate({
+      WAITING_ROOM_ALLOW_DEVICE_SELECTION: true,
+    });
+
+    mockPublisher.getVideoSource = () => undefined as never;
+
+    await render(<WaitingRoom />, {
+      previewPublisherContext: {
+        __interceptor: (context: PreviewPublisherContextType) => {
+          context.publisher = mockPublisher;
+          context.publisherVideoElement = mockPublisherVideoElement;
+          context.isVideoEnabled = true;
+          context.isVideoLoading = false;
+          context.accessStatus = DEVICE_ACCESS_STATUS.ACCEPTED;
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('waitingRoom')).toBeInTheDocument();
+    });
+  });
+
   it('should call destroyPublisher when navigating away from waiting room', async () => {
     const user = userEvent.setup();
 
@@ -239,26 +270,23 @@ describe('WaitingRoom', () => {
     });
   });
 
-  it('should not render ControlPanel when allowDeviceSelection is false', async () => {
+  it('should still render ControlPanel when allowDeviceSelection is false', async () => {
     env.partialUpdate({
       WAITING_ROOM_ALLOW_DEVICE_SELECTION: false,
     });
 
-    const { container } = await render(<WaitingRoom />, {
+    await render(<WaitingRoom />, {
       previewPublisherContext: {
         __interceptor: (context: PreviewPublisherContextType) => {
           context.accessStatus = DEVICE_ACCESS_STATUS.ACCEPTED;
+          context.isVideoLoading = false;
         },
       },
     });
 
-    await waitFor(
-      () => {
-        const controlPanel = container.querySelector('[data-testid="ControlPanel"]');
-        expect(controlPanel).not.toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
+    await waitFor(() => {
+      expect(screen.queryByTestId('ControlPanel')).toBeInTheDocument();
+    });
   });
 
   it('should render ControlPanel when allowDeviceSelection is true', async () => {
