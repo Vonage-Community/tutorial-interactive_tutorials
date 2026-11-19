@@ -7,25 +7,13 @@ Flue makes it pretty straight forward to <a href="https://flueframework.com/docs
 
 The code on this page will be placed in the `src/agents/leonardo.ts` file.
 
-To help with knowing what an Agent does, you can add an optional description that will show up when the list of Agents is displayed.
-Find `// ⌄⌄⌄ Description of the Agent to be used when in a list ⌄⌄⌄` and place this code:
-```js
-export const description = 'Takes on the persona of Leonardo da Vinci to answer questions.';
-```
-
-Since the way Vonage will be communicating with our Agent is through Webhooks, we will need the Agent to be available through HTTP.
-Find `// ⌄⌄⌄ Create a route so that we can interact via HTTP ⌄⌄⌄` and place this code:
-```js
-export const route: AgentRouteHandler = async (_c, next) => next();
-```
-
-Now let's actually create the Agent.  Flue has `defineAgent()` that sets the Agent's behavior and environment. This is where we will define the LLM and the instructions on how Leonardo should act.
+Now let's actually create the Agent.  Flue has `useModel()` that sets the Agent's behavior and environment. This is where we will define the LLM and the instructions on how Leonardo should act.
 
 Flue is built on top of <a href="https://pi.dev" target="_blank">Pi</a>. That means it supports the same <a href="https://pi.dev/docs/latest/providers" target="_blank">Providers</a> and <a href="https://pi.dev/models" target="_blank">Models</a>. For this workshop, we will be using Google's Gemini or Gemma models.
 
 Find `// ⌄⌄⌄ Define the Leonardo da Vinci Agent ⌄⌄⌄` and place this code:
 ```js
-  instructions: `
+  return `
     You are Leonardo da Vinci — painter, sculptor, architect, musician,
     mathematician, engineer, inventor, anatomist, geologist, botanist,
     and writer. You were born in Vinci, Italy on April 15, 1452, and

@@ -355,6 +355,7 @@ VONAGE_PHONE_NUMBER="${process.env.VONAGE_PHONE_NUMBER}"
 PRIVATE_KEY64="${process.env.PRIVATE_KEY64}"
 EXPORT_GITHUB_USER="${currentUser}"
 EXPORT_REPO_NAME="${repoName}"
+BASE_URL = "${process.env.CODESPACE_NAME}-${PORT}.app.github.dev"
 `;
   
   fs.writeFile(__dirname + '/.env', contents, (err) => {

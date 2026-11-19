@@ -1,5 +1,6 @@
-import { flue } from '@flue/runtime/routing';
+import { createAgentRouter } from '@flue/runtime/routing';
 import { Hono } from 'hono';
+import { Leonardo } from './agents/leonardo.ts';
 import { serveStatic } from '@hono/node-server/serve-static';
 import fs from 'node:fs';
 import { Vonage } from '@vonage/server-sdk';
@@ -60,8 +61,7 @@ app.get('/health', (c) => c.json({ ok: true }));
 
 // ─── Mount Flue routes at root ────────────────────────────────────────────────
 // This makes Agents available at POST /agents/{agent}/:id
-app.route('/', flue());
-
+app.route('/agents/leonardo', createAgentRouter(Leonardo));
 
 export default app;
 
